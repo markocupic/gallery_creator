@@ -1,0 +1,34 @@
+
+*.clear
+{
+	clear:both;
+}
+.led_new
+{
+	padding:2px 0 3px 22px;
+	background:url("photo.png") no-repeat left center;
+}
+
+.led_pencil
+{
+	padding:2px 0 3px 22px;
+	background:url("pencil.png") no-repeat left center;
+}
+
+.album_infos td
+{
+	padding:4px;
+}
+
+
+
+.album_infos tr.odd>td
+{
+	background-color:#CCCCCC;
+}
+
+
+div.readonly input
+{
+	background-color:#CCCCCC;
+}
