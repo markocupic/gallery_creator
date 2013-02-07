@@ -1,33 +1,13 @@
 <?php
-if (!defined('TL_ROOT'))
-	die('You can not access this file directly!');
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
- *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
- * PHP version 5
- * @copyright  Marko Cupic 2010
- * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
- * @package    gallery_creator
- * @license    GNU/LGPL
- * @filesource
+ * 
+ * Copyright (C) 2005-2012 Leo Feyer
+ * 
+ * @package Gallery Creator
+ * @link    http://www.contao.org
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
 $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
@@ -43,10 +23,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			array(
 				'tl_gallery_creator_pictures',
 				'onloadCbSetUpPalettes'
-			),
-			array(
-				'tl_gallery_creator_pictures',
-				'onloadCbCheckRefThumb'
 			)
 		),
 
@@ -54,6 +30,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'tl_gallery_creator_pictures',
 				'ondeleteCb'
 			)),
+		'sql' => array('keys' => array(
+				'id' => 'primary',
+				'pid' => 'index'
+			))
 	),
 
 	//list
@@ -145,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'imagerotate' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate'],
 				'href' => 'mode=imagerotate',
-				'icon' => 'system/modules/gallery_creator/html/rotate.png',
+				'icon' => 'system/modules/gallery_creator/assets/images/rotate.png',
 				'attributes' => 'onclick="Backend.getScrollOffset();"',
 				'button_callback' => array(
 					'tl_gallery_creator_pictures',
@@ -167,6 +147,30 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
 	// Fields
 	'fields' => array(
+
+		'id' => array('sql' => "int(10) unsigned NOT NULL auto_increment"),
+
+		'pid' => array(
+			'foreignKey' => 'tl_gallery_creator_albums.alias',
+			'sql' => "int(10) unsigned NOT NULL default '0'",
+			'relation' => array(
+				'type' => 'belongsTo',
+				'load' => 'lazy'
+			)
+		),
+              
+              'fileID' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'],
+                     'eval' => array(
+                            'doNotShow' => true
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'"
+              ),
+
+		'sorting' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
+
+		'tstamp' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
+
 		'published' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'],
 			'inputType' => 'checkbox',
@@ -174,7 +178,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'isBoolean' => true,
 				'submitOnChange' => true,
 				'tl_class' => 'long'
-			)
+			),
+			'sql' => "char(1) NOT NULL default '1'"
 		),
 
 		'image_info' => array(
@@ -187,7 +192,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'doNotShow' => true
 			)
 		),
-
 		'title' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'],
 			'exclude' => true,
@@ -196,8 +200,18 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'allowHtml' => false,
 				'decodeEntities' => true,
 				'rgxp' => 'alnum'
-			)
+			),
+			'sql' => "varchar(255) NOT NULL default ''"
 		),
+
+		//filename
+		'name' => array('sql' => "varchar(255) NOT NULL default ''"),
+
+		//path
+		'path' => array('sql' => "varchar(255) NOT NULL default ''"),
+
+		//activate subpalette
+		'externalFile' => array('sql' => "char(1) NOT NULL default ''"),
 
 		'comment' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['comment'],
@@ -209,7 +223,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'decodeEntities' => true,
 				'tl_class' => 'w50 ',
 				'style' => 'margin-right:-15px; width:90%; height:150px;'
-			)
+			),
+			'sql' => "text NULL"
 		),
 
 		'picture' => array(
@@ -224,15 +239,18 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 		'date' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'],
 			'inputType' => 'text',
-			'eval' => array(
+                     // when upload a new image, the image inherits the date of the parent album
+                     'default' => time(),
+                     'eval' => array(
 				'mandatory' => true,
 				'maxlength' => 10,
-				'datepicker' => $this->getDatePickerString(),
+				'datepicker' => true,
 				'submitOnChange' => false,
 				'rgxp' => 'date',
 				'tl_class' => 'm12 w50 wizard ',
 				'submitOnChange' => false
-			)
+			),
+			'sql' => "int(10) unsigned NOT NULL default '0'"
 		),
 
 		'addCustomThumb' => array(
@@ -242,7 +260,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'eval' => array(
 				'submitOnChange' => true,
 				'doNotShow' => true
-			)
+			),
+			'sql' => "char(1) NOT NULL default ''"
 		),
 
 		'customThumb' => array(
@@ -254,7 +273,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'files' => true,
 				'filesOnly' => true,
 				'extensions' => 'jpeg,jpg,gif,png,bmp,tiff'
-			)
+			),
+			'sql' => "varchar(255) NOT NULL default ''"
 		),
 
 		'owner' => array(
@@ -268,14 +288,21 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'doNotShow' => true,
 				'nospace' => true,
 				'tl_class' => 'clr m12 w50'
+			),
+			'sql' => "int(10) NOT NULL default '0'",
+			'relation' => array(
+				'type' => 'hasOne',
+				'load' => 'eager'
 			)
 		),
+
 		'socialMediaSRC' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['socialMediaSRC'],
 			'exclude' => true,
 			'filter' => true,
 			'inputType' => 'text',
-			'eval' => array('tl_class' => 'clr')
+			'eval' => array('tl_class' => 'clr'),
+			'sql' => "varchar(255) NOT NULL default ''"
 		),
 		'localMediaSRC' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['localMediaSRC'],
@@ -286,7 +313,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'files' => true,
 				'filesOnly' => true,
 				'fieldType' => 'radio'
-			)
+			),
+			'sql' => "varchar(255) NOT NULL default ''"
 		),
 		'cssID' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cssID'],
@@ -296,7 +324,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 				'multiple' => true,
 				'size' => 2,
 				'tl_class' => 'w50 clr'
-			)
+			),
+			'sql' => "varchar(255) NOT NULL default ''"
 		)
 	)
 );
@@ -312,16 +341,10 @@ class tl_gallery_creator_pictures extends Backend
 {
 
 	/**
-	 * absoluter Pfad ins Bildverzeichnis
-	 * @var string
-	 */
-	public $imgDir;
-
-	/**
 	 *  Pfad ab TL_ROOT ins Bildverzeichnis
 	 * @var string
 	 */
-	public $relImgDir;
+	public $uploadPath;
 
 	/*
 	 * bool
@@ -334,16 +357,10 @@ class tl_gallery_creator_pictures extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 		$this->import('Files');
-
-		//absoluter Pfad zum Upload-Dir
-		$this->imgDir = TL_ROOT . '/' . $GLOBALS['TL_CONFIG']['uploadPath'] . '/gallery_creator_albums/';
+		$this->GcHelpers = new GcHelpers;
 
 		//relativer Pfad zum Upload-Dir fuer safe-mode-hack
-		$this->relImgDir = $GLOBALS['TL_CONFIG']['uploadPath'] . '/gallery_creator_albums/';
-
-		//Setzt bei jedem neuen Aufruf das Clipboard in die Anfangskonfiguration zurück
-		if ($this->Input->get('act') != 'paste')
-			$this->Session->set('CLIPBOARD', array());
+		$this->uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
 
 		//parse Backend Template Hook registrieren
 		$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array(
@@ -351,22 +368,27 @@ class tl_gallery_creator_pictures extends Backend
 			'myParseBackendTemplate'
 		);
 
-		switch ($this->Input->get('mode'))
+		switch (Input::get('mode'))
 		{
 
 			case 'imagerotate' :
-				$this->rotateJpgImage();
-				$this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $this->Input->get('id'));
+                            
+                            $objPic = $this->Database->prepare('SELECT path FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('imgId'));
+                            // Rotate image anticlockwise
+                            $angle = 270;
+		              GcHelpers::imageRotate($objPic->path, $angle);
+                            GcHelpers::registerInFilesystem($objPic->path);
+				$this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . Input::get('id'));
 				break;
 			default :
 				break;
 		}//end switch
 
-		switch ($this->Input->get('act'))
+		switch (Input::get('act'))
 		{
 			case 'create' :
 				//Neue Bilder können ausschliesslich über einen Bildupload realisiert werden
-				$this->Redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $this->Input->get('pid'));
+				$this->Redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . Input::get('pid'));
 				break;
 
 			case 'select' :
@@ -380,15 +402,10 @@ class tl_gallery_creator_pictures extends Backend
 
 				break;
 
-			case 'imagerotate' :
-				$this->rotateJpgImage();
-				break;
-
 			default :
 				break;
 		} //end switch
 	}
-
 
 	/**
 	 * Return the delete-image-button
@@ -405,7 +422,6 @@ class tl_gallery_creator_pictures extends Backend
 		$objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
 		return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
 	}
-
 
 	/**
 	 * Return the edit-image-button
@@ -425,7 +441,6 @@ class tl_gallery_creator_pictures extends Backend
 
 	}
 
-
 	/**
 	 * Return the cut-image-button
 	 * @param array
@@ -441,7 +456,6 @@ class tl_gallery_creator_pictures extends Backend
 		return '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
 	}
 
-
 	/**
 	 * Return the paste-image-button
 	 * @param array
@@ -452,20 +466,33 @@ class tl_gallery_creator_pictures extends Backend
 	 * @param string
 	 * @return string
 	 */
-	public function buttonCbPasteImage($row, $href, $label, $title, $icon, $attributes)
+    public function buttonCbPasteImage($row, $href, $label, $title, $icon, $attributes)
 	{
-		$imagePasteAfter = $this->generateImage('pasteafter.gif', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id']), 'class="blink"');
-
-		if ($this->Input->get('act') == 'paste' && $this->Input->get('mode') == 'cut')
+        //get the CLIPBOARD settings from the current Session
+        $arrClipboard = $this->Session->get('CLIPBOARD');
+        $arrClipboard = $arrClipboard['tl_gallery_creator_pictures'];
+        
+        if (!$arrClipboard['mode'] && Input::get('act') != 'paste')
+        {
+            return null;
+        }
+        
+		if ((Input::get('act') == 'paste' && Input::get('mode') == 'cut') || $arrClipboard['mode'])
 		{
-			if ($row['id'] == $this->Input->get('id'))
+			if ($row['id'] == Input::get('id'))
 			{
-				return;
+				return null;
 			}
-			return '<a href="' . $this->addToUrl($href . '&id=' . $this->Input->get('id') . '&pid=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $imagePasteAfter . '</a> ';
+            //generate the icon
+            $pasteAfterIcon = $this->generateImage($icon, sprintf($label, $row['id']), 'class="blink"');
+    
+            //replace 'cut' with 'cutAll' when moving several images 
+            $href = $arrClipboard['mode'] == 'cutAll' ? str_replace('cut', 'cutAll', $href) : $href;
+            
+            $url = $this->addToUrl(sprintf('%s&id=%d&pid=%d', $href, Input::get('id'), $row['id']));
+            return sprintf('<a href="%s" title="%s" %s>%s</a> ', $url, specialchars($title), $attributes,  $pasteAfterIcon);  
 		}
 	}
-
 
 	/**
 	 * Return the rotate-image-button
@@ -479,9 +506,8 @@ class tl_gallery_creator_pictures extends Backend
 	 */
 	public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return '<a href="' . $this->addToUrl($href . '&imgid=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+		return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
 	}
-
 
 	/**
 	 * child-record-callback
@@ -494,84 +520,41 @@ class tl_gallery_creator_pictures extends Backend
 		$key = ($arrRow['published'] == '1') ? 'published' : 'unpublished';
 		$date = $this->parseDate($GLOBALS['TL_CONFIG']['datimFormat'], $arrRow['date']);
 		//nächste Zeile nötig, da be_bredcrumb sonst bei "mehrere bearbeiten" hier einen Fehler produziert
-		if (!is_file(TL_ROOT . "/" . $arrRow['path'] . '/' . $arrRow['name']))
+		if (!is_file(TL_ROOT . "/" . $arrRow['path']))
 		{
 			return "";
 		}
 
-		$imageSrc = $arrRow['path'] . '/' . $arrRow['name'];
-		$objFile = new File($imageSrc);
+		$objFile = new File($arrRow['path']);
 		if ($objFile->isGdImage)
 		{
-			$hasMovie = "";
-			$src = $imageSrc;
-
 			//if dataset contains a link to movie file...
+			$hasMovie = NULL;
+			$src = $objFile->path;
 			$src = trim($arrRow['socialMediaSRC']) != "" ? trim($arrRow['socialMediaSRC']) : $src;
 			$src = trim($arrRow['localMediaSRC']) != "" ? trim($arrRow['localMediaSRC']) : $src;
 			if (trim($arrRow['socialMediaSRC']) != "" or trim($arrRow['localMediaSRC']) != "")
 			{
-				$type = trim($arrRow['localMediaSRC']) != "" ? 'embeded local-media: ' : 'embeded social media: ';
-				$hasMovie = '<div class="block"><img src="system/modules/gallery_creator/html/film.png"> ' . $type . '<a href="' . $src . '" data-lightbox="gc_album_' . $this->Input->get('id') . '">' . $src . '</a></div>';
+				$type = trim($arrRow['localMediaSRC']) == "" ? ' embeded local-media: ' : ' embeded social media: ';
+				$iconSrc = 'system/modules/gallery_creator/assets/images/film.png';
+				$movieIcon = $this->generateImage($iconSrc);
+				$hasMovie = sprintf('<div class="block">%s%s<a href="%s" data-lightbox="gc_album_%s">%s</a></div>', $movieIcon, $type, $src, Input::get('id'), $src);
 			}
-			//-->
-
-			return '
-
-<div class="cte_type ' . $key . '"><strong>' . $arrRow['headline'] . '</strong> - ' . $arrRow['name'] . ' [' . $objFile->width . ' x ' . $objFile->height . ' px, ' . $this->getReadableSize($objFile->filesize) . ']</div>
-' . $hasMovie . '
-<div class="block"><a href="' . $src . '" data-lightbox="gc_album_' . $this->Input->get('id') . '"><img src="' . $this->getImage($imageSrc, "100", "", "proportional") . '"></a></div>
-<div class="limit_height' . (!$GLOBALS['TL_CONFIG']['doNotCollapse'] ? ' h64' : '') . ' block">
-' . (($arrRow['comment'] != '') ? $arrRow['comment'] : '') . '
-</div>' . "\n";
+			//generate icon/thumbnail
+			if ($GLOBALS['TL_CONFIG']['thumbnails'])
+			{
+				$image = Image::get($objFile->path, "100", "", "center_center");
+				$image = $this->generateImage($image);
+			}
+			//return html
+			$return = sprintf('<div class="cte_type %s"><strong>%s</strong> - %s [%s x %s px, %s]</div>', $key, $arrRow['headline'], $arrRow['name'],$objFile->width,  $objFile->height, $this->getReadableSize($objFile->filesize));
+			$return .= $hasMovie;
+			$return .= $image ? '<div class="block">' . $image . '</div>' : NULL;
+			$return .= sprintf('<div class="limit_height%s block">%s</div>', ($GLOBALS['TL_CONFIG']['thumbnails'] ? ' h64' : ''), specialchars($arrRow['comment']));
+			return $return;
 		}
 	}
 
-
-	/**
-	 * $imgSrc - GD image handle of source image
-	 * $angle - angle of rotation. Needs to be positive integer
-	 * angle shall be 0,90,180,270, but if you give other it
-	 * will be rouned to nearest right angle (i.e. 52->90 degs,
-	 * 96->90 degs)
-	 * returns GD image handle of rotated image.
-	 * http://www.php.net/manual/de/function.imagerotate.php
-	 * thanks to Borszczuk
-	 */
-	private function imageRotateRightAngle($imgSrc, $angle)
-	{
-		// ensuring we got really RightAngle (if not we choose the closest one)
-		$angle = min(((int)(($angle + 45) / 90) * 90), 270);
-
-		// no need to fight
-		if ($angle == 0)
-			return ($imgSrc);
-
-		// dimenstion of source image
-		$srcX = imagesx($imgSrc);
-		$srcY = imagesy($imgSrc);
-		switch( $angle )
-		{
-			case 90 :
-				$imgDest = imagecreatetruecolor($srcY, $srcX);
-				for ($x = 0; $x < $srcX; $x++)
-					for ($y = 0; $y < $srcY; $y++)
-						imagecopy($imgDest, $imgSrc, $srcY - $y - 1, $x, $x, $y, 1, 1);
-				break;
-
-			case 180 :
-				$imgDest = ImageFlip($imgSrc, IMAGE_FLIP_BOTH);
-				break;
-
-			case 270 :
-				$imgDest = imagecreatetruecolor($srcY, $srcX);
-				for ($x = 0; $x < $srcX; $x++)
-					for ($y = 0; $y < $srcY; $y++)
-						imagecopy($imgDest, $imgSrc, $y, $srcX - $x - 1, $x, $y, 1, 1);
-				break;
-		}
-		return ($imgDest);
-	}
 
 
 	/**
@@ -581,17 +564,16 @@ class tl_gallery_creator_pictures extends Backend
 	 */
 	public function inputFieldCbGenerateImage()
 	{
-		$objImg = $this->Database->prepare('SELECT path,name,pid FROM tl_gallery_creator_pictures WHERE id=?')->limit(1)->execute($this->Input->get('id'));
-		$src = $objImg->path . '/' . $objImg->name;
+		$objImg = $this->Database->prepare('SELECT path,name,pid FROM tl_gallery_creator_pictures WHERE id=?')->limit(1)->execute(Input::get('id'));
+		$src = $objImg->path;
 		return '
 
 <div class="w50 easyExclude easyExcludeFN_picture" style="height:200px;">
 	<h3><label for="ctrl_picture">' . $objImg->name . '</label></h3>
-	<a href="' . $src . '" data-lightbox="gc_image_' . $this->Input->get('id') . '"><img src="' . $this->getImage($src, '180', '180', 'crop') . '"></a>
+	<a href="' . $src . '" data-lightbox="gc_image_' . Input::get('id') . '"><img src="' . Image::get($src, '180', '180', 'crop') . '"></a>
 </div>
 		';
 	}
-
 
 	/**
 	 * input-field-callback generate image information
@@ -600,8 +582,7 @@ class tl_gallery_creator_pictures extends Backend
 	 */
 	public function inputFieldCbGenerateImageInformation()
 	{
-		$objImg = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')->execute($this->Input->get('id'));
-
+		$objImg = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('id'));
 		$objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objImg->owner);
 		$output = '
 			<div class="album_infos">
@@ -620,6 +601,10 @@ class tl_gallery_creator_pictures extends Backend
 				<tr class="odd">
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['filename'][0] . ': </strong></td>
 					<td>' . $objImg->name . '</td>
+				</tr>
+                            <tr>
+       				<td><strong>tl_files.id: </strong></td>
+					<td>' . $objImg->fileID . '</td>
 				</tr>';
 
 		if ($this->restrictedUser)
@@ -658,7 +643,6 @@ class tl_gallery_creator_pictures extends Backend
 		return $output;
 	}
 
-
 	/**
 	 * Parse Backend Template Hook
 	 * @param string
@@ -667,78 +651,59 @@ class tl_gallery_creator_pictures extends Backend
 	 */
 	public function myParseBackendTemplate($strContent, $strTemplate)
 	{
-		if ($this->Input->get('table') == 'tl_gallery_creator_pictures')
+		if (Input::get('table') == 'tl_gallery_creator_pictures')
 		{
 			//da alle neuen Bilder (neue Datensaetze) nur über fileupload oder importImages realisiert werden, ist der "Create-Button" obsolet
 			//entfernt den Create-Button aus den den global operations
-			$strContent = preg_replace('/<a href(.*?)tl_gallery_creator_pictures(.*?)act=create(.*?)<\/a>(.*?)::/i', "", $strContent);
-
+			$strContent = preg_replace('/<a href(.*?)tl_gallery_creator_pictures(.*?)act=create(.*?)<\/a>(.*?)/i', "", $strContent);
 			//Bei einigen Browsern überragt die textarea den unteren Seitenrand, deshalb eine weitere leere clearing-box
 			$strContent = str_replace('</fieldset>', '<div class="clr" style="clear:both"><p> </p><!-- clearing Box --></div></fieldset>', $strContent);
 		}
 
-		if ($this->Input->get('table') == 'tl_gallery_creator_pictures' && $this->Input->get('act') == 'edit')
+		if (Input::get('table') == 'tl_gallery_creator_pictures' && Input::get('act') == 'select')
 		{
 			//saveNcreate button-entfernen
 			$strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
 			//saveNclose button-entfernen
 			//$strContent=preg_replace('/<input type=\"submit\" name=\"saveNclose\"((\r|\n|.)+?)>/','',$strContent);
+            //copy button-entfernen
+			$strContent = preg_replace('/<input(.*?)copy(.*?)submit(.*?)>/', '', $strContent);
 			//saveNback button-entfernen
 			//$strContent=preg_replace('/<input type=\"submit\" name=\"saveNback\"((\r|\n|.)+?)>/','',$strContent);
 		}
 		return $strContent;
 	}
 
-
 	/**
 	 * ondelete-callback
 	 * prevents deleting images by unauthorised users
 	 */
-	public function ondeleteCb()
+	public function ondeleteCb(DC_Table $dc)
 	{
-		if ($this->Input->get('act') == 'deleteAll')
-		{
-			foreach ($_SESSION["BE_DATA"]["CURRENT"]["IDS"] as $id)
-			{
-				$objImg = $this->Database->prepare('SELECT id,path,name,owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($id);
-				if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
-				{
-					if (is_file(TL_ROOT . '/' . $objImg->path . '/' . $objImg->name))
-					{
-						//Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
-						$objDeleteItem = $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
-						$objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE path=? AND name=?')->execute($objImg->path, $objImg->name);
+		$objImg = $this->Database->prepare('SELECT id,owner,path,name FROM tl_gallery_creator_pictures WHERE id=?')->execute($dc->id);
 
-						if (strstr($objImg->path, "gallery_creator_albums") && $objImgNumRows->numRows < 1)
-							$this->Files->delete($objImg->path . '/' . $objImg->name);
-					}
-				}
-				else
-				{
-					$this->log('Datensatz mit ID ' . $id . ' wurde vom  Benutzer mit ID ' . $this->User->id . ' versucht aus tl_gallery_creator_pictures zu loeschen.', __METHOD__, TL_ERROR);
-				}
+		if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+		{
+			//Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
+			$objDeleteItem = $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
+			$objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE path=? AND name=?')->execute($objImg->path, $objImg->name);
+
+			if (strstr($objImg->path, $this->uploadPath) && $objImgNumRows->numRows < 1)
+			{
+				//Datei vom Server loeschen
+				$this->Files->delete($objImg->path);
+				//Datensatz aus tl_files loeschen
+				GcHelpers::deleteFromFilesystem($objImg->path);
+				GcHelpers::registerInFilesystem($this->uploadPath);
 			}
 		}
-		else
+		if (!$this->User->isAdmin && $objImg->owner != $this->User->id)
 		{
-			$objImg = $this->Database->prepare('SELECT id,owner,path,name FROM tl_gallery_creator_pictures WHERE id=?')->execute($this->Input->get('id'));
-
-			if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
-			{
-				//Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
-				$objDeleteItem = $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
-				$objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE path=? AND name=?')->execute($objImg->path, $objImg->name);
-				if (strstr($objImg->path, "gallery_creator_albums") && $objImgNumRows->numRows < 1)
-					$this->Files->delete($objImg->path . '/' . $objImg->name);
-			}
-			if (!$this->User->isAdmin && $objImg->owner != $this->User->id)
-			{
-				$this->log('Datensatz mit ID ' . $this->Input->get('id') . ' wurde vom  Benutzer mit ID ' . $this->User->id . ' versucht aus tl_gallery_creator_pictures zu loeschen.', __METHOD__, TL_ERROR);
-				$this->redirect('contao/main.php?do=error');
-			}
+			$this->log('Datensatz mit ID ' . $dc->id . ' wurde vom  Benutzer mit ID ' . $this->User->id . ' versucht aus tl_gallery_creator_pictures zu loeschen.', __METHOD__, TL_ERROR);
+			$this->redirect('contao/main.php?do=error');
 		}
+
 	}
-
 
 	/**
 	 * child-record-callback
@@ -747,7 +712,7 @@ class tl_gallery_creator_pictures extends Backend
 	 */
 	public function onloadCbCheckPermission()
 	{
-		//admin hat keine Einschraenkungen
+		// admin hat keine Einschraenkungen
 		if ($this->User->isAdmin)
 		{
 			return;
@@ -755,10 +720,10 @@ class tl_gallery_creator_pictures extends Backend
 
 		//Nur der Ersteller hat keine Einschraenkungen
 
-		if ($this->Input->get('act') == 'edit')
+		if (Input::get('act') == 'edit')
 
 		{
-			$objUser = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($this->Input->get('id'));
+			$objUser = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('id'));
 
 			if (true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
 			{
@@ -771,33 +736,6 @@ class tl_gallery_creator_pictures extends Backend
 			}
 		}
 	}
-
-
-	/**
-	 * onload-callback
-	 * Kontrolliert, ob das in der db eingetragenen Vorschaubild im Bilderordner auch tatsaechlich existiert
-	 */
-	public function onloadCbCheckRefThumb()
-	{
-		$objAlb = $this->Database->execute('SELECT id, thumb FROM tl_gallery_creator_albums');
-		while ($objAlb->next())
-		{
-			$objPreviewThumb = $this->Database->prepare('SELECT name,path FROM tl_gallery_creator_pictures WHERE id=?')->execute($objAlb->thumb);
-			if (!is_file(TL_ROOT . '/' . $objPreviewThumb->path . '/' . $objPreviewThumb->name))
-			{
-				$objPic = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE pid=?')->limit(1)->execute($objAlb->id);
-				if ($objPic->id && $objPic->numRows)
-				{
-					$objAlb2 = $this->Database->prepare('UPDATE tl_gallery_creator_albums SET thumb=? WHERE id=?')->execute($objPic->id, $objAlb->id);
-				}
-				else
-				{
-					$objAlb2 = $this->Database->prepare('UPDATE tl_gallery_creator_albums SET thumb=? WHERE id=?')->execute('', $objAlb->id);
-				}
-			}
-		}
-	}
-
 
 	/**
 	 * onload-callback
@@ -817,42 +755,4 @@ class tl_gallery_creator_pictures extends Backend
 			$GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['fields']['owner']['eval']['doNotShow'] = false;
 		}
 	}
-
-
-	/**
-	 * rotates image by 90°
-	 */
-	public function rotateJpgImage()
-	{
-
-		$objPic = $this->Database->prepare('SELECT path,name,pid FROM tl_gallery_creator_pictures WHERE id=?')->execute($this->Input->get('imgid'));
-
-		// File and rotation
-		$filename = '../' . $objPic->path . '/' . $objPic->name;
-		$this->Files->chmod($objPic->path . '/' . $objPic->name, 0777);
-
-		// Load
-		$source = imagecreatefromjpeg($filename);
-		// Rotate
-		if (is_callable('imagerotate'))
-		{
-			//imagerotate ist nicht auf allen Systemen verfügbar
-			$degrees = 270;
-			$rotate = imagerotate($source, $degrees, 0);
-
-		}
-		else
-		{
-			$degrees = 90;
-			$rotate = $this->imageRotateRightAngle($source, $degrees);
-		}
-
-		// Output
-		imagejpeg($rotate, $filename);
-		imagedestroy($source);
-		$this->Files->chmod($objPic->path . '/' . $objPic->name, 0644);
-	}
-
-
 }
-?>

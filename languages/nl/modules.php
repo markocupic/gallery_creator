@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/nl/modules.php 
  * 
- * Contao extension: gallery_creator 3.1.1 stable 
+ * Contao extension: gallery_creator 4.0.1 stable 
  * Niederländisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -17,7 +17,6 @@
  
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['1'] = "Maak en verander albums/galerijen.";
-$GLOBALS['TL_LANG']['FMD']['webgallery']['0'] = "web galleries";
 $GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Toon Gallery Creator albums als frontend module.";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery Creator";

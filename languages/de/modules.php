@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/modules.php 
  * 
- * Contao extension: gallery_creator 3.1.1 stable 
+ * Contao extension: gallery_creator 4.0.1 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -17,10 +17,11 @@
  
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['1'] = "Bildgalerien erstellen und bearbeiten.";
-$GLOBALS['TL_LANG']['FMD']['webgallery']['0'] = "Bildgalerien";
-$GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery Creator";
-$GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Album-Bilder des Gallery-Creators als Frontend-Modul anzeigen.";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery Creator";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator']['1'] = "Eine Gallerie als Inhaltselement einf&uuml;gen.";
+$GLOBALS['TL_LANG']['FMD']['module_type_gallery_creator'] = "Gallery Creator";
+$GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery-Creator-Frontend-Modul";
+$GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Gallery-Creator-Album als Frontend-Modul einbinden.";
+$GLOBALS['TL_LANG']['CTE']['ce_type_gallery_creator'] = "Gallery Creator";
+$GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery-Creator-Inhaltselement";
+$GLOBALS['TL_LANG']['CTE']['gallery_creator']['1'] = "Gallery-Creator-Album als Inhaltselement einbinden.";
  
 ?>

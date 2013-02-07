@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/nl/default.php 
  * 
- * Contao extension: gallery_creator 3.1.1 stable 
+ * Contao extension: gallery_creator 4.0.1 stable 
  * Niederländisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 

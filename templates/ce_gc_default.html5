@@ -1,8 +1,13 @@
-<!-- indexer::continue -->
-<?php $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/html/gallery_creator_fe.js'; ?>
+<?php
+/* CSS for the frontend-output */
+$GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_fe.css';
 
-<?php if (!$this->Input->get('vars')): ?>
-<!--start album-overview-->
+/* javascript for the frontend-output */
+$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_fe.js';
+?>
+
+<?php if (!\Input::get('items')): ?>
+<!-- gallery_creator - album list -->
 <div class="<?php echo $this->class; ?> gallery_creator block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 <?php if ($this->headline): ?>
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
@@ -10,41 +15,39 @@
 	
 <?php echo $this->pagination; ?>
 <?php if (count($this->arrAlbums)>0): ?>
-<ul class="list_albums">
+
+       <ul class="list_albums">
 <?php foreach ($this->arrAlbums as $Album): ?> 
-	<li class="level_1 block row"  style="<?php echo $this->imagemargin; ?>">
-		<div class="tstamp block">[<?php echo $Album["event_date"]; ?>]</div>
-			<div class="col_1">
-				<figure class="image_container" onmouseover="<?php echo  $Album["thumbMouseover"]; ?>">
+              <li class="level_1 block"  style="<?php echo $this->imagemargin; ?>">
+                     <div class="tstamp block"><p>[<?php echo $Album["event_date"]; ?>]</p></div>
+                     <div class="col_1">
+                            <figure class="image_container" onmouseover="<?php echo  $Album["thumbMouseover"]; ?>">
 <?php if ($Album["href"]): ?>
-					<a href="<?php echo $Album["href"]; ?>" title="<?php echo $Album["title"]; ?>">
+                                   <a href="<?php echo $Album["href"]; ?>" title="<?php echo $Album["title"]; ?>">
 <?php endif; ?>
-						<img src="<?php echo $Album["thumb_src"]; ?>" alt="<?php echo $Album["alt"]; ?>" class="<?php echo $Album["class"]; ?>">
+                                          <img src="<?php echo $Album["thumb_src"]; ?>" alt="<?php echo $Album["alt"]; ?>" class="<?php echo $Album["class"]; ?>">
 <?php if ($Album["href"]): ?>
-					</a>
+                                   </a>
 <?php endif; ?>
-				<figcaption class="caption"><?php echo $Album["title"]; ?></figcaption>
-				</figure>
-			</div>
-			<div class="col_2">
-				<h2><?php echo $Album["name"]; ?></h2>
+                            </figure>
+                     </div>
+                     <div class="col_2">
+                            <h2><?php echo $Album["name"]; ?></h2>
 <?php if ($Album["count"]): ?>				
-				<p class="count_pics"><?php echo $Album["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            <p class="count_pics"><?php echo $Album["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
 <?php endif; ?>
 <?php if ($Album["count_subalbums"]): ?>				
-				<p class="count_pics"><?php echo $Album["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
+                            <p class="count_pics"><?php echo $Album["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
 <?php endif; ?>		
 <?php if ($Album["comment"]): ?>
-				<p class="album_comment"><?php echo $Album["comment"]; ?></p>
+                            <p class="album_comment"><?php echo $Album["comment"]; ?></p>
 <?php endif; ?>
-			</div>
-		<div class="clr"><!--clearing-box--></div>
-	</li>
+                     </div>
+              </li>
 <?php endforeach; ?>
-</ul>
+       </ul>
 <?php endif; ?>	
 </div>
-<!--end album-overview-->
 <?php endif; ?>
 
 
@@ -52,19 +55,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-<?php 
-if ($this->Input->get('vars')): ?>
-<!--start detailview-->
+<?php if (\Input::get('items')): ?>
+<!-- gallery_creator - album preview -->
 <div class="<?php echo $this->class; ?> gallery_creator block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 
 <?php if ($this->headline): ?>
@@ -79,132 +71,70 @@ if ($this->Input->get('vars')): ?>
 <h2><?php echo $this->Albumname; ?></h2>
 <?php endif; ?>
 
-<?php if ($this->error): ?>
-<?php foreach ($this->error as $errorMessage): ?>
-<p><?php echo $errorMessage; ?></p>
-<?php endforeach; ?>
-<?php return; ?>
-<?php endif; ?>
-	
-
 <?php if ($this->subalbums): ?>
-<!-- Unteralben anzeigen -->
 <div class="subalbums">
-	<h3>Unteralben von: <?php echo $this->Albumname; ?></h3>
-	<ul class="list_albums">
-<?php foreach ($this->subalbums as $Subalbum): ?>
-		<li class="level_1 block row"  style="<?php echo $this->imagemargin; ?>">
-		<div class="tstamp block">[<?php echo $Subalbum["event_date"]; ?>]</div>
-			<div class="col_1">
-				<figure class="image_container" onmouseover="<?php echo  $Album["thumbMouseover"]; ?>">
+	<h3><?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums_of']; ?>: <?php echo $this->Albumname; ?></h3>
+
+       <ul class="list_albums">
+<?php foreach ($this->subalbums as $Subalbum): ?> 
+              <li class="level_1 block"  style="<?php echo $this->imagemargin; ?>">
+                     <div class="tstamp block"><p>[<?php echo $Subalbum["event_date"]; ?>]</p></div>
+                     <div class="col_1">
+                            <figure class="image_container" onmouseover="<?php echo  $Subalbum["thumbMouseover"]; ?>">
 <?php if ($Subalbum["href"]): ?>
-					<a href="<?php echo $Subalbum["href"]; ?>" title="<?php echo $Subalbum["title"]; ?>">
+                                   <a href="<?php echo $Subalbum["href"]; ?>" title="<?php echo $Subalbum["title"]; ?>">
 <?php endif; ?>
-						<img src="<?php echo $Subalbum["thumb_src"]; ?>" alt="<?php echo $Subalbum["alt"]; ?>" class="<?php echo $Subalbum["class"]; ?>">
+                                          <img src="<?php echo $Subalbum["thumb_src"]; ?>" alt="<?php echo $Subalbum["alt"]; ?>" class="<?php echo $Subalbum["class"]; ?>">
 <?php if ($Subalbum["href"]): ?>
-					</a>
+                                   </a>
 <?php endif; ?>
-				<figcaption class="caption"><?php echo $Subalbum["title"]; ?></figcaption>
-				</figure>
-			</div>
-			<div class="col_2">
-				<h2><?php echo $Subalbum["name"]; ?></h2>
-<?php if ($Subalbum["count"]): ?>				
-				<p class="count_pics"><?php echo $Subalbum["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            </figure>
+                     </div>
+                     <div class="col_2">
+                            <h2><?php echo $Subalbum["name"]; ?></h2>
+<?php if ($Subalbum["count"]): ?>       			
+                            <p class="count_pics"><?php echo $Subalbum["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
 <?php endif; ?>
 <?php if ($Subalbum["count_subalbums"]): ?>				
-				<p class="count_pics"><?php echo $Subalbum["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
-<?php endif; ?>				
+                            <p class="count_pics"><?php echo $Subalbum["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
+<?php endif; ?>		
 <?php if ($Subalbum["comment"]): ?>
-				<p class="album_comment"><?php echo $Subalbum["comment"]; ?></p>
+                            <p class="album_comment"><?php echo $Subalbum["comment"]; ?></p>
 <?php endif; ?>
-			</div>
-		<div class="clr"><!--clearing-box--></div>
-	</li>
-<?php endforeach;?>
-	</ul>
+                     </div>
+              </li>
+<?php endforeach; ?>
+       </ul>
 </div>
-<!-- Ende Unteralben anzeigen -->
 <?php endif; ?>
+
 
 <?php if ($this->albumComment): ?>
 <div class="albumComment">
-	<p>
-<?php echo $this->albumComment; ?>
-	</p>
+       <p><?php echo $this->albumComment; ?></p>
 </div>
 <?php endif; ?>
 
 <?php echo $this->pagination; ?>
 <?php $col=0; ?>
-<?php $row=0; ?>
-<?php $imageNumber=0; ?>
 <?php if ($this->arrPictures): ?>
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
-<?php $imageNumber++; ?> 
-<?php $col++; ?>
-<?php if ($col==1): ?>
-<?php $row++; ?>
-	<li class="level_1 block <?php echo ($row%2==0 ? "odd" : "even"); ?>">
-		<ul class="level_2 block"> 
-<?php endif; ?>
-			<li class="level_2 inline <?php echo ($col==1 ? " first_col" : "") . ($col==$this->colsPerRow ? " last_col" : ""); ?>">
-			<figure class="image_container" style="float:left; <?php echo $this->imagemargin; ?>">
+       <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
+              <figure<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo (strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''); ?>" style="<?php echo $this->imagemargin; ?>">
 <?php if ($Picture["href"]): ?>
-				<a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"]; ?>">
+                     <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"]; ?>">
 <?php endif; ?>
-				<img src="<?php echo $Picture["thumb_src"]; ?>" class="<?php echo $Picture["class"]; ?>" alt="<?php echo $Picture["title"] ? $Picture["title"] : $Picture["name"]; ?>">
+                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture["thumb_width"]; ?>" height="<?php echo $Picture["thumb_height"]; ?>" alt="<?php echo $Picture["title"] ? $Picture["title"] : $Picture["name"]; ?>">
 <?php if ($Picture["href"]!=""): ?>
-				</a>
+                     </a>
 <?php endif; ?>
-			<figcaption class="caption"><?php echo $Picture["comment"]; ?></figcaption>
-			</figure>				
-			</li>	
-<?php if ($col==$this->colsPerRow OR count($this->arrPictures)==$imageNumber && $this->colsPerRow!=0): ?> 
-<?php $col=0; ?>
-		</ul>
-	</li>
-<!--  end row  -->
-<?php endif;?>
+              </figure>				
+       </li>
+<?php $col++;?>
+<?php if ($col == $this->colsPerRow) $col=0; ?>
 <?php endforeach;?>
 </ul>
 <?php endif;?>
 </div>
-<!--end detailview-->
-
 <?php endif; ?>
-
-
-<script type="text/javascript">
-<!--//--><![CDATA[//><!--
-window.addEvent('domready', function() {
-    //Weiterleitung bei Klick auf das, das Bild enthaltende Listenelement
-	$$("ul.list_albums li.level_1").addEvent('click', function() {
-		var href = this.getElement('a').get('href');
-		var myURI = new URI();
-		var redirect = myURI.get('scheme') + '://' + myURI.get('host') + myURI.get('directory') + href;
-		window.parent.location=redirect;
-	});
-	/**
-	 * Cursor über h2
-	 */
-	$$('.gallery_creator li.level_1').setStyle('cursor', 'pointer');
-	
-	//bei domready erhält das erste Listenelement einen overlay
-	$$(".gallery_creator ul.list_albums").getFirst("li").addClass('active');
-	//Klassenzuweisung 
-	$$(".gallery_creator ul.list_albums li.level_1").addEvent('mouseover', function() {
-		$$(".gallery_creator ul.list_albums").getFirst("li").removeClass('active');
-		this.addClass('active');
-	});
-	//Klassenentfernung 
-	$$(".gallery_creator ul.list_albums li.level_1").addEvent('mouseout', function() {
-		this.removeClass('active');
-	});
-
-});
-//--><!]]>
-</script>
-
-<!-- indexer::stop -->

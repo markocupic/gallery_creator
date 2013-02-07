@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 3.1.1 stable 
+ * Contao extension: gallery_creator 4.0.1 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -57,5 +57,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Einf&uuml
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Einf&uuml;gen in";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Einf&uuml;gen in Album mit ID %s";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'] = "Inhaltselement mit id=%s in Artikel \"%s\" auf Seite \"%s\"";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = "Bilder vor dem Upload nicht skalieren.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['0'] = "Datenbank aufr&auml;umen";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['1'] = "Alte/fehlerhafte Datenbankeinträge l&ouml;schen";
  
 ?>

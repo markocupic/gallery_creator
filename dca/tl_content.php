@@ -1,33 +1,13 @@
 <?php
-if (!defined('TL_ROOT'))
-	die('You can not access this file directly!');
 
-/*
+/**
  * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
- *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
- * PHP version 5
- * @copyright  Marko Cupic 2010
- * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
- * @package    gallery_creator
- * @license    GNU/LGPL
- * @filesource
+ * 
+ * Copyright (C) 2005-2012 Leo Feyer
+ * 
+ * @package Gallery Creator
+ * @link    http://www.contao.org
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
 /**
@@ -50,7 +30,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_rows'] = array(
 	'default' => '4',
 	'inputType' => 'select',
 	'options' => range(0, 30),
-	'eval' => array('tl_class' => '')
+	'eval' => array('tl_class' => 'clr'),
+	'sql' => "smallint(5) unsigned NOT NULL default '4'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_template'] = array(
@@ -60,7 +41,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_template'] = array(
 	'options_callback' => array(
 		'ce_gallery_creator',
 		'getTemplates'
-	)
+	),
+    'eval' => array('tl_class' => 'clr'),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_hierarchicalOutput'] = array(
@@ -68,7 +51,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_hierarchicalOutput'] = array(
 	'exclude' => true,
 	'default' => false,
 	'inputType' => 'checkbox',
-	'eval' => array('submitOnChange' => true)
+	'eval' => array('submitOnChange' => true, 'tl_class' => 'clr'),
+	'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting'] = array(
@@ -78,9 +62,10 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting'] = array(
 	'default' => 'date',
 	'inputType' => 'select',
 	'eval' => array(
-		'tl_class' => '',
+		'tl_class' => 'clr',
 		'submitOnChange' => true
-	)
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting_direction'] = array(
@@ -90,9 +75,10 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting_direction'] = array(
 	'default' => 'DESC',
 	'inputType' => 'select',
 	'eval' => array(
-		'tl_class' => '',
+		'tl_class' => 'clr',
 		'submitOnChange' => true
-	)
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting'] = array(
@@ -102,9 +88,10 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting'] = array(
 	'default' => 'date',
 	'inputType' => 'select',
 	'eval' => array(
-		'tl_class' => '',
+		'tl_class' => 'clr',
 		'submitOnChange' => false
-	)
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting_direction'] = array(
@@ -114,23 +101,26 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting_direction'] = arr
 	'default' => 'DESC',
 	'inputType' => 'select',
 	'eval' => array(
-		'tl_class' => '',
+		'tl_class' => 'clr',
 		'submitOnChange' => false
-	)
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_activateThumbSlider'] = array(
 	'exclude' => true,
 	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider'],
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => '')
+	'eval' => array('tl_class' => 'clr'),
+	'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_redirectSingleAlb'] = array(
 	'exclude' => true,
 	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'],
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => '')
+	'eval' => array('tl_class' => 'clr'),
+	'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_AlbumsPerPage'] = array(
@@ -139,49 +129,45 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_AlbumsPerPage'] = array(
 	'inputType' => 'text',
 	'eval' => array(
 		'rgxp' => 'digit',
-		'tl_class' => ''
-	)
+		'tl_class' => 'clr'
+	),
+	'sql' => "smallint(5) unsigned NOT NULL default '0'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_detailview'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_size_detailview'],
 	'exclude' => true,
 	'inputType' => 'imageSize',
-	'options' => explode(',', 'crop,proportional,box'),
+	'options' => $GLOBALS['TL_CROP'],
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array(
 		'rgxp' => 'digit',
 		'nospace' => true,
-		'tl_class' => ''
-	)
+		'tl_class' => 'clr'
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
-if (version_compare(VERSION, '2.10', '>'))
-{
-	$GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_detailview']['options'] = $GLOBALS['TL_CROP'];
-}
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_albumlist'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlist'],
 	'exclude' => true,
 	'inputType' => 'imageSize',
-	'options' => explode(',', 'crop,proportional,box'),
+	'options' => $GLOBALS['TL_CROP'],
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array(
 		'rgxp' => 'digit',
 		'nospace' => true,
-		'tl_class' => ''
-	)
+		'tl_class' => 'clr'
+	),
+	'sql' => "varchar(64) NOT NULL default ''"
 );
-if (version_compare(VERSION, '2.10', '>'))
-{
-	$GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_albumlist']['options'] = $GLOBALS['TL_CROP'];
-}
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_fullsize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_fullsize'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => '')
+	'eval' => array('tl_class' => 'clr'),
+	'sql' => "char(1) NOT NULL default '1'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_ThumbsPerPage'] = array(
@@ -191,8 +177,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_ThumbsPerPage'] = array(
 	'inputType' => 'text',
 	'eval' => array(
 		'rgxp' => 'digit',
-		'tl_class' => ''
-	)
+		'tl_class' => 'clr'
+	),
+	'sql' => "smallint(5) unsigned NOT NULL default '0'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
@@ -205,8 +192,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
 	),
 	'eval' => array(
 		'multiple' => true,
-		'tl_class' => ''
-	)
+		'tl_class' => 'clr'
+	),
+	'sql' => "text NOT NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_all_albums'] = array(
@@ -214,9 +202,10 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_all_albums'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
-		'tl_class' => '',
+		'tl_class' => 'clr',
 		'submitOnChange' => true
-	)
+	),
+	'sql' => "char(1) NOT NULL default ''"
 );
 
 /**
@@ -263,7 +252,7 @@ class ce_gallery_creator extends Backend
 	 */
 	public function optionsCallbackListAlbums()
 	{
-		$objContent = $this->Database->prepare('SELECT gc_sorting, gc_sorting_direction FROM tl_content WHERE id=?')->execute($this->Input->get('id'));
+		$objContent = $this->Database->prepare('SELECT gc_sorting, gc_sorting_direction FROM tl_content WHERE id=?')->execute(Input::get('id'));
 
 		$str_sorting = $objContent->gc_sorting == '' || $objContent->gc_sorting_direction == '' ? 'date DESC' : $objContent->gc_sorting . ' ' . $objContent->gc_sorting_direction;
 
@@ -284,7 +273,7 @@ class ce_gallery_creator extends Backend
 	 */
 	public function onloadCbSetUpPalettes()
 	{
-		$objContent = $this->Database->prepare('SELECT gc_publish_all_albums FROM tl_content WHERE id=?')->execute($this->Input->get('id'));
+		$objContent = $this->Database->prepare('SELECT gc_publish_all_albums FROM tl_content WHERE id=?')->execute(Input::get('id'));
 		if ($objContent->gc_publish_all_albums)
 		{
 			$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = str_replace('gc_publish_albums,', '', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator']);

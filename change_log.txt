@@ -1,7 +1,0 @@
-3.1.1 Thumbnaildimensionen lassen sich neu für Albumauflistung und Detailansicht getrennt definieren. Thumbnailbreiten müssen aber in allen Inhaltselementen neu definiert werden!
-3.1.1 Automatische Weiterleitung in die Detailansicht, wenn nur ein Album vorhanden ist, im Modulmodus hinzugefügt.
-3.1.1 Galleria-Script-> Update auf Version 1.2.6 -> Template angepasst
-3.1.1 Die Möglichkeit hinzugefügt, dass Thumbnails nicht anklickbar sind und nicht zur Grossansicht weitergeleitet wird
-3.1.1 In der Inhaltselement-Version kann die Sortierreihenfolge der Bildauflistung nun auch eingestellt werden
-3.1.1 In der Inhaltselement-Version kann die Sortierreihenfolge der Bildauflistung nun auch eingestellt werden
-3.1.1 ab build 49: Inhaltselement-Id wird nur noch in der URI angezeigt, wenn mehrere Gallery Creator CE auf einer Seite eingesetzt werden.
