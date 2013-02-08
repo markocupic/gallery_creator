@@ -2,9 +2,9 @@
 
 /**
  * Contao Open Source CMS
- * 
+ *
  * Copyright (C) 2005-2012 Leo Feyer
- * 
+ *
  * @package Gallery Creator
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
@@ -20,119 +20,119 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,head
  */
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_rows'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_rows'],
-	'default' => '4',
-	'inputType' => 'select',
-	'options' => range(0, 30),
-	'eval' => array('tl_class' => ''),
-	'sql' => "smallint(5) unsigned NOT NULL default '4'"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_rows'],
+       'default' => '4',
+       'inputType' => 'select',
+       'options' => range(0, 30),
+       'eval' => array('tl_class' => ''),
+       'sql' => "smallint(5) unsigned NOT NULL default '4'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_detailview'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_detailview'],
-	'exclude' => true,
-	'inputType' => 'imageSize',
-	'options' => $GLOBALS['TL_CROP'],
-	'reference' => &$GLOBALS['TL_LANG']['MSC'],
-	'eval' => array(
-		'rgxp' => 'digit',
-		'nospace' => true,
-		'tl_class' => ''
-	),
-	'sql' => "varchar(64) NOT NULL default ''"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_detailview'],
+       'exclude' => true,
+       'inputType' => 'imageSize',
+       'options' => $GLOBALS['TL_CROP'],
+       'reference' => &$GLOBALS['TL_LANG']['MSC'],
+       'eval' => array(
+              'rgxp' => 'digit',
+              'nospace' => true,
+              'tl_class' => ''
+       ),
+       'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_albumlist'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist'],
-	'exclude' => true,
-	'inputType' => 'imageSize',
-	'options' => $GLOBALS['TL_CROP'],
-	'reference' => &$GLOBALS['TL_LANG']['MSC'],
-	'eval' => array(
-		'rgxp' => 'digit',
-		'nospace' => true,
-		'tl_class' => ''
-	),
-	'sql' => "varchar(64) NOT NULL default ''"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist'],
+       'exclude' => true,
+       'inputType' => 'imageSize',
+       'options' => $GLOBALS['TL_CROP'],
+       'reference' => &$GLOBALS['TL_LANG']['MSC'],
+       'eval' => array(
+              'rgxp' => 'digit',
+              'nospace' => true,
+              'tl_class' => ''
+       ),
+       'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_fullsize'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_fullsize'],
-	'exclude' => true,
-	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => ''),
-	'sql' => "char(1) NOT NULL default '1'"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_fullsize'],
+       'exclude' => true,
+       'inputType' => 'checkbox',
+       'eval' => array('tl_class' => ''),
+       'sql' => "char(1) NOT NULL default '1'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_hierarchicalOutput'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput'],
-	'exclude' => true,
-	'default' => true,
-	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => ''),
-	'sql' => "char(1) NOT NULL default '1'"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput'],
+       'exclude' => true,
+       'default' => true,
+       'inputType' => 'checkbox',
+       'eval' => array('tl_class' => ''),
+       'sql' => "char(1) NOT NULL default '1'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_template'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_template'],
-	'exclude' => true,
-	'inputType' => 'select',
-	'options_callback' => array(
-		'mod_gallery_creator',
-		'getTemplates'
-	),
-	'sql' => "varchar(64) NOT NULL default ''"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_template'],
+       'exclude' => true,
+       'inputType' => 'select',
+       'options_callback' => array(
+              'mod_gallery_creator',
+              'getTemplates'
+       ),
+       'sql' => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
-	'exclude' => true,
-	'inputType' => 'trbl',
-	'options' => explode(',', 'px,%,em,pt,pc,in,cm,mm'),
-	'eval' => array(
-		'includeBlankOption' => true,
-		'tl_class' => ''
-	),
-	'sql' => "varchar(128) NOT NULL default ''"
+       'label' => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
+       'exclude' => true,
+       'inputType' => 'trbl',
+       'options' => explode(',', 'px,%,em,pt,pc,in,cm,mm'),
+       'eval' => array(
+              'includeBlankOption' => true,
+              'tl_class' => ''
+       ),
+       'sql' => "varchar(128) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_activateThumbSlider'] = array(
-	'exclude' => true,
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider'],
-	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => ''),
-	'sql' => "char(1) NOT NULL default ''"
+       'exclude' => true,
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider'],
+       'inputType' => 'checkbox',
+       'eval' => array('tl_class' => ''),
+       'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_redirectSingleAlb'] = array(
-	'exclude' => true,
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'],
-	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => ''),
-	'sql' => "char(1) NOT NULL default ''"
+       'exclude' => true,
+       'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'],
+       'inputType' => 'checkbox',
+       'eval' => array('tl_class' => ''),
+       'sql' => "char(1) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_AlbumsPerPage'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage'],
-	'exclude' => true,
-	'inputType' => 'text',
-	'eval' => array(
-		'rgxp' => 'digit',
-		'tl_class' => ''
-	),
-	'sql' => "smallint(5) unsigned NOT NULL default '0'"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage'],
+       'exclude' => true,
+       'inputType' => 'text',
+       'eval' => array(
+              'rgxp' => 'digit',
+              'tl_class' => ''
+       ),
+       'sql' => "smallint(5) unsigned NOT NULL default '0'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_ThumbsPerPage'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage'],
-	'default' => 0,
-	'exclude' => true,
-	'inputType' => 'text',
-	'eval' => array(
-		'rgxp' => 'digit',
-		'tl_class' => ''
-	),
-	'sql' => "smallint(5) unsigned NOT NULL default '0'"
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage'],
+       'default' => 0,
+       'exclude' => true,
+       'inputType' => 'text',
+       'eval' => array(
+              'rgxp' => 'digit',
+              'tl_class' => ''
+       ),
+       'sql' => "smallint(5) unsigned NOT NULL default '0'"
 );
 
 /**
@@ -144,17 +144,17 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_ThumbsPerPage'] = array(
  */
 class mod_gallery_creator extends Backend
 {
-	/**
-	 * Return all gallery_creator frontent-templates as array
-	 * @param object
-	 * @return array
-	 */
-	public function getTemplates(DataContainer $dc)
-	{
-		$intPid = $dc->activeRecord->pid;
-		return $this->getTemplateGroup('ce_gc_', $intPid);
-	}
-
+       /**
+        * Return all gallery_creator frontent-templates as array
+        * @param object
+        * @return array
+        */
+       public function getTemplates(DataContainer $dc)
+       {
+              $intPid = $dc->activeRecord->pid;
+              return $this->getTemplateGroup('ce_gc_', $intPid);
+       }
 
 }
+
 ?>
