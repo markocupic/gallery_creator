@@ -357,7 +357,6 @@ class tl_gallery_creator_pictures extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 		$this->import('Files');
-		$this->GcHelpers = new GcHelpers;
 
 		//relativer Pfad zum Upload-Dir fuer safe-mode-hack
 		$this->uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
@@ -376,8 +375,8 @@ class tl_gallery_creator_pictures extends Backend
                             $objPic = $this->Database->prepare('SELECT path FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('imgId'));
                             // Rotate image anticlockwise
                             $angle = 270;
-		              GcHelpers::imageRotate($objPic->path, $angle);
-                            GcHelpers::registerInFilesystem($objPic->path);
+		              GalleryCreator\GcHelpers::imageRotate($objPic->path, $angle);
+                            GalleryCreator\GcHelpers::registerInFilesystem($objPic->path);
 				$this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . Input::get('id'));
 				break;
 			default :
@@ -693,8 +692,8 @@ class tl_gallery_creator_pictures extends Backend
 				//Datei vom Server loeschen
 				$this->Files->delete($objImg->path);
 				//Datensatz aus tl_files loeschen
-				GcHelpers::deleteFromFilesystem($objImg->path);
-				GcHelpers::registerInFilesystem($this->uploadPath);
+				GalleryCreator\GcHelpers::deleteFromFilesystem($objImg->path);
+				GalleryCreator\GcHelpers::registerInFilesystem($this->uploadPath);
 			}
 		}
 		if (!$this->User->isAdmin && $objImg->owner != $this->User->id)

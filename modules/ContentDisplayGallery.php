@@ -14,7 +14,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace Contao;
+namespace GalleryCreator;
 
 
 /**
@@ -25,7 +25,7 @@ namespace Contao;
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
-class ContentDisplayGallery extends \DisplayGallery
+class ContentDisplayGallery extends DisplayGallery
 {
 
        /**

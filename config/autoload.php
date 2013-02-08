@@ -10,22 +10,33 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
+
+/**
+ * Register the namespaces
+ */
+ClassLoader::addNamespaces(array
+(
+       'GalleryCreator',
+));
+
+
 /**
  * Register the classes
  */
 ClassLoader::addClasses(array(
 	// Helpers
-	'Contao\GcHelpers' 						=> 'system/modules/gallery_creator/classes/GcHelpers.php',
-	'Contao\DisplayGallery' 				=> 'system/modules/gallery_creator/classes/DisplayGallery.php',
+	'GalleryCreator\GcHelpers' 				=> 'system/modules/gallery_creator/classes/GcHelpers.php',
+	'GalleryCreator\DisplayGallery' 			=> 'system/modules/gallery_creator/classes/DisplayGallery.php',
 
 	// Modules
-	'Contao\ContentDisplayGallery' 			=> 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
+	'GalleryCreator\ContentDisplayGallery' 		=> 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
 	'Contao\ModuleDisplayGallery' 			=> 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
 
 	//Models
-	'Contao\GalleryCreatorAlbumsModel' 		=> 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
-	'Contao\GalleryCreatorPicturesModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php'
+	'GalleryCreator\GalleryCreatorAlbumsModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
+	'GalleryCreator\GalleryCreatorPicturesModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php'
 ));
+
 
 /**
  * Register the templates

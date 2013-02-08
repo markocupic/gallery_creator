@@ -14,7 +14,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace Contao;
+namespace GalleryCreator;
 
 
 /**
@@ -307,11 +307,12 @@ class GcHelpers extends \System
               $objUser = \BackendUser::getInstance();
               
               //upload url
-              $objTemplate->uploadUrl = ampersand(sprintf('%scontao/main.php?do=gallery_creator&act=edit&table=tl_gallery_creator_albums&id=%s&mode=fileupload&rt=%s', \Environment::get('base'), $intAlbumId, REQUEST_TOKEN, session_id(), $_COOKIE['BE_USER_AUTH']));
+              $objTemplate->uploadUrl = ampersand(sprintf('%scontao/main.php?do=gallery_creator&act=edit&table=tl_gallery_creator_albums&id=%s&mode=fileupload&rt=%s', \Environment::get('base'), $intAlbumId, REQUEST_TOKEN));
               
               //security tokens
-              $objTemplate->userAuth = $_COOKIE['BE_USER_AUTH'];
-              $objTemplate->sessionId = session_id();
+              $objTemplate->securityTokens = sprintf('PHPSESSID=%s; path=/; %s_USER_AUTH=%s; path=/;', session_id(), TL_MODE, $_COOKIE[TL_MODE . '_USER_AUTH']);
+              
+              //request token
               $objTemplate->requestToken = REQUEST_TOKEN;
               
               //get the domain
@@ -500,16 +501,16 @@ class GcHelpers extends \System
                      $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
                      if (!$GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
                      {
-                            \GcHelpers::createNewImage($objAlb->id, $image['path']);
+                            GcHelpers::createNewImage($objAlb->id, $image['path']);
                      }
                      else
                      {
-                            $strFilename = \GcHelpers::generateUniqueFilename($image['name']);
+                            $strFilename = GcHelpers::generateUniqueFilename($image['name']);
                             $strSourceSrc = $image['path'];
                             $strDestSrc = $uploadPath . '/' . $objAlb->alias . '/' . $strFilename;
                             //copy Image to the upload folder
                             \Files::getInstance()->copy($strSourceSrc, $strDestSrc);
-                            \GcHelpers::createNewImage($objAlb->id, $strDestSrc);
+                            GcHelpers::createNewImage($objAlb->id, $strDestSrc);
                      }
               }
         

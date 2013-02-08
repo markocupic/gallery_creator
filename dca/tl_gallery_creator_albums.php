@@ -739,7 +739,7 @@ class tl_gallery_creator_albums extends Backend
         */
        public function inputFieldCbGenerateJumpLoader()
        {
-              return GcHelpers::generateUploader(Input::get('id'));
+              return GalleryCreator\GcHelpers::generateUploader(Input::get('id'));
        }
 
        /**
@@ -845,21 +845,21 @@ class tl_gallery_creator_albums extends Backend
                      }
 
                      // also delete the child element
-                     $arrDeletedAlbums = GcHelpers::getAllSubalbums(Input::get('id'));
+                     $arrDeletedAlbums = GalleryCreator\GcHelpers::getAllSubalbums(Input::get('id'));
                      $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
 
                      foreach ($arrDeletedAlbums as $idDelAlbum) {
                             $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                             if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
                                    // remove the deleted directory from tl_files
-                                   GcHelpers::deleteFromFilesystem($this->uploadPath . '/' . $objAlb->alias);
+                                   GalleryCreator\GcHelpers::deleteFromFilesystem($this->uploadPath . '/' . $objAlb->alias);
 
                                    // remove all pictures from tl_files
                                    $objFile = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($idDelAlbum);
                                    while ($objFile->next()) {
                                           // preserve pictures from external directories
                                           if (strstr($objFile->path, $this->uploadPath)) {
-                                                 GcHelpers::deleteFromFilesystem($objFile->path);
+                                                 GalleryCreator\GcHelpers::deleteFromFilesystem($objFile->path);
                                           }
                                    }
                                    // remove all pictures from tl_gallery_creator_pictures
@@ -891,7 +891,7 @@ class tl_gallery_creator_albums extends Backend
               // create the upload directory if it doesn't already exists
               $folder = new Folder($this->uploadPath);
 
-              GcHelpers::registerInFilesystem($this->uploadPath);
+              GalleryCreator\GcHelpers::registerInFilesystem($this->uploadPath);
 
               
               Files::getInstance()->chmod($this->uploadPath, 0777);
@@ -913,10 +913,10 @@ class tl_gallery_creator_albums extends Backend
               $objAlb = GalleryCreatorAlbumsModel::findById(Input::get('id'));
 
               // move uploaded file in the album-directory
-              if ($arrUploadedFile = GcHelpers::fileupload($objAlb->id, Input::post('fileName'))) {
+              if ($arrUploadedFile = GalleryCreator\GcHelpers::fileupload($objAlb->id, \Input::post('fileName'))) {
                      // write the new entry in tl_gallery_creator_pictures
                      $strFileSrc = $arrUploadedFile['strFileSrc'];
-                     GcHelpers::createNewImage($objAlb->id, $strFileSrc);
+                     GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
               }
               exit();
        }
@@ -979,7 +979,7 @@ class tl_gallery_creator_albums extends Backend
                      $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
 
                      // import Images from filesystem and write entries to tl_gallery_creator_pictures
-                     GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
+                     GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
               }
               $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId);
        }
@@ -990,7 +990,7 @@ class tl_gallery_creator_albums extends Backend
         */
        public function onloadCbReviseTable()
        {
-              GcHelpers::reviseTable();
+              GalleryCreator\GcHelpers::reviseTable();
        }
 
        /**
@@ -1038,7 +1038,7 @@ class tl_gallery_creator_albums extends Backend
 
                      if (Input::get('mode') == 'clean_db') {
                             if ($this->Input->post('FORM_SUBMIT') && $this->Input->post('clean_db')) {
-                                   GcHelpers::reviseTable(true);
+                                   GalleryCreator\GcHelpers::reviseTable(true);
                                    $this->redirect('contao/main.php?do=gallery_creator');
                                    exit();
                             }
@@ -1087,7 +1087,7 @@ class tl_gallery_creator_albums extends Backend
               while ($objDb->next()) {
                      $arrThumbId[$objDb->id] = $objDb->name;
               }
-              $arrSubalbums = GcHelpers::getAllSubalbums(Input::get('id'));
+              $arrSubalbums = GalleryCreator\GcHelpers::getAllSubalbums(Input::get('id'));
 
               if (count($arrSubalbums)) {
                      foreach ($arrSubalbums as $albId) {
@@ -1177,7 +1177,7 @@ class tl_gallery_creator_albums extends Backend
               {
                      // create the new folder and register it in tl_files
                      $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
-                     GcHelpers::registerInFilesystem($objFolder->path);
+                     GalleryCreator\GcHelpers::registerInFilesystem($objFolder->path);
                      
                      // chmod
                      Files::getInstance()->chmod($objFolder->path, 0777);
@@ -1200,13 +1200,13 @@ class tl_gallery_creator_albums extends Backend
 
                                    // update the path of each file in tl_files
                                    $oldFilePath = $this->uploadPath . '/' . $objAlbum->alias . '/' . $objPic->name;
-                                   GcHelpers::registerInFilesystem($oldFilePath, $newFilePath);
+                                   GalleryCreator\GcHelpers::registerInFilesystem($oldFilePath, $newFilePath);
                             }
                      }
 
                      $oldFolderPath = $this->uploadPath . '/' . $objAlbum->alias;
                      $newFolderPath = $this->uploadPath . '/' . $strAlias;
-                     GcHelpers::registerInFilesystem($oldFolderPath, $newFolderPath);
+                     GalleryCreator\GcHelpers::registerInFilesystem($oldFolderPath, $newFolderPath);
 
                      // rename the dir to the new albumalias
                      Files::getInstance()->chmod($this->uploadPath . '/' . $objAlbum->alias, 0777);

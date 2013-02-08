@@ -14,7 +14,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace Contao;
+namespace GalleryCreator;
 
 
 /**
@@ -467,7 +467,7 @@ abstract class DisplayGallery extends \Module
                      //[int] Anzahl Bilder im Album
                      'count' => $objPics->numRows,
                      //[int] Anzahl Unteralben
-                     'count_subalbums' => count(\GcHelpers::getAllSubalbums($objAlbum->id)),
+                     'count_subalbums' => count(GcHelpers::getAllSubalbums($objAlbum->id)),
                      //[string] alt Attribut fuer das Vorschaubild
                      'alt' => $arrPreviewThumb['name'],
                      //[string] Pfad zum Originalbild
@@ -787,8 +787,8 @@ abstract class DisplayGallery extends \Module
               }
               
               //generiert den Link zum Parent-Album
-              if ($this->gc_hierarchicalOutput && \GcHelpers::getParentAlbum($intAlbumId)) {
-                     $arrParentAlbum = \GcHelpers::getParentAlbum($intAlbumId);
+              if ($this->gc_hierarchicalOutput && GcHelpers::getParentAlbum($intAlbumId)) {
+                     $arrParentAlbum = GcHelpers::getParentAlbum($intAlbumId);
                      return $this->generateFrontendUrl($objPage->row(),  ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
               }
               

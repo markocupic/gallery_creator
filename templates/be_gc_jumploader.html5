@@ -14,6 +14,10 @@
 	
        <param name="ac_fireAppletInitialized" value="true"/> 
 
+       <!-- send the PHPSESSIONID and the BE_USER_AUTH cookie -->
+       <!-- Contao requires these parameters for the user-authentification -->
+       <param name="uc_cookie" value="<?php echo $this->securityTokens; ?>"/>
+
        <!-- for windows - OS only -->
        <param name="vc_useNativeFileDialog" value="true"/>
 
@@ -64,20 +68,21 @@
        
        // callback function
        function appletInitialized(applet) { 
+
+              applet.getUploaderConfig().setUserAgent(navigator.userAgent); 
+              
               appletGlobal = applet;
+              appletGlobal = applet;	
               var uploader = appletGlobal.getUploader();
               var attrSet = uploader.getAttributeSet();
-              /*send the session_id to the server */
-              var attr1 = attrSet.createStringAttribute("SESSION_ID", "<?php echo $this->sessionId; ?>");
-              attr1.setSendToServer(true);
-              
-              /*send the BE_USER_AUTH - Cookie to the server */
-              var attr2 = attrSet.createStringAttribute("<?php echo TL_MODE; ?>_USER_AUTH", "<?php echo $this->userAuth; ?>");
-              attr2.setSendToServer(true);
-              
+                           
               /*send the REQUEST_TOKEN to the server */
-              var attr3 = attrSet.createStringAttribute("REQUEST_TOKEN", "<?php echo $this->requestToken; ?>");
-              attr3.setSendToServer(true);
+              var attr0 = attrSet.createStringAttribute("REQUEST_TOKEN", "<?php echo $this->requestToken; ?>");
+              attr0.setSendToServer(true);
+
+              // adds the TL_FORM_SUBMIT
+              var attr1 = attrSet.createStringAttribute('FORM_SUBMIT', 'tl_upload');
+		attr1.setSendToServer(true);
        }
 
        //eval server response

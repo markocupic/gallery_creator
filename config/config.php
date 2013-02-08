@@ -35,17 +35,6 @@ array_insert($GLOBALS['FE_MOD'], 2, array('module_type_gallery_creator' => array
 
 if (TL_MODE == 'BE')
 {
-       //Contao requires these parameters for the user-authentification when using the jumploader plugin
-	if ($_GET['do'] == 'gallery_creator' && $_GET['mode'] == 'fileupload' && $_POST['BE_USER_AUTH'])
-	{
-              if (!defined('BYPASS_TOKEN_CHECK'))
-			define('BYPASS_TOKEN_CHECK', true);
-
-		session_id($_POST['SESSION_ID']);
-		$_COOKIE['BE_USER_AUTH'] = $_POST['BE_USER_AUTH'];
-
-	}
-
 	$GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
 		'icon' => 'system/modules/gallery_creator/assets/images/photo.png',
 		'tables' => array(
