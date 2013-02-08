@@ -709,11 +709,11 @@ class GcHelpers extends \System
 
 
        /**
-       * Hilfsmethode
-       * gibt ein Array mit allen Dateien, Verzeichnissen und Unterverzeichnissen zurueck
-       * @param string
-       * @return array
-       */
+        * Hilfsmethode
+        * gibt ein Array mit allen Dateien, Verzeichnissen und Unterverzeichnissen zurueck
+        * @param string
+        * @return array
+        */
        public static function scanRecursive($strPath)
        {
               $arrFiles = array();

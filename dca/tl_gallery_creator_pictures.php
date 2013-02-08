@@ -345,10 +345,10 @@ class tl_gallery_creator_pictures extends Backend
         */
        public $uploadPath;
 
-       /*
-         * bool
-         * bei eingeschränkten Usern wird der Wert auf true gesetzt
-         */
+       /**
+        * bool
+        * bei eingeschränkten Usern wird der Wert auf true gesetzt
+        */
        public $restrictedUser = false;
 
        public function __construct()

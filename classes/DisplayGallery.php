@@ -799,4 +799,3 @@ abstract class DisplayGallery extends \Module
        }
 
 }
-
