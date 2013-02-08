@@ -1,6 +1,0 @@
-#################
-## PHP STORM
-#################
-
-# ignore phpstorm configuration files
-.idea
