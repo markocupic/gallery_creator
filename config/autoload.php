@@ -30,7 +30,7 @@ ClassLoader::addClasses(array(
 
 	// Modules
 	'GalleryCreator\ContentDisplayGallery' 		=> 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
-	'Contao\ModuleDisplayGallery' 			=> 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
+	'GalleryCreator\ModuleDisplayGallery' 		=> 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
 
 	//Models
 	'GalleryCreator\GalleryCreatorAlbumsModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
