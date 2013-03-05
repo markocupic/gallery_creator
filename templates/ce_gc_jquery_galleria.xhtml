@@ -67,6 +67,14 @@ $GLOBALS['TL_HEAD'][] = '<!-- load Galleria -->';
 $GLOBALS['TL_HEAD'][] = '<script type="text/javascript" src="system/modules/gallery_creator/assets/js/galleria/galleria.js"></script>';
 ?>
 
+<?php if ($this->insertArticlePre):?>
+<!-- articleBoxPre-->
+<div id="articleBoxPre" class="block">
+<?php echo $this->insertArticlePre; ?>
+</div>
+<!-- end articleBoxPre-->
+<?php endif; ?>
+
 <?php if ($this->headline): ?>
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
@@ -118,6 +126,7 @@ $GLOBALS['TL_HEAD'][] = '<script type="text/javascript" src="system/modules/gall
 
 
 <?php if ($this->arrPictures): ?>
+<div id="galleryContainer" class="block">
 <div id="galleria" class="<?php echo $this->class; ?> gallery_creator block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 <?php foreach ($this->arrPictures as $Picture): ?>
        <a href="<?php echo $Picture["href"]; ?>" rel="" title="<?php echo $Picture["comment"]; ?>">
@@ -125,7 +134,17 @@ $GLOBALS['TL_HEAD'][] = '<script type="text/javascript" src="system/modules/gall
        </a>
 <?php endforeach;?>
 </div>
+</div>
 <?php endif; ?>
+
+<?php if ($this->insertArticlePost):?>
+<!-- articleBoxPost-->
+<div id="articleBoxPost" class="block">
+<?php echo $this->insertArticlePost; ?>
+</div>
+<!-- end articleBoxPost-->
+<?php endif; ?>
+       
 </div>
 
 

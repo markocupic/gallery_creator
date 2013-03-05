@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/it/modules.php 
  * 
- * Contao extension: gallery_creator 3.1.1 stable 
+ * Contao extension: gallery_creator 4.0.1 stable 
  * Italienisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -17,7 +17,6 @@
  
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['1'] = "Crea ed edita gallerie di album";
-$GLOBALS['TL_LANG']['FMD']['webgallery']['0'] = "web gallery";
 $GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Presenta album gallery_creator come un modulo frontend.";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery Creator";

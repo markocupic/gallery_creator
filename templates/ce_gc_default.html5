@@ -59,6 +59,14 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <!-- gallery_creator - album preview -->
 <div class="<?php echo $this->class; ?> gallery_creator block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 
+<?php if ($this->insertArticlePre):?>
+<!-- articleBoxPre-->
+<div id="articleBoxPre" class="block">
+<?php echo $this->insertArticlePre; ?>
+</div>
+<!-- end articleBoxPre-->
+<?php endif; ?>
+
 <?php if ($this->headline): ?>
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
@@ -118,6 +126,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php echo $this->pagination; ?>
 <?php $col=0; ?>
 <?php if ($this->arrPictures): ?>
+<div id="galleryContainer" class="block">
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
        <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
@@ -135,6 +144,16 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php if ($col == $this->colsPerRow) $col=0; ?>
 <?php endforeach;?>
 </ul>
+</div>
 <?php endif;?>
+
+<?php if ($this->insertArticlePost):?>
+<!-- articleBoxPre-->
+<div id="articleBoxPost" class="block">
+<?php echo $this->insertArticlePost; ?>
+</div>
+<!-- end articleBoxPost-->
+<?php endif; ?>
+
 </div>
 <?php endif; ?>

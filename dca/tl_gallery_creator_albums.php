@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Palettes
        'palettes' => array(
               '__selector__' => array('protected'),
-              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,thumb,comment;{protection:hide},protected',
+              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,thumb,comment;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
               'restricted_user' => '{album_info},link_edit_images,album_info',
               'fileupload' => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader},fileupload',
               'import_images' => '{upload_settings},preserve_filename,multiSRC',
@@ -444,6 +444,28 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'tl_class' => 'clr'
                      ),
                      'sql' => "blob NULL"
+              ),
+
+              'insert_article_pre' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'],
+                     'inputType' => 'text',
+                     'eval' => array(
+                            'doNotShow' => false,
+                            'rgxp' => 'digit',
+                            'tl_class' => 'w50',
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'",
+              ),
+              
+              'insert_article_post' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'],
+                     'inputType' => 'text',
+                     'eval' => array(
+                            'doNotShow' => false,
+                            'rgxp' => 'digit',
+                            'tl_class' => 'w50',
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'",
               ),
 
               'clean_db' => array(

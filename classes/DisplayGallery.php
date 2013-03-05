@@ -474,6 +474,10 @@ abstract class DisplayGallery extends \Module
                      'src' => $arrPreviewThumb['path'],
                      //[string] Pfad zum Thumbnail
                      'thumb_src' => \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
+                     //[int] article id
+                     'insert_article_pre' => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
+                     //[int] article id
+                     'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : null,
                      //[string] css-Classname
                      'class' => 'thumb',
                      //[int] Thumbnailbreite
@@ -734,6 +738,10 @@ abstract class DisplayGallery extends \Module
               $this->Template->Albumname = $objAlbum->name;
               //Der Kommentar zum gewaehlten Album
               $this->Template->albumComment = $objAlbum->comment != "" ? nl2br($objAlbum->comment) : NULL;
+              // In der Detailansicht kann optional ein Artikel vor dem Album hinzugefuegt werden
+              $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
+              // In der Detailansicht kann optional ein Artikel nach dem Album hinzugefuegt werden
+              $this->Template->insertArticlePost = $objAlbum->insert_article_post ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_post) : null;
               //Das Event-Datum des Albums als unix-timestamp
               $this->Template->eventTstamp = $objAlbum->date;
               //Das Event-Datum des Albums formatiert
