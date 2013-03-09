@@ -71,17 +71,9 @@ class ModuleDisplayGallery extends DisplayGallery
                      //Authentifizierung bei vor Zugriff geschuetzten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
                      $this->feUserAuthentication($this->strAlbumalias);
 
-                     //gcmode muss vorerst noch beibehalten werden, da ansonsten alte, eigene templates nicht mehr funktionieren
-                     $this->gcMode = 'overview';
+                    
 
-                     //jw_iamgerotator
-                     if (strstr(\Input::get('items'), 'jw_imagerotator'))
-                     {
-                            $get_gcalb = explode('.', \Input::get('items'));
-                            // Albumalias aus Request ziehen
-                            $this->strAlbumalias = trim($get_gcalb[0]);
-                            $this->gcMode = 'jw_imagerotator';
-                     }
+                    
                      // Die AlbumId aus dem AlbumAlias extrahieren
                      $objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')->execute($this->strAlbumalias);
                      $this->intAlbumId = $objAlbum->id;
@@ -89,11 +81,14 @@ class ModuleDisplayGallery extends DisplayGallery
               }
               //moduleType ist fuer die Ajax-Anwendungen von Bedeutung
               $this->Template->moduleType = $this->moduleType;
+              
+              $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
+              $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
 
-              switch ($this->gcMode)
+              switch ($switch)
               {
 
-                     default :
+                     case 'albumlisting' :
 
                             // create array with allowed albums
                             $arrAllowedAlbums = array();
@@ -156,7 +151,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             $this->getAlbumTemplateVars($objAlbum->id, 'fmd');
                             break;
 
-                     case 'overview' :
+                     case 'detailview' :
                             //Array mit allfaelligen Unteralben generieren
                             if ($this->gc_hierarchicalOutput)
                             {

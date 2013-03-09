@@ -42,9 +42,8 @@ class ContentDisplayGallery extends DisplayGallery
 
               if (\Input::get('items'))
               {
-                     $arrGetRequest = explode('.', \Input::get('items'));
                      // get the content element id from the $_GET - variable if multiple gallery_creator content elements are embeded on the current page
-                     $this->ContentElementId = $this->countGcContentElementsOnPage() > 1 ? trim($arrGetRequest[0]) : $this->id;
+                     $this->ContentElementId = $this->countGcContentElementsOnPage() > 1 ? \Input::get('ce') : $this->id;
 
                      // only display the detail view of the selected album if multiple gallery_creator content elements are embeded on the current page
                      if ($this->id != $this->ContentElementId && $this->countGcContentElementsOnPage() > 1)
@@ -120,13 +119,15 @@ class ContentDisplayGallery extends DisplayGallery
                             }
                      }
               }
-
               // build up the new array
               $arrAllowedAlbums = array_values($arrSelectedAlb);
 
-              switch ($this->gcMode)
+              $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
+              $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
+
+              switch ($switch)
               {
-                     default :
+                     case 'albumlisting' :
                             // abort if no album is selected
                             if (count($arrAllowedAlbums) < 1)
                             {
@@ -173,7 +174,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->getAlbumTemplateVars($objAlbum->id, 'cte');
                             break;
 
-                     case 'overview' :
+                     case 'detailview' :
 
                             // for security reasons...
                             if (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums))
