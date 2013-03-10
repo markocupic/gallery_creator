@@ -599,14 +599,23 @@ abstract class DisplayGallery extends \Module
               {
                      return null;
               }
-
+              
+             
               //check if there is a custom thumbnail selected
-              if (is_file(TL_ROOT . '/' . $objPicture->customThumb))
+              if ($objPicture->customThumb > 0)
               {
-                     $objFile = new \File($objPicture->customThumb);
-                     if ($objFile->isGdImage)
+                     $objFile = \FilesModel::findByPk($objPicture->customThumb);  
+                     if ($objFile !== null)
                      {
-                            $thumbSrc = $objPicture->customThumb;
+                            if (is_file(TL_ROOT . '/' . $objFile->path))
+                            {
+                                   $objFile = new \File($objFile->path);
+                                   if ($objFile->isGdImage)
+                                   {
+                                          //$thumbSrc = $objFile->path;
+                                          $thumbSrc = \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
+                                   }
+                            }
                      }
               }
 

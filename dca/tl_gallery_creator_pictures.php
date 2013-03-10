@@ -265,7 +265,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
               'customThumb' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['customThumb'],
-                     //'exclude'               => true,
+                     'exclude' => true,
                      'inputType' => 'fileTree',
                      'eval' => array(
                             'fieldType' => 'radio',
@@ -273,7 +273,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'filesOnly' => true,
                             'extensions' => 'jpeg,jpg,gif,png,bmp,tiff'
                      ),
-                     'sql' => "varchar(255) NOT NULL default ''"
+                     'sql' => "int(10) unsigned NOT NULL default '0'"
               ),
 
               'owner' => array(
