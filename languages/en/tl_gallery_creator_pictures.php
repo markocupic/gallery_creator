@@ -19,8 +19,10 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['media_integration'] = 'Embed
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['id'] = array('image-ID');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'] = array('file-ID');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['id'] = array('Image ID');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'] = array('Album ID', 'Note that changing the album ID can break data integrity!');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'] = array('File ID');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'] = array('image-informations');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'] = array('publish image');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'] = array('date of creation');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'] = array('image-owner');

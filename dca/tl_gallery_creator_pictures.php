@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'pid' => 'index'
               ))
        ),
-
+       'panelLayout' => 'filter',
        //list
        'list' => array(
               'sorting' => array(
@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'comment',
                             'thumb'
                      ),
-                     'panelLayout' => 'limit',
+       		'panelLayout' => 'filter;search,limit',
                      'fields' => array('sorting ASC'),
                      'child_record_callback' => array(
                             'tl_gallery_creator_pictures',
@@ -150,12 +150,16 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'id' => array('sql' => "int(10) unsigned NOT NULL auto_increment"),
 
               'pid' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'],
                      'foreignKey' => 'tl_gallery_creator_albums.alias',
                      'sql' => "int(10) unsigned NOT NULL default '0'",
                      'relation' => array(
                             'type' => 'belongsTo',
                             'load' => 'lazy'
-                     )
+                     ),
+                     'eval' => array(
+                            'doNotShow' => true
+                     ),
               ),
 
               'fileID' => array(
@@ -173,6 +177,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'published' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'],
                      'inputType' => 'checkbox',
+                     'filter' => true,
                      'eval' => array(
                             'isBoolean' => true,
                             'submitOnChange' => true,
@@ -182,19 +187,21 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               ),
 
               'image_info' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'],
                      'input_field_callback' => array(
                             'tl_gallery_creator_pictures',
                             'inputFieldCbGenerateImageInformation'
                      ),
                      'eval' => array(
                             'tl_class' => 'clr',
-                            'doNotShow' => true
                      )
               ),
               'title' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'],
                      'exclude' => true,
                      'inputType' => 'text',
+                     'filter' => true,
+                     'search' => true,
                      'eval' => array(
                             'allowHtml' => false,
                             'decodeEntities' => true,
@@ -204,7 +211,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               ),
 
               //filename
-              'name' => array('sql' => "varchar(255) NOT NULL default ''"),
+              'name' => array(
+                     'sql' => "varchar(255) NOT NULL default ''",
+                     'search' => true,
+              ),
 
               //path
               'path' => array('sql' => "varchar(255) NOT NULL default ''"),
@@ -216,6 +226,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['comment'],
                      'inputType' => 'textarea',
                      'exclude' => true,
+                     'filter' => true,
+                     'search' => true,
                      'cols' => 20,
                      'rows' => 6,
                      'eval' => array(
@@ -240,6 +252,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'inputType' => 'text',
                      // when upload a new image, the image inherits the date of the parent album
                      'default' => time(),
+                     'filter' => true,
+                     'search' => true,
                      'eval' => array(
                             'mandatory' => true,
                             'maxlength' => 10,
@@ -255,10 +269,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'addCustomThumb' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb'],
                      'exclude' => true,
+                     'filter' => true,
                      'inputType' => 'checkbox',
                      'eval' => array(
                             'submitOnChange' => true,
-                            'doNotShow' => true
                      ),
                      'sql' => "char(1) NOT NULL default ''"
               ),
@@ -281,6 +295,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'default' => $this->User->id,
                      'foreignKey' => 'tl_user.name',
                      'inputType' => 'select',
+                     'filter' => true,
+                     'search' => true,
                      'eval' => array(
                             'includeBlankOption' => true,
                             'blankOptionLabel' => 'noName',
@@ -299,6 +315,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['socialMediaSRC'],
                      'exclude' => true,
                      'filter' => true,
+                     'search' => true,
                      'inputType' => 'text',
                      'eval' => array('tl_class' => 'clr'),
                      'sql' => "varchar(255) NOT NULL default ''"
@@ -307,6 +324,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['localMediaSRC'],
                      'exclude' => true,
                      'filter' => true,
+                     'search' => true,
                      'inputType' => 'fileTree',
                      'eval' => array(
                             'files' => true,
@@ -576,16 +594,16 @@ class tl_gallery_creator_pictures extends Backend
         * Returns the html-table-tag containing some picture informations
         * @return string
         */
-       public function inputFieldCbGenerateImageInformation()
+       public function inputFieldCbGenerateImageInformation(DataContainer $dc)
        {
-              $objImg = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('id'));
+              $objImg = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')->execute($dc->id);
               $objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objImg->owner);
               $output = '
 			<div class="album_infos">
 			<br /><br />
 			<table cellpadding="0" cellspacing="0" width="100%" summary="">
 				<tr class="odd">
-					<td style="width:20%"><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['id'][0] . ': </strong></td>
+					<td style="width:20%"><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'][0] . ': </strong></td>
 					<td>' . $objImg->id . '</td>
 				</tr>
 

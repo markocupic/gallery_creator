@@ -17,7 +17,10 @@
  
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['media_integration'] = "Video- oder Soundintegration";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['id']['0'] = "Bild-ID";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid']['0'] = "Album-ID";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid']['1'] = "Das Ändern der Album-ID kann die Konsistenz der Daten gefährden!";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID']['0'] = "Dateisystem-ID";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info']['0'] = "Bildinformationen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published']['0'] = "Bild ver&ouml;ffentlichen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date']['0'] = "Erstellungsdatum";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner']['0'] = "Besitzer/Ersteller";
