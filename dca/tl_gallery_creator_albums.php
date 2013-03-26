@@ -489,6 +489,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'eval' => array(
                             'maxlength' => 10,
                             'tl_class' => 'm12',
+                            'rgxp' => 'digit'
                      ),
                      'sql' => "int(10) unsigned NOT NULL default '0'"
               ),

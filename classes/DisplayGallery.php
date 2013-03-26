@@ -894,7 +894,8 @@ abstract class DisplayGallery extends \Module
                      $arrVisitors = strlen($objDb->visitors_details) ? unserialize($objDb->visitors_details) : array();
                      if (is_array($arrVisitors))
                      {
-                            if (count($arrVisitors) == 10)
+                            // keep visiors data in the db unless 20 other users visited the album 
+                            if (count($arrVisitors) == 20)
                             {
                                   // slice the last position
                                   $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
