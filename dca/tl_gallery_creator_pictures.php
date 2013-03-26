@@ -35,7 +35,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'pid' => 'index'
               ))
        ),
-       'panelLayout' => 'filter',
        //list
        'list' => array(
               'sorting' => array(

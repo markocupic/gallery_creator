@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Palettes
        'palettes' => array(
               '__selector__' => array('protected'),
-              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,thumb,comment;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
+              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,thumb,comment,visitors;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
               'restricted_user' => '{album_info},link_edit_images,album_info',
               'fileupload' => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader},fileupload',
               'import_images' => '{upload_settings},preserve_filename,multiSRC',
@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      ),
                      'sql' => "text NULL"
               ),
-
+             
               'event_location' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location'],
                      'exclude' => true,
@@ -299,7 +299,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'nospace' => true,
                             'rgxp' => 'digit',
                             'maxlength' => 64,
-                            'tl_class' => 'w50 m12',
+                            'tl_class' => 'm12',
                             'submitOnChange' => true
                      ),
                      'sql' => "varchar(255) NOT NULL default ''"
@@ -474,7 +474,24 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'inputFieldCbCleanDb'
                      ),
                      'eval' => array('doNotShow' => true)
-              )
+              ),
+              'visitors_details' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'],
+                     'inputType' => 'textarea',
+                     'eval' => array(
+                            'tl_class' => 'm12',
+                     ),
+                     'sql' => "blob NULL"
+              ),
+              'visitors' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'],
+                     'inputType' => 'text',
+                     'eval' => array(
+                            'maxlength' => 10,
+                            'tl_class' => 'm12',
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'"
+              ),
        )
 );
 
@@ -691,7 +708,7 @@ class tl_gallery_creator_albums extends Backend
               $output = '
 <div class="clean_db">
 <br /><br />
-		<input type="checkbox" name="clean_db">
+       	<input type="checkbox" name="clean_db">
 		<label for="clean_db">Clean the database from damaged/invalid/orphaned entries</label>
 </div>
 			';

@@ -197,6 +197,9 @@ class ModuleDisplayGallery extends DisplayGallery
 
                             //weitere Template Variablen erstellen
                             $this->getAlbumTemplateVars($this->intAlbumId, 'fmd');
+                            
+                            // init the counter
+                            $this->initCounter($this->intAlbumId);
                             break;
 
                      case 'jw_imagerotator' :

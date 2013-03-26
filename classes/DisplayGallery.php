@@ -486,6 +486,8 @@ abstract class DisplayGallery extends \Module
                      //[string] Albumkommentar
                      'comment' => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
                      'caption' => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
+                     //[int] Albumbesucher (Anzahl Klicks)
+                     'visitors' => $objAlbum->visitors,
                      //[string] Link zur Detailansicht
                      'href' => TL_MODE == 'FE' ? sprintf($href, $objAlbum->alias) : NULL,
                      //[string] Inhalt fuer das title Attribut
@@ -791,6 +793,8 @@ abstract class DisplayGallery extends \Module
               $this->Template->backLink = $this->generateBackLink($strContentType, $intAlbumId);
               //Der dem Bild uebergeordnete Albumname
               $this->Template->Albumname = $objAlbum->name;
+              // Albumbesucher (Anzahl Klicks)
+              $this->Template->visitors = $objAlbum->vistors;
               //Der Kommentar zum gewaehlten Album
               $this->Template->albumComment = $objAlbum->comment != "" ? nl2br($objAlbum->comment) : NULL;
               // In der Detailansicht kann optional ein Artikel vor dem Album hinzugefuegt werden
@@ -860,6 +864,74 @@ abstract class DisplayGallery extends \Module
               $url = $this->generateFrontendUrl($objPage->row(), '');
               $url .= isset($_SESSION['GC_DATA']['page']) ? '?page=' . $_SESSION['GC_DATA']['page'] : '';
               return $url;
+       }
+       
+       /**
+        * initCounter
+        * @param integer
+        * @return string
+        */
+       public static function initCounter($intAlbumId)
+       {
+              if (preg_match('/bot|sp[iy]der|crawler|lib(?:cur|www)|search|archive/i', $_SERVER['HTTP_USER_AGENT']))
+              {
+                     // do not count spiders/bots
+                     return;
+              }
+              
+              if (TL_MODE == 'FE')
+              {
+                     $objDb = \Database::getInstance()->prepare('SELECT visitors, visitors_details FROM tl_gallery_creator_albums WHERE id=?')->executeUncached($intAlbumId);
+                     if (strpos($objDb->visitors_details, $_SERVER['REMOTE_ADDR']))
+                     {
+                            // return if the visitor is allready registered
+                            return;
+                     }
+
+                     // increase the number of visitors by one
+                     $intCount =  (int) $objDb->visitors + 1;
+                     
+                     $arrVisitors = strlen($objDb->visitors_details) ? unserialize($objDb->visitors_details) : array();
+                     if (is_array($arrVisitors))
+                     {
+                            if (count($arrVisitors) == 10)
+                            {
+                                  // slice the last position
+                                  $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
+                            }
+                     }
+                     else
+                     {
+                            $set = array('visitors_details' => '');
+                            $objDbUpd = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)->executeUncached($intAlbumId);
+                     }     
+                     
+                     //build up the array
+                     $newVisitor = array ($_SERVER['REMOTE_ADDR'] => array(
+                                   'ip' => $_SERVER['REMOTE_ADDR'],
+                                   'pid' => $intAlbumId,
+                                   'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                                   'tstamp' => time(),
+                                   'url' => \Environment::get('request'),
+                            )
+                     );
+
+                     if (count($arrVisitors))
+                     {
+                            // insert the element to the beginning of the array
+                            array_unshift($arrVisitors, $newVisitor);
+                     }
+                     else
+                     {
+                            // create the new array
+                            $arrVisitors = array();
+                            $arrVisitors[] = array($_SERVER['REMOTE_ADDR'] => $newVisitor);
+                     }
+                     
+                     // update database
+                     $set = array('visitors' => $intCount, 'visitors_details' => serialize($arrVisitors));
+                     $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)->executeUncached($intAlbumId);
+              }
        }
 
 }

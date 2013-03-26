@@ -42,6 +42,9 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'] = array(
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_resolution'] = array('image width','During the upload process the image resolution will be scaled to the selected value.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'] = array('image quality/compression','During the upload process the image will be compressed. (1000 = best quality)');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'] = array('preserve the original filename','Otherwise the filename will be automatically generated.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'] = array('Number of visitors');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'] = array('Visitors details (ip, browser type, etc.)');
+
 
 /**
  * Buttons

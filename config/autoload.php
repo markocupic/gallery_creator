@@ -25,16 +25,15 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array(
 	// Helpers
-	'GalleryCreator\GcHelpers' 				=> 'system/modules/gallery_creator/classes/GcHelpers.php',
-	'GalleryCreator\DisplayGallery' 			=> 'system/modules/gallery_creator/classes/DisplayGallery.php',
-
+	'GalleryCreator\GcHelpers' 				       => 'system/modules/gallery_creator/classes/GcHelpers.php',
+	'GalleryCreator\DisplayGallery' 			       => 'system/modules/gallery_creator/classes/DisplayGallery.php',
 	// Modules
-	'GalleryCreator\ContentDisplayGallery' 		=> 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
-	'GalleryCreator\ModuleDisplayGallery' 		=> 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
+	'GalleryCreator\ContentDisplayGallery' 		       => 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
+	'GalleryCreator\ModuleDisplayGallery' 		       => 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
 
 	//Models
-	'GalleryCreator\GalleryCreatorAlbumsModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
-	'GalleryCreator\GalleryCreatorPicturesModel' 	=> 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php'
+	'GalleryCreator\GalleryCreatorAlbumsModel' 	       => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
+	'GalleryCreator\GalleryCreatorPicturesModel' 	       => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
 ));
 
 
@@ -46,5 +45,5 @@ TemplateLoader::addFiles(array(
 'ce_gc_default' 		=> 'system/modules/gallery_creator/templates', 
 'ce_gc_jquery_galleria'     => 'system/modules/gallery_creator/templates',
 'ce_gc_jw_imagerotator'     => 'system/modules/gallery_creator/templates',
-'ce_gc_lightbox'            => 'system/modules/gallery_creator/templates'
+'ce_gc_lightbox'            => 'system/modules/gallery_creator/templates',
 ));		

@@ -219,6 +219,10 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // generate other template variables
                             $this->getAlbumTemplateVars($this->intAlbumId, 'cte');
+                            
+                            // init the counter
+                            $this->initCounter($this->intAlbumId);
+                            
                             break;
 
                      case 'jw_imagerotator' :
