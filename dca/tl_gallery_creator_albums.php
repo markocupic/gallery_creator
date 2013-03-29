@@ -196,7 +196,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'datepicker' => true,
                             'submitOnChange' => true,
                             'rgxp' => 'date',
-                            'tl_class' => 'w50 wizard m12',
+                            'tl_class' => 'w50 wizard',
                             'submitOnChange' => false
                      ),
                      'sql' => "int(10) unsigned NOT NULL default '0'"
@@ -212,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'blankOptionLabel' => 'noName',
                             'doNotShow' => true,
                             'nospace' => true,
-                            'tl_class' => 'w50 m12'
+                            'tl_class' => 'w50'
                      ),
                      'sql' => "int(10) NOT NULL default '0'",
                      'relation' => array(
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'default' => $this->User->name,
                      'eval' => array(
                             'doNotShow' => true,
-                            'tl_class' => 'clr w50 m12 readonly'
+                            'tl_class' => 'w50 readonly'
                      ),
                      'sql' => "text NULL"
               ),
@@ -237,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'inputType' => 'text',
                      'eval' => array(
                             'mandatory' => false,
-                            'tl_class' => 'clr w50 m12',
+                            'tl_class' => 'w50',
                             'submitOnChange' => false
                      ),
                      'sql' => "varchar(255) NOT NULL default ''"
@@ -248,7 +248,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'inputType' => 'text',
                      'eval' => array(
                             'mandatory' => true,
-                            'tl_class' => 'w50 m12',
+                            'tl_class' => 'w50',
                             'submitOnChange' => false
                      ),
                      'sql' => "varchar(255) NOT NULL default ''"
@@ -261,7 +261,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'doNotShow' => false,
                             'doNotCopy' => true,
                             'maxlength' => 50,
-                            'tl_class' => 'w50 m12',
+                            'tl_class' => 'w50',
                             'unique' => true
                      ),
                      'save_callback' => array(
@@ -281,7 +281,8 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'tl_class' => 'clr long',
                             'style' => 'height:7em;',
                             'allowHtml' => false,
-                            'submitOnChange' => false
+                            'submitOnChange' => false,
+                            'wrap' => 'soft'
                      ),
                      'sql' => "text NULL"
               ),
@@ -299,7 +300,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'nospace' => true,
                             'rgxp' => 'digit',
                             'maxlength' => 64,
-                            'tl_class' => 'm12',
+                            'tl_class' => 'w50',
                             'submitOnChange' => true
                      ),
                      'sql' => "varchar(255) NOT NULL default ''"
@@ -478,9 +479,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
               'visitors_details' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'],
                      'inputType' => 'textarea',
-                     'eval' => array(
-                            'tl_class' => 'm12',
-                     ),
                      'sql' => "blob NULL"
               ),
               'visitors' => array(
@@ -488,7 +486,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'inputType' => 'text',
                      'eval' => array(
                             'maxlength' => 10,
-                            'tl_class' => 'm12',
+                            'tl_class' => 'w50',
                             'rgxp' => 'digit'
                      ),
                      'sql' => "int(10) unsigned NOT NULL default '0'"
@@ -1143,7 +1141,7 @@ class tl_gallery_creator_albums extends Backend
         * displ_alb_in_this_ce  - options_callback
         * @return array
         */
-       protected function optionsCbDisplAlbInThisContentElements()
+       public function optionsCbDisplAlbInThisContentElements()
        {
               $objDb = $this->Database->prepare('SELECT tl_content.id AS id, tl_article.title as title, tl_page.title as pagename FROM tl_content, tl_article, tl_page  WHERE tl_article.id=tl_content.pid AND tl_page.id=tl_article.pid AND tl_content.type=?')->execute('gallery_creator');
               $opt = array();
