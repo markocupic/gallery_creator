@@ -542,8 +542,8 @@ class GcHelpers extends \System
               // for files
               if ($type == 'file')
               {
-                     $hash = md5_file(TL_ROOT . '/' . $strSrc);
                      $objFile = new \File($strSrc);
+                     $hash = $objFile->hash;
                      $extension = $objFile->extension;
               }
               
@@ -551,8 +551,18 @@ class GcHelpers extends \System
               if ($type == 'folder')
               {
                      $objFolder = new \Folder($strSrc);
-                     // creating hash of folders causes memory-limit-problems
-                     $hash = $objFolder->isEmpty() ? $objFolder->hash : '';
+                     $strSrc = $objFolder->path;
+                     if (version_compare(VERSION, '3.0', '>'))
+                     {
+                            // in versions > 3.0 contao collects the hash from the filenames
+                            $hash = $objFolder->hash;
+                     }
+                     else
+                     {
+                            // in old versions contao collects the hash from the file content
+                            // creating hash of folders causes memory-limit-problems
+                            $hash = $objFolder->isEmpty() ? $objFolder->hash : '';
+                     }
                      $extension = '';
               }
               
@@ -567,8 +577,6 @@ class GcHelpers extends \System
               
               //if entry allready exists, update only
               $objFile = \Database::getInstance()->prepare('SELECT * FROM tl_files WHERE path=?')->executeUncached($strSrc);
-              //contao > 3.0.3
-              //$objFile = \FilesModel::findByPath($strSrc, array('uncached'=>true));
               if ($objFile->numRows)
               {
                      // if the file/folder war renamed, change the path in tl_files
