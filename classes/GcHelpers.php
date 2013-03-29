@@ -339,7 +339,7 @@ class GcHelpers extends \System
               //optional jumploader adds a watermark to each uploaded image
               if (strlen($GLOBALS['TL_CONFIG']['gc_watermark_path']))
               {
-                     $objFile = FilesModel::findById($GLOBALS['TL_CONFIG']['gc_watermark_path']);
+                     $objFile = \FilesModel::findById($GLOBALS['TL_CONFIG']['gc_watermark_path']);
                      if (is_object($objFile) && is_file(TL_ROOT . '/' . $objFile->path))
                      {
                             $objFile = new \File($objFile->path);
