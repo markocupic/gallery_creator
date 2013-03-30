@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 4.0.1 stable 
+ * Contao extension: gallery_creator 4.1.0 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -45,6 +45,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality']['0'] = "Bildqual
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality']['1'] = "Das Bild wird w&auml;hrend des Uploadvorganges komprimiert. (1000 = beste Qualit&auml;t)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename']['0'] = "Original-Dateinamen beibehalten";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename']['1'] = "Alternativ wird der Dateinamen vom System automatisch generiert.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors']['0'] = "Anzahl Albumzugriffe";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details']['0'] = "Besucher-Details (IP, Browserdetails, Zugriffszeit, etc.)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['0'] = "Neues Album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['1'] = "Ein neues Album anlegen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit']['0'] = "Album bearbeiten";

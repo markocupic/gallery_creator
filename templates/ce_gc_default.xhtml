@@ -35,6 +35,8 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
                             <h2><?php echo $Album["name"]; ?></h2>
 <?php if ($Album["count"]): ?>				
                             <p class="count_pics"><?php echo $Album["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            <p class="visitors"><?php echo $Album["visitors"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
+    
 <?php endif; ?>
 <?php if ($Album["count_subalbums"]): ?>				
                             <p class="count_pics"><?php echo $Album["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
@@ -81,7 +83,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 
 <?php if ($this->subalbums): ?>
 <div class="subalbums">
-       <h3><?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums_of']; ?>: <?php echo $this->Albumname; ?></h3>
+	<h3><?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums_of']; ?>: <?php echo $this->Albumname; ?></h3>
 
        <ul class="list_albums">
 <?php foreach ($this->subalbums as $Subalbum): ?> 
@@ -102,6 +104,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
                             <h2><?php echo $Subalbum["name"]; ?></h2>
 <?php if ($Subalbum["count"]): ?>       			
                             <p class="count_pics"><?php echo $Subalbum["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            <p class="visitors"><?php echo $Subalbum["visitors"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
 <?php endif; ?>
 <?php if ($Subalbum["count_subalbums"]): ?>				
                             <p class="count_pics"><?php echo $Subalbum["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
@@ -126,6 +129,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php echo $this->pagination; ?>
 <?php $col=0; ?>
 <?php if ($this->arrPictures): ?>
+<div id="galleryContainer" class="block">
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
        <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
@@ -143,10 +147,11 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php if ($col == $this->colsPerRow) $col=0; ?>
 <?php endforeach;?>
 </ul>
+</div>
 <?php endif;?>
 
 <?php if ($this->insertArticlePost):?>
-<!-- articleBox-->
+<!-- articleBoxPre-->
 <div id="articleBoxPost" class="block">
 <?php echo $this->insertArticlePost; ?>
 </div>
