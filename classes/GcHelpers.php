@@ -105,10 +105,6 @@ class GcHelpers extends \System
                             // the album-owner is automaticaly the image owner, if the image was uploaded by a by a frontend user
                             if (TL_MODE == 'FE') $userId = $objAlbum->owner;
                             
-                            //get the fileId
-                            $objFiles = \FilesModel::findByPath($strFilepath);
-                            $fileId = $objFiles !== null ? $objFiles->id : '0';
-                            
                             //finally save new image in tl_gallery_creator_pictures
                             $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
                             $objPicture->name = $objFile->basename;
@@ -116,7 +112,6 @@ class GcHelpers extends \System
                             $objPicture->owner = $userId;
                             $objPicture->date = $objAlbum->date;
                             $objPicture->sorting = $nextOrd;
-                            $objPicture->fileID = $fileId;
                             $objPicture->save();
 
                             \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
@@ -645,17 +640,6 @@ class GcHelpers extends \System
                      }
               }
 
-              //auf gueltige fileId ueberpruefen
-              $objPic = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE fileID=?')->execute('0');
-              while ($objPic->next())
-              {
-                     $objFiles = \FilesModel::findByPath($objPic->path);
-                     if ($objFiles !== null)
-                     {
-                            $objUpdate = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_pictures SET fileID=? WHERE id=?')->execute($objFiles->id, $objPic->id);
-                     }
-              }
-        
               //auf gueltige pid ueberpruefen
               $objAlb = \Database::getInstance()->prepare('SELECT id, pid FROM tl_gallery_creator_albums WHERE pid!=?')->execute('0');
               while ($objAlb->next())

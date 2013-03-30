@@ -161,14 +161,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      ),
               ),
 
-              'fileID' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'],
-                     'eval' => array(
-                            'doNotShow' => true
-                     ),
-                     'sql' => "int(10) unsigned NOT NULL default '0'"
-              ),
-
               'sorting' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
 
               'tstamp' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
@@ -614,11 +606,7 @@ class tl_gallery_creator_pictures extends Backend
 				<tr class="odd">
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['filename'][0] . ': </strong></td>
 					<td>' . $objImg->name . '</td>
-				</tr>
-                            <tr>
-       				<td><strong>tl_files.id: </strong></td>
-					<td>' . $objImg->fileID . '</td>
-				</tr>';
+				</tr>;
 
               if ($this->restrictedUser)
               {
