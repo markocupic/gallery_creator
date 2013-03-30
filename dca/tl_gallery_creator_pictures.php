@@ -591,7 +591,7 @@ class tl_gallery_creator_pictures extends Backend
               $objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objImg->owner);
               $output = '
 			<div class="album_infos">
-			<br /><br />
+			<br><br>
 			<table cellpadding="0" cellspacing="0" width="100%" summary="">
 				<tr class="odd">
 					<td style="width:20%"><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'][0] . ': </strong></td>
@@ -606,7 +606,7 @@ class tl_gallery_creator_pictures extends Backend
 				<tr class="odd">
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['filename'][0] . ': </strong></td>
 					<td>' . $objImg->name . '</td>
-				</tr>;
+				</tr>';
 
               if ($this->restrictedUser)
               {
@@ -633,7 +633,7 @@ class tl_gallery_creator_pictures extends Backend
 					
 					<tr>
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['video_id'][0] . ': </strong></td>
-					<td>' . trim($objImg->video_href_local) != "" ? trim($objImg->video_href_local) : "-" . '</td>
+					<td>' . (trim($objImg->video_href_local) != '' ? trim($objImg->video_href_local) : '-') . '</td>
 					</tr>';
               }
 

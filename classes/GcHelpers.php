@@ -525,8 +525,26 @@ class GcHelpers extends \System
               * $strSrcUpdateTo: the new path to the file/folder if file was moved or renamed
               */
               
-              if (strstr($strSrc, '.svn') || strstr($strSrc, '.DS_Store'))
+              if (!strlen($strSrc) || strstr($strSrc, '.svn') || strstr($strSrc, '.DS_Store'))
                      return false;
+                     
+              // Exempt folders from the synchronisation
+              $arrExempt = array();
+              if ($GLOBALS['TL_CONFIG']['fileSyncExclude'] != '')
+              {
+                     $arrExempt = array_map(function($e) {
+                            return $GLOBALS['TL_CONFIG']['uploadPath'] . '/' . $e;
+                     }, trimsplit(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
+                     
+                     foreach ($arrExempt as $strExemptFolder)
+                     {
+                            if (strpos($strSrc, $strExemptFolder . '/') !== false)
+                            {
+                                   return false;
+                            }       
+                     }
+              }
+              
               if (is_dir(TL_ROOT . '/' . $strSrc))
               {
                      $type = 'folder';
