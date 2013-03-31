@@ -10,12 +10,10 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
 /**
  * Run in a custom namespace, so the class can be replaced
  */
 namespace GalleryCreator;
-
 
 /**
  * Class GcHelpers
@@ -35,25 +33,24 @@ class GcHelpers extends \System
         * $intAlbumId - albumId
         * $strFilepath - filepath -> files/gallery_creator_albums/albumalias/filename.jpg
         * @return bool
-       */
+        */
        public static function createNewImage($intAlbumId, $strFilepath)
        {
-              
+
               //get the file-object
               $objFile = new \File($strFilepath);
               if (!$objFile->isGdImage)
                      return false;
-              
+
               //get the album-object
               $objAlbum = \GalleryCreatorAlbumsModel::findById($intAlbumId);
-              
+
               //check if the file ist stored in the album-directory or if it is stored in an external directory
               $blnExternalFile = strstr($objFile->dirname, $objAlbum->alias) ? false : true;
-              
+
               //the upload path
               $strUploadPath = GALLERY_CREATOR_UPLOAD_PATH;
-              
-              
+
               //get the album object and the alias
               $strAlbumAlias = $objAlbum->alias;
               //db insert
@@ -69,15 +66,16 @@ class GcHelpers extends \System
                      //get the next sorting index
                      $objImg_2 = \Database::getInstance()->prepare('SELECT MAX(sorting)+10 AS maximum FROM tl_gallery_creator_pictures WHERE pid=?')->executeUncached($objAlbum->id);
                      $nextOrd = $objImg_2->maximum;
-              
+
                      //if filename should be generated
-                     if (!$objAlbum->preserve_filename) {
+                     if (!$objAlbum->preserve_filename)
+                     {
                             $oldFilepath = $strFilepath;
                             $newFilepath = sprintf('%s/%s/alb%s_img%s.%s', $strUploadPath, $objAlbum->alias, $objAlbum->id, $insertId, $objFile->extension);
                             \Files::getInstance()->rename($oldFilepath, $newFilepath);
                             $strFilepath = $newFilepath;
                      }
-                     
+
                      //galleryCreatorImagePostInsert - HOOK
                      //uebergibt die id des neu erstellten db-Eintrages ($lastInsertId)
                      if (isset($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']) && is_array($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']))
@@ -88,23 +86,25 @@ class GcHelpers extends \System
                                    $objClass->$callback[1]($insertId);
                             }
                      }
-                     
+
                      if (is_file(TL_ROOT . '/' . $strFilepath))
                      {
                             $objFile = new \File($strFilepath);
                             if (!$objFile->isGdImage)
                                    return false;
-                            
+
                             // update or insert entries in tl_files
                             self::registerInFilesystem($strFilepath);
                             self::registerInFilesystem(dirname($strFilepath));
-                            
+
                             //get the userId
                             $userId = '0';
-                            if (TL_MODE == 'BE') $userId = \BackendUser::getInstance()->id;
+                            if (TL_MODE == 'BE')
+                                   $userId = \BackendUser::getInstance()->id;
                             // the album-owner is automaticaly the image owner, if the image was uploaded by a by a frontend user
-                            if (TL_MODE == 'FE') $userId = $objAlbum->owner;
-                            
+                            if (TL_MODE == 'FE')
+                                   $userId = $objAlbum->owner;
+
                             //finally save new image in tl_gallery_creator_pictures
                             $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
                             $objPicture->name = $objFile->basename;
@@ -115,18 +115,17 @@ class GcHelpers extends \System
                             $objPicture->save();
 
                             \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
-                            
-                            
+
                             //check for a valid preview-thumb for the album
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
                             if ($objAlbum !== null)
                             {
                                    if ($objAlbum->thumb == "")
                                    {
-                                         $objAlbum->thumb = $insertId;
-                                         $objAlbum->save();
+                                          $objAlbum->thumb = $insertId;
+                                          $objAlbum->save();
                                    }
-                            }       
+                            }
                             return true;
                      }
                      else
@@ -163,11 +162,12 @@ class GcHelpers extends \System
               {
                      $field = 'path';
               }
-              switch ($field) {
+              switch ($field)
+              {
                      case 'id' :
                             \Database::getInstance()->prepare('DELETE FROM tl_files WHERE id=?')->execute($value);
                             break;
-                     
+
                      case 'path' :
                             \Database::getInstance()->prepare('DELETE FROM tl_files WHERE path=?')->execute($value);
                             break;
@@ -186,7 +186,7 @@ class GcHelpers extends \System
               $strUploadPath = GALLERY_CREATOR_UPLOAD_PATH;
               $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
               $strAlbumAlias = $objAlb->alias;
-              
+
               //unerlaubte Dateitypen abfangen
               $pathinfo = pathinfo($strFilename);
               $uploadTypes = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['uploadTypes']));
@@ -199,7 +199,7 @@ class GcHelpers extends \System
                      //send the response to the jumploader applet
                      die(json_encode(array('status' => 'error', 'serverResponse' => $errorMsg)));
               }
-              
+
               //zu grosse und zu kleine, defekte Dateien abfangen
               if ($GLOBALS['TL_CONFIG']['maxFileSize'] <= $_FILES['file']['size'] || $_FILES['file']['size'] < 1000)
               {
@@ -210,21 +210,20 @@ class GcHelpers extends \System
                      //send the response to the jumploader applet
                      die(json_encode(array('status' => 'error', 'serverResponse' => $errorMsg)));
               }
-              
+
               //dateinamen romanisieren und auf Einmaligkeit testen
               $strFilename = self::generateUniqueFilename($strFilename);
-              
-              
+
               //chmod-settings
               \Files::getInstance()->chmod($strUploadPath . '/' . $strAlbumAlias, 0777);
-              
+
               //move_uploaded_file
               if (\Files::getInstance()->move_uploaded_file($_FILES['file']['tmp_name'], $strUploadPath . '/' . $strAlbumAlias . '/' . $strFilename))
               {
                      $strFileSrc = $strUploadPath . '/' . $strAlbumAlias . '/' . $strFilename;
                      //chmod
                      \Files::getInstance()->chmod($strFileSrc, 0644);
-                     
+
                      //send the response to the jumploader applet
                      echo json_encode(array('status' => 'success', 'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful']));
                      //return the array if file was successfully uploaded
@@ -254,11 +253,12 @@ class GcHelpers extends \System
               {
                      throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
               }
-              
+
               //Falls Datei schon existiert, wird hinten eine Zahl mit fuehrenden Nullen angehaengt -> filename0001.jpg
               $i = 1;
               $isUnique = false;
-              do {
+              do
+              {
                      $i++;
                      $objImg = \Database::getInstance()->prepare('SELECT count(id) AS items FROM tl_gallery_creator_pictures WHERE name=?')->execute($strFilename);
                      if ($objImg->items < 1)
@@ -286,7 +286,7 @@ class GcHelpers extends \System
                             }
                      }
               } while (!$isUnique);
-              
+
               return $strFilename;
        }
 
@@ -300,16 +300,16 @@ class GcHelpers extends \System
               //create the template object
               $objTemplate = new \BackendTemplate('be_gc_jumploader');
               $objUser = \BackendUser::getInstance();
-              
+
               //upload url
               $objTemplate->uploadUrl = ampersand(sprintf('%scontao/main.php?do=gallery_creator&act=edit&table=tl_gallery_creator_albums&id=%s&mode=fileupload&rt=%s', \Environment::get('base'), $intAlbumId, REQUEST_TOKEN));
-              
+
               //security tokens
               $objTemplate->securityTokens = sprintf('PHPSESSID=%s; path=/; %s_USER_AUTH=%s; path=/;', session_id(), TL_MODE, $_COOKIE[TL_MODE . '_USER_AUTH']);
-              
+
               //request token
               $objTemplate->requestToken = REQUEST_TOKEN;
-              
+
               //get the domain
               $domain = \Environment::get('base');
 
@@ -326,11 +326,11 @@ class GcHelpers extends \System
                      sprintf('%s/xfiledialog.jar', $pathToArchive),
               );
               $objTemplate->jumploaderArchive = implode(',', $arrJumploaderArchive);
-              
+
               //resize images in browser before loading them up
               $objTemplate->imageRes = $objUser->gc_img_resolution . 'x' . $objUser->gc_img_resolution;
               $objTemplate->imageQuality = $objUser->gc_img_quality;
-              
+
               //optional jumploader adds a watermark to each uploaded image
               if (strlen($GLOBALS['TL_CONFIG']['gc_watermark_path']))
               {
@@ -350,13 +350,12 @@ class GcHelpers extends \System
               // check if images should be scaled during the upload process
               if ($objUser->gc_img_resolution != 'no_scaling')
               {
-                  $objTemplate->scaleImages = true;   
+                     $objTemplate->scaleImages = true;
               }
-              
+
               // parse the jumloader view and return it
               return $objTemplate->parse();
        }
-
 
        /**
         * gibt ein Array mit den Unteralben eines Albums zurück
@@ -375,7 +374,6 @@ class GcHelpers extends \System
               return $arrSubAlbums;
        }
 
-
        /**
         * gibt ein Array mit allen Angaben des Parent-Albums zurueck
         * @param integer
@@ -385,33 +383,36 @@ class GcHelpers extends \System
        {
               $objAlbPid = \Database::getInstance()->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->execute($AlbumId);
               $parentAlb = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($objAlbPid->pid);
-              
+
               if ($parentAlb->numRows == 0)
                      return NULL;
               $arrParentAlbum = $parentAlb->fetchAllAssoc();
               return $arrParentAlbum[0];
        }
 
-
        /**
-	 * @param string 
+        * @param string
         * @param integer
         * @return bool
         * $imgPath - relative path to the filesource
-	 * angle - the rotation angle is interpreted as the number of degrees to rotate the image anticlockwise.
-	 * angle shall be 0,90,180,270
-	 */
-	public static function imageRotate($imgPath, $angle)
-	{
-              
-              if ($angle == 0) return false;
-              if ($angle % 90 !== 0) return false;
-              if ($angle < 90 || $angle > 360) return false;
-              if (!function_exists('imagerotate')) return false;
-              // chmod
-	       \Files::getInstance()->chmod($imgPath, 0777);
+        * angle - the rotation angle is interpreted as the number of degrees to rotate the image anticlockwise.
+        * angle shall be 0,90,180,270
+        */
+       public static function imageRotate($imgPath, $angle)
+       {
 
-		// Load
+              if ($angle == 0)
+                     return false;
+              if ($angle % 90 !== 0)
+                     return false;
+              if ($angle < 90 || $angle > 360)
+                     return false;
+              if (!function_exists('imagerotate'))
+                     return false;
+              // chmod
+              \Files::getInstance()->chmod($imgPath, 0777);
+
+              // Load
               if (TL_MODE == 'BE')
               {
                      $imgSrc = '../' . $imgPath;
@@ -424,16 +425,15 @@ class GcHelpers extends \System
 
               //rotate
               $imgTmp = imagerotate($source, $angle, 0);
-              
-		// Output
-		imagejpeg($imgTmp,  $imgSrc);
-		imagedestroy($source);
-              
-              // chmod
-		\Files::getInstance()->chmod($imgPath, 0644);
-              return true;
-	}
 
+              // Output
+              imagejpeg($imgTmp, $imgSrc);
+              imagedestroy($source);
+
+              // chmod
+              \Files::getInstance()->chmod($imgPath, 0644);
+              return true;
+       }
 
        /**
         * @param integer
@@ -456,11 +456,11 @@ class GcHelpers extends \System
                                    if ($objFile->isGdImage)
                                    {
                                           $arrFileSrc[md5($objFiles->path)] = array(
-                                          'name' => $objFile->basename,
-                                          'path' => $objFiles->path
+                                                 'name' => $objFile->basename,
+                                                 'path' => $objFiles->path
                                           );
                                    }
-                            
+
                             }
                             //if item is directory store its files in the array
                             if (is_dir(TL_ROOT . '/' . $objFiles->path))
@@ -474,10 +474,10 @@ class GcHelpers extends \System
                                                  if ($objFile->isGdImage)
                                                  {
                                                         $arrFileSrc[md5($objFiles->path . '/' . $fileSrc)] = array(
-                                                        //only the basename
-                                                        'name' => $objFile->basename,
-                                                        //path (incl. filename)
-                                                        'path' => $objFile->value
+                                                               //only the basename
+                                                               'name' => $objFile->basename,
+                                                               //path (incl. filename)
+                                                               'path' => $objFile->value
                                                         );
                                                  }
                                           }
@@ -508,9 +508,8 @@ class GcHelpers extends \System
                             GcHelpers::createNewImage($objAlb->id, $strDestSrc);
                      }
               }
-        
-       }
 
+       }
 
        /**
         * Register a file or folder in tl_files
@@ -521,37 +520,40 @@ class GcHelpers extends \System
        public static function registerInFilesystem($strSrc = '', $strSrcUpdateTo = null)
        {
               /**
-              * $strSrc: the path to the file/folder: 'files/mydir/myfile.txt' or 'files/mydir'
-              * $strSrcUpdateTo: the new path to the file/folder if file was moved or renamed
-              */
-              
+               * $strSrc: the path to the file/folder: 'files/mydir/myfile.txt' or 'files/mydir'
+               * $strSrcUpdateTo: the new path to the file/folder if file was moved or renamed
+               */
+
               if (!strlen($strSrc) || strstr($strSrc, '.svn') || strstr($strSrc, '.DS_Store'))
                      return false;
-                     
+
               // Exempt folders from the synchronisation
               $arrExempt = array();
               if ($GLOBALS['TL_CONFIG']['fileSyncExclude'] != '')
               {
-                     $arrExempt = array_map(function($e) {
+                     $arrExempt = array_map(function ($e)
+                     {
                             return $GLOBALS['TL_CONFIG']['uploadPath'] . '/' . $e;
                      }, trimsplit(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
-                     
+
                      foreach ($arrExempt as $strExemptFolder)
                      {
                             if (strpos($strSrc, $strExemptFolder . '/') !== false)
                             {
                                    return false;
-                            }       
+                            }
                      }
               }
-              
+
               if (is_dir(TL_ROOT . '/' . $strSrc))
               {
                      $type = 'folder';
-              } else {
+              }
+              else
+              {
                      $type = 'file';
-              }       
-              
+              }
+
               // for files
               if ($type == 'file')
               {
@@ -559,7 +561,7 @@ class GcHelpers extends \System
                      $hash = $objFile->hash;
                      $extension = $objFile->extension;
               }
-              
+
               // for folders
               if ($type == 'folder')
               {
@@ -578,7 +580,7 @@ class GcHelpers extends \System
                      }
                      $extension = '';
               }
-              
+
               //get the pid
               $parentFolder = dirname($strSrc);
               $objTlFile = \Database::getInstance()->prepare('SELECT * FROM tl_files WHERE path=?')->executeUncached($parentFolder);
@@ -587,7 +589,7 @@ class GcHelpers extends \System
               {
                      $pid = 0;
               }
-              
+
               //if entry allready exists, update only
               $objFile = \Database::getInstance()->prepare('SELECT * FROM tl_files WHERE path=?')->executeUncached($strSrc);
               if ($objFile->numRows)
@@ -602,47 +604,48 @@ class GcHelpers extends \System
                      $set['tstamp'] = time();
                      $set['found'] = 1;
                      \Database::getInstance()->prepare('UPDATE tl_files %s WHERE id=?')
-                                             ->set($set)
-                                             ->execute($objFile->id);
+                            ->set($set)
+                            ->execute($objFile->id);
                      $fileId = $objFile->id;
-              } else {
+              }
+              else
+              {
                      // if file is not registered in tl_files register now
                      $objFiles = new \FilesModel();
-                     $objFiles->hash         = $hash;
-                     $objFiles->tstamp       = time();
-                     $objFiles->path         = $strSrc;
-                     $objFiles->name         = basename($strSrc);
-                     $objFiles->type         = $type;
-                     $objFiles->pid          = $pid;
-                     $objFiles->extension    = $extension;
-                     $objFiles->found        = 1;
+                     $objFiles->hash = $hash;
+                     $objFiles->tstamp = time();
+                     $objFiles->path = $strSrc;
+                     $objFiles->name = basename($strSrc);
+                     $objFiles->type = $type;
+                     $objFiles->pid = $pid;
+                     $objFiles->extension = $extension;
+                     $objFiles->found = 1;
                      $objFiles->save();
                      $fileId = $objFile->id;
               }
-              return  $fileId ;
+              return $fileId;
        }
 
-
        /**
-	 * reviseTable
-	 * @param bool
-	 *
-	 */
+        * reviseTable
+        * @param bool
+        *
+        */
        public static function reviseTable($blnCleanDb = false)
        {
               //Upload-Verzeichnis erstellen, falls nicht mehr vorhanden
               new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
-              
+
               //Sorgt dafuer, dass der zur id gehoerende Name immer aktuell ist
               $db = \Database::getInstance()->execute('SELECT id, owner, alias FROM tl_gallery_creator_albums');
               while ($db->next())
               {
                      //Besitzt das Album ein Verzeichnis
                      new \Folder(GALLERY_CREATOR_UPLOAD_PATH . '/' . $db->alias);
-                     
+
                      //chmod-settings
                      \Files::getInstance()->chmod(GALLERY_CREATOR_UPLOAD_PATH . '/' . $db->alias, 0777);
-                     
+
                      //Albumbesitzer ueberpruefen
                      $db_2 = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($db->owner);
                      $owner = $db_2->name;
@@ -663,14 +666,15 @@ class GcHelpers extends \System
               while ($objAlb->next())
               {
                      $objParentAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')->execute($objAlb->pid);
-                     if ($objParentAlb->numRows < 1) {
+                     if ($objParentAlb->numRows < 1)
+                     {
                             \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $objAlb->id);
                      }
               }
 
               //Datensaetze ohne definierten Bildnamen loeschen
               \Database::getInstance()->prepare('DELETE FROM tl_gallery_creator_pictures WHERE path=?')->execute('');
-              
+
               //Checks if there belongs a file to each Insert in tl_gallery_creator_pictures
               $objPicture = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures ORDER BY pid');
               while ($objPicture->next())
@@ -703,7 +707,8 @@ class GcHelpers extends \System
               {
                      $newArr = array();
                      $arrAlbums = unserialize($objCont->gc_publish_albums);
-                     if (is_array($arrAlbums)) {
+                     if (is_array($arrAlbums))
+                     {
                             foreach ($arrAlbums as $AlbumID)
                             {
                                    $objAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')->limit('1')->execute($AlbumID);
@@ -717,7 +722,6 @@ class GcHelpers extends \System
               }
        }
 
-
        /**
         * Hilfsmethode
         * gibt ein Array mit allen Dateien, Verzeichnissen und Unterverzeichnissen zurueck
@@ -728,20 +732,20 @@ class GcHelpers extends \System
        {
               $arrFiles = array();
               $arrScan = scan($strPath);
-              
+
               foreach ($arrScan as $strFile)
               {
                      if ($strFile == '.svn' || $strFile == '.DS_Store')
                      {
                             continue;
                      }
-                     
+
                      if (is_dir($strPath . '/' . $strFile))
                      {
                             //folders
                             $arrFiles[] = $strPath . '/' . $strFile;
                             $arrFiles = array_merge($arrFiles, self::scanRecursive($strPath . '/' . $strFile));
-                     } 
+                     }
                      else
                      {
                             //files
