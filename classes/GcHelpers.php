@@ -603,9 +603,7 @@ class GcHelpers extends \System
                      $set['hash'] = $hash;
                      $set['tstamp'] = time();
                      $set['found'] = 1;
-                     \Database::getInstance()->prepare('UPDATE tl_files %s WHERE id=?')
-                            ->set($set)
-                            ->execute($objFile->id);
+                     \Database::getInstance()->prepare('UPDATE tl_files %s WHERE id=?')->set($set)->execute($objFile->id);
                      $fileId = $objFile->id;
               }
               else
@@ -720,38 +718,5 @@ class GcHelpers extends \System
                      }
                      \Database::getInstance()->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')->execute(serialize($newArr), $objCont->id);
               }
-       }
-
-       /**
-        * Hilfsmethode
-        * gibt ein Array mit allen Dateien, Verzeichnissen und Unterverzeichnissen zurueck
-        * @param string
-        * @return array
-        */
-       public static function scanRecursive($strPath)
-       {
-              $arrFiles = array();
-              $arrScan = scan($strPath);
-
-              foreach ($arrScan as $strFile)
-              {
-                     if ($strFile == '.svn' || $strFile == '.DS_Store')
-                     {
-                            continue;
-                     }
-
-                     if (is_dir($strPath . '/' . $strFile))
-                     {
-                            //folders
-                            $arrFiles[] = $strPath . '/' . $strFile;
-                            $arrFiles = array_merge($arrFiles, self::scanRecursive($strPath . '/' . $strFile));
-                     }
-                     else
-                     {
-                            //files
-                            $arrFiles[] = $strPath . '/' . $strFile;
-                     }
-              }
-              return $arrFiles;
        }
 }
