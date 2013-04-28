@@ -57,7 +57,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'id' => 'primary',
                             'pid' => 'index',
                             'alias' => 'index',
-                            'folder_id' => 'index'
                      )
               )
        ),
@@ -160,6 +159,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Fields
        'fields' => array(
               'id' => array('sql' => "int(10) unsigned NOT NULL auto_increment"),
+              
               'pid' => array(
                      'foreignKey' => 'tl_gallery_creator_albums.alias',
                      'sql' => "int(10) unsigned NOT NULL default '0'",
@@ -168,16 +168,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'load' => 'lazy'
                      )
               ),
+              
               'sorting' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
+              
               'tstamp' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
-              'folder_id' => array(
-                     'foreignKey' => 'tl_files.name',
-                     'sql' => "int(10) unsigned NOT NULL default '0'",
-                     'relation' => array(
-                            'type' => 'hasOne',
-                            'load' => 'eager'
-                     )
-              ),
 
               'published' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published'],

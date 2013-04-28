@@ -61,6 +61,9 @@ abstract class DisplayGallery extends \Module
         */
        public function generate()
        {
+              // unset the Session
+              unset($_SESSION['gallery_creator']['CURRENT_ALBUM']);
+
               // set the item from the auto_item parameter
               if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
               {
@@ -70,6 +73,8 @@ abstract class DisplayGallery extends \Module
               if (strlen(\Input::get('items')))
               {
                      $this->DETAIL_VIEW = true;
+              } else {
+                     
               }
 
               //assigning the frontend template
@@ -80,9 +85,9 @@ abstract class DisplayGallery extends \Module
 
               // store the pagination variable page in the current session
               if (!\Input::get('items'))
-                     unset($_SESSION['GC_DATA']['page']);
+                     unset($_SESSION['gallery_creator']['PAGINATION']);
               if (\Input::get('page') && !$this->DETAIL_VIEW)
-                     $_SESSION['GC_DATA']['page'] = \Input::get('page');
+                     $_SESSION['gallery_creator']['PAGINATION']  = \Input::get('page');
 
               return parent::generate();
 
@@ -322,7 +327,19 @@ abstract class DisplayGallery extends \Module
                             return false;
 
                      $json = "";
-                     $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY id')->executeUncached(1, \Input::get('albumId'));
+                     
+                     // sorting direction
+                     $ceType = \Input::get('action');
+                     if ($ceType == 'cte')
+                     {
+                            $sorting = $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
+                     }
+                     else
+                     {
+                            $sorting = 'sorting DESC';
+                     }
+
+                     $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)->executeUncached(1, \Input::get('albumId'));
                      while ($objPicture->next())
                      {
                             $href = $objPicture->path;
@@ -781,11 +798,15 @@ abstract class DisplayGallery extends \Module
               //wichtig fuer Ajax-Anwendungen
               $this->Template->elementType = strtolower($strContentType);
               $this->Template->elementId = $this->id;
-
+              
+              // Load the current album from db
               $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
+              
               //store all album-data in the array
               $this->Template->arrAlbumdata = $objAlbum->fetchAssoc();
-              $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
+              
+              // store the data of the current album in the session
+              $_SESSION['gallery_creator']['CURRENT_ALBUM'] = $this->Template->arrAlbumdata;
 
               //die FMD/CTE-id
               $this->Template->fmdId = $this->id;
@@ -862,7 +883,7 @@ abstract class DisplayGallery extends \Module
 
               //generiert den Link zur Startuebersicht unter Beruecksichtigung der pagination
               $url = $this->generateFrontendUrl($objPage->row(), '');
-              $url .= isset($_SESSION['GC_DATA']['page']) ? '?page=' . $_SESSION['GC_DATA']['page'] : '';
+              $url .= isset($_SESSION['gallery_creator']['PAGINATION']) ? '?page=' . $_SESSION['gallery_creator']['PAGINATION'] : '';
               return $url;
        }
        
