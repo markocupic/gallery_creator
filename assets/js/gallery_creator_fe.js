@@ -35,7 +35,7 @@ GalleryCreatorFe = new Class({
         this.defaultThumbSrc = this.thumb.getProperty('src');
         var currentTime = new Date();
         this.eventId = currentTime.getTime();
-        this.lastFade = currentTime.getTime();
+        this.lastSlide = currentTime.getTime();
         //add the onmouseout-event
         this.currentDiv.addEvent('mouseout', function () {
             self.stopThumbSlide();
@@ -67,18 +67,15 @@ GalleryCreatorFe = new Class({
                 if (responseText.eventId == null || self.eventId == null) return;
                 if (responseText.thumbPath != "" && responseText.thumbPath != self.thumb.getProperty('src')) {
                     var currentTime = new Date();
-                    if (currentTime.getTime() - self.lastFade < 2000) {
+                    if (currentTime.getTime() - self.lastSlide < 2000) {
                         self.startThumbSlide(eventId);
                         return;
                     }
 
-                    self.lastFade = currentTime.getTime();
+                    self.lastSlide = currentTime.getTime();
                     var thumb = self.thumb;
-                    thumb.fade(0);
-                    var fadeIn = (function fadeIn() {
-                        thumb.setProperty('src', responseText.thumbPath);
-                        thumb.fade(Number.from(self.thumbOpacity));
-                    }.delay(500));
+                    thumb.setProperty('src', responseText.thumbPath);
+
                 }
 
                 self.startThumbSlide(responseText.eventId);
