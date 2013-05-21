@@ -38,9 +38,9 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
        //list
        'list' => array(
               'sorting' => array(
-                     'flag' => 1,
-                     'mode' => 4,
-                     'disableGrouping' => true,
+                     'mode'                    => 4,
+			'fields'                  => array('sorting'),
+			'panelLayout'             => 'filter;search,limit',
                      'headerFields' => array(
                             'id',
                             'date',
@@ -48,9 +48,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'name',
                             'comment',
                             'thumb'
-                     ),
-       		'panelLayout' => 'filter;search,limit',
-                     'fields' => array('sorting ASC'),
+                     ),		
                      'child_record_callback' => array(
                             'tl_gallery_creator_pictures',
                             'childRecordCb'
@@ -656,7 +654,13 @@ class tl_gallery_creator_pictures extends Backend
               {
                      //da alle neuen Bilder (neue Datensaetze) nur über fileupload oder importImages realisiert werden, ist der "Create-Button" obsolet
                      //entfernt den Create-Button aus den den global operations
-                     $strContent = preg_replace('/<a href(.*?)tl_gallery_creator_pictures(.*?)act=create(.*?)<\/a>(.*?)/i', "", $strContent);
+                     $pattern = '|<a href="[^"]*tl_gallery_creator_pictures[^"]*mode=create[^"]*"[^>]*></a>|Usi';
+                     $strContent = preg_replace($pattern, '', $strContent);
+                     
+                     //entfernt den Create-Button aus den den operations
+                     $pattern = '|<a href="[^"]*tl_gallery_creator_pictures[^"]*act=create[^"]*"[^>]*><img[^>]*></a>|Usi';
+                     $strContent = preg_replace($pattern, '', $strContent);
+                     
                      //Bei einigen Browsern überragt die textarea den unteren Seitenrand, deshalb eine weitere leere clearing-box
                      $strContent = str_replace('</fieldset>', '<div class="clr" style="clear:both"><p> </p><!-- clearing Box --></div></fieldset>', $strContent);
               }
