@@ -318,7 +318,7 @@ class GcHelpers extends \System
               $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader/lang/messages_' . $language . '.zip';
 
               //jumploader Archive
-              $pathToArchive = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
+              $pathToArchive = \System::urlEncode($domain) . 'system/modules/gallery_creator/assets/plugins/jumploader';
               $arrJumploaderArchive = array(
                      sprintf('%s/mediautil_z.jar', $pathToArchive),
                      sprintf('%s/sanselan_z.jar', $pathToArchive),
