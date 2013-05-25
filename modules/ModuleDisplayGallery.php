@@ -105,18 +105,24 @@ class ModuleDisplayGallery extends DisplayGallery
                             {
                                    if (TL_MODE == 'FE' && $objAlbum->protected == true)
                                    {
-                                          $blnAllowed = null;
                                           $this->import('FrontendUser', 'User');
+
                                           // remove id from $arrSelectedAlb if user is not allowed
                                           if (FE_USER_LOGGED_IN && is_array(unserialize($this->User->allGroups)))
                                           {
                                                  if (!array_intersect(unserialize($this->User->allGroups), unserialize($objAlbum->groups)))
                                                  {
+                                                        // user is not allowed
                                                         continue;
+                                                 } else {
+                                                        // user is allowed
+                                                        $arrAllowedAlbums[] = $objAlbum->id;
                                                  }
                                           }
+                                   } else {
+                                          // album is not protected
+                                          $arrAllowedAlbums[] = $objAlbum->id;
                                    }
-                                   $arrAllowedAlbums[] = $objAlbum->id;
                             }
 
                             // pagination settings
