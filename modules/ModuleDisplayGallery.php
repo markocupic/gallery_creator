@@ -45,6 +45,7 @@ class ModuleDisplayGallery extends DisplayGallery
                      $this->Template->cssID = strlen($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
                      $this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
               }
+
               // redirect to the detailview if there is only 1 album
               if (!\Input::get('items') && $this->gc_redirectSingleAlb) {
                      $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
@@ -52,20 +53,26 @@ class ModuleDisplayGallery extends DisplayGallery
                             \Input::setGet('items', $objAlbum->alias);
                      }
               }
+
               if (\Input::get('items')) {
                      $this->strAlbumalias = \Input::get('items');
                      // authenticate user if album is protected
                      $this->feUserAuthentication($this->strAlbumalias);
+
                      // get the album id from the album alias
                      $objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')->execute($this->strAlbumalias);
                      $this->intAlbumId = $objAlbum->id;
               }
+              
               // moduleType is used for ajax applications
               $this->Template->moduleType = $this->moduleType;
               $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
               $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
+
               switch ($switch) {
+
                      case 'albumlisting' :
+
                             // get all published albums
                             $arrAllowedAlbums = array();
                             if ($this->gc_hierarchicalOutput) {
@@ -73,6 +80,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             } else {
                                    $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
                             }
+
                             while ($objAlbum->next()) {
                                    if (TL_MODE == 'FE' && $objAlbum->protected == true) {
                                           $this->import('FrontendUser', 'User');
@@ -82,28 +90,32 @@ class ModuleDisplayGallery extends DisplayGallery
                                                         // user is allowed
                                                         $arrAllowedAlbums[] = $objAlbum->id;
                                                  }
-                                                 continue;
                                           }
+                                          continue;
                                    }
                                    // album is not protected
                                    $arrAllowedAlbums[] = $objAlbum->id;
                             }
+
                             // pagination settings
                             $limit = $this->gc_AlbumsPerPage;
                             if ($limit > 0) {
                                    $page = \Input::get('page') ? \Input::get('page') : 1;
                                    $offset = ($page - 1) * $limit;
                                    $itemsTotal = count($arrAllowedAlbums);
+
                                    // add pagination menu
                                    $objPagination = new \Pagination($itemsTotal, $limit);
                                    $this->Template->pagination = $objPagination->generate("\n ");
                             }
+
                             // get all published albums
                             $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id IN(' . implode(",", $arrAllowedAlbums) . ') ORDER BY sorting ASC');
                             if ($limit > 0) {
                                    $objAlbum->limit($limit, $offset);
                             }
                             $objAlbum = $objAlbum->execute('1', '0');
+
                             // album array
                             $arrAlbums = array();
                             while ($objAlbum->next()) {
@@ -113,7 +125,9 @@ class ModuleDisplayGallery extends DisplayGallery
                             $this->Template->arrAlbums = $arrAlbums;
                             $this->getAlbumTemplateVars($objAlbum->id, 'fmd');
                             break;
+
                      case 'detailview' :
+
                             // generate the subalbum array
                             if ($this->gc_hierarchicalOutput) {
                                    $objSubAlbums = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY sorting ASC')->execute($this->intAlbumId, '1');
@@ -124,36 +138,47 @@ class ModuleDisplayGallery extends DisplayGallery
                                    }
                                    $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : NULL;
                             }
+
                             // pagination settings
                             $limit = $this->gc_ThumbsPerPage;
                             if ($limit > 0) {
                                    $page = \Input::get('page') ? \Input::get('page') : 1;
                                    $offset = ($page - 1) * $limit;
+
                                    // count albums
                                    $objTotal = $this->Database->prepare('SELECT COUNT(id) as itemsTotal FROM tl_gallery_creator_pictures WHERE published=? AND pid=?')->execute('1', $this->intAlbumId);
                                    $itemsTotal = $objTotal->itemsTotal;
+
                                    // add pagination menu
                                    $objPagination = new \Pagination($itemsTotal, $limit);
                                    $this->Template->pagination = $objPagination->generate("\n ");
                             }
+
                             $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=?  AND pid=? ORDER BY sorting');
                             if ($limit > 0) {
                                    $objPictures->limit($limit, $offset);
                             }
+
                             $objPictures = $objPictures->execute('1', $this->intAlbumId);
                             $arrPictures = array();
+
                             while ($objPictures->next()) {
                                    // picture array
                                    $arrPictures[$objPictures->id] = $this->getPictureInformationArray($objPictures->id, $this->gc_size_detailview, 'fmd');
                             }
+
                             // add picture array to the template
                             $this->Template->arrPictures = $arrPictures;
+
                             // add some other useful template vars
                             $this->getAlbumTemplateVars($this->intAlbumId, 'fmd');
+
                             // init the counter
                             $this->initCounter($this->intAlbumId);
                             break;
+
                      case 'jw_imagerotator' :
+
                             header("content-type:text/xml;charset=utf-8");
                             echo $this->getJwImagerotatorXml($this->strAlbumalias);
                             exit;
