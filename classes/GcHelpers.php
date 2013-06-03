@@ -311,14 +311,14 @@ class GcHelpers extends \System
               $objTemplate->requestToken = REQUEST_TOKEN;
 
               //get the domain
-              $domain = \Environment::get('base');
+              $domain = str_replace(array('http%3A','https%3A'), array('http:','https:'), \System::urlEncode(\Environment::get('base')));
 
               //languageFiles
               $language = strlen($objUser->language) ? $objUser->language : 'en';
               $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader/lang/messages_' . $language . '.zip';
 
               //jumploader Archive
-              $pathToArchive = \System::urlEncode($domain) . 'system/modules/gallery_creator/assets/plugins/jumploader';
+              $pathToArchive =  $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
               $arrJumploaderArchive = array(
                      sprintf('%s/mediautil_z.jar', $pathToArchive),
                      sprintf('%s/sanselan_z.jar', $pathToArchive),
