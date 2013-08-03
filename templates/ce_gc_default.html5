@@ -137,7 +137,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php if ($Picture["href"]): ?>
                      <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"] ? $Picture["comment"] : $Picture["title"] ? $Picture["title"] : $Picture["filename"]; ?>">
 <?php endif; ?>
-                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture["thumb_width"]; ?>" height="<?php echo $Picture["thumb_height"]; ?>" alt="<?php echo $Picture["title"] ? $Picture["title"] : $Picture["name"]; ?>">
+                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture['size'][0]; ?>" height="<?php echo $Picture['size'][1]; ?>" alt="<?php echo $Picture["title"] ? $Picture["title"] : $Picture["name"]; ?>">
 <?php if ($Picture["href"]!=""): ?>
                      </a>
 <?php endif; ?>
