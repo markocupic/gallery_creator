@@ -18,7 +18,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 
        <ul class="list_albums">
 <?php foreach ($this->arrAlbums as $Album): ?> 
-              <li class="level_1 block"  style="<?php echo $this->imagemargin; ?>">
+              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Album["event_date"]; ?>]</p></div>
                      <div class="col_1">
                             <div class="image_container" onmouseover="<?php echo  $Album["thumbMouseover"]; ?>">
@@ -87,7 +87,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 
        <ul class="list_albums">
 <?php foreach ($this->subalbums as $Subalbum): ?> 
-              <li class="level_1 block"  style="<?php echo $this->imagemargin; ?>">
+              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Subalbum["event_date"]; ?>]</p></div>
                      <div class="col_1">
                             <div class="image_container" onmouseover="<?php echo  $Subalbum["thumbMouseover"]; ?>">
@@ -133,7 +133,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
        <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
-              <div<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''; ?>" style="<?php echo $this->imagemargin; ?>">
+              <div<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''; ?>"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
 <?php if ($Picture["href"]): ?>
                      <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"] ? $Picture["comment"] : ($Picture["title"] ? $Picture["title"] : $Picture["filename"]); ?>">
 <?php endif; ?>
