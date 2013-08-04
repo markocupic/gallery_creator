@@ -19,30 +19,30 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
        <ul class="list_albums">
 <?php foreach ($this->arrAlbums as $Album): ?> 
               <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
-                     <div class="tstamp block"><p>[<?php echo $Album["event_date"]; ?>]</p></div>
+                     <div class="tstamp block"><p>[<?php echo $Album['event_date']; ?>]</p></div>
                      <div class="col_1">
-                            <div class="image_container" onmouseover="<?php echo  $Album["thumbMouseover"]; ?>">
-<?php if ($Album["href"]): ?>
-                                   <a href="<?php echo $Album["href"]; ?>" title="<?php echo $Album["title"]; ?>">
+                            <div class="image_container" onmouseover="<?php echo  $Album['thumbMouseover']; ?>">
+<?php if ($Album['href']): ?>
+                                   <a href="<?php echo $Album['href']; ?>" title="<?php echo $Album['title']; ?>">
 <?php endif; ?>
-                                          <img src="<?php echo $Album["thumb_src"]; ?>" width="<?php echo $Album['size'][0]; ?>" height="<?php echo $Album['size'][1]; ?>" alt="<?php echo $Album["alt"]; ?>" class="<?php echo $Album["class"]; ?>" />
-<?php if ($Album["href"]): ?>
+                                          <img src="<?php echo $Album['thumb_src']; ?>" width="<?php echo $Album['size'][0]; ?>" height="<?php echo $Album['size'][1]; ?>" alt="<?php echo $Album['alt']; ?>" class="<?php echo $Album['class']; ?>" />
+<?php if ($Album['href']): ?>
                                    </a>
 <?php endif; ?>
                             </div>
                      </div>
                      <div class="col_2">
-                            <h2><?php echo $Album["name"]; ?></h2>
-<?php if ($Album["count"]): ?>				
-                            <p class="count_pics"><?php echo $Album["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
-                            <p class="visitors"><?php echo $Album["visitors"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
+                            <h2><?php echo $Album['name']; ?></h2>
+<?php if ($Album['count']): ?>				
+                            <p class="count_pics"><?php echo $Album['count']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            <p class="visitors"><?php echo $Album['visitors']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
     
 <?php endif; ?>
-<?php if ($Album["count_subalbums"]): ?>				
-                            <p class="count_pics"><?php echo $Album["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
+<?php if ($Album['count_subalbums']): ?>				
+                            <p class="count_pics"><?php echo $Album['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
 <?php endif; ?>		
-<?php if ($Album["comment"]): ?>
-                            <p class="album_comment"><?php echo $Album["comment"]; ?></p>
+<?php if ($Album['comment']): ?>
+                            <p class="album_comment"><?php echo $Album['comment']; ?></p>
 <?php endif; ?>
                      </div>
               </li>
@@ -88,29 +88,29 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
        <ul class="list_albums">
 <?php foreach ($this->subalbums as $Subalbum): ?> 
               <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
-                     <div class="tstamp block"><p>[<?php echo $Subalbum["event_date"]; ?>]</p></div>
+                     <div class="tstamp block"><p>[<?php echo $Subalbum['event_date']; ?>]</p></div>
                      <div class="col_1">
-                            <div class="image_container" onmouseover="<?php echo  $Subalbum["thumbMouseover"]; ?>">
-<?php if ($Subalbum["href"]): ?>
-                                   <a href="<?php echo $Subalbum["href"]; ?>" title="<?php echo $Subalbum["title"]; ?>">
+                            <div class="image_container" onmouseover="<?php echo  $Subalbum['thumbMouseover']; ?>">
+<?php if ($Subalbum['href']): ?>
+                                   <a href="<?php echo $Subalbum['href']; ?>" title="<?php echo $Subalbum['title']; ?>">
 <?php endif; ?>
-                                          <img src="<?php echo $Subalbum["thumb_src"]; ?>" alt="<?php echo $Subalbum["alt"]; ?>" class="<?php echo $Subalbum["class"]; ?>" />
-<?php if ($Subalbum["href"]): ?>
+                                          <img src="<?php echo $Subalbum['thumb_src']; ?>" alt="<?php echo $Subalbum['alt']; ?>" class="<?php echo $Subalbum['class']; ?>" />
+<?php if ($Subalbum['href']): ?>
                                    </a>
 <?php endif; ?>
                             </div>
                      </div>
                      <div class="col_2">
-                            <h2><?php echo $Subalbum["name"]; ?></h2>
-<?php if ($Subalbum["count"]): ?>       			
-                            <p class="count_pics"><?php echo $Subalbum["count"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
-                            <p class="visitors"><?php echo $Subalbum["visitors"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
+                            <h2><?php echo $Subalbum['name']; ?></h2>
+<?php if ($Subalbum['count']): ?>       			
+                            <p class="count_pics"><?php echo $Subalbum['count']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['pictures']; ?></p>
+                            <p class="visitors"><?php echo $Subalbum['visitors']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['visitors']; ?></p>
 <?php endif; ?>
-<?php if ($Subalbum["count_subalbums"]): ?>				
-                            <p class="count_pics"><?php echo $Subalbum["count_subalbums"]; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
+<?php if ($Subalbum['count_subalbums']): ?>				
+                            <p class="count_pics"><?php echo $Subalbum['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
 <?php endif; ?>		
-<?php if ($Subalbum["comment"]): ?>
-                            <p class="album_comment"><?php echo $Subalbum["comment"]; ?></p>
+<?php if ($Subalbum['comment']): ?>
+                            <p class="album_comment"><?php echo $Subalbum['comment']; ?></p>
 <?php endif; ?>
                      </div>
               </li>
@@ -132,13 +132,13 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <div id="galleryContainer" class="block">
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
-       <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
-              <div<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''; ?>"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
-<?php if ($Picture["href"]): ?>
-                     <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"] ? $Picture["comment"] : ($Picture["title"] ? $Picture["title"] : $Picture["filename"]); ?>">
+       <li class="col_<?php echo $col; ?><?php echo ($col == 0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
+              <div<?php echo (strlen($Picture['cssID']) ? ' id="' . $Picture['cssID'] . '"' : ''); ?> class="image_container<?php echo strlen($Picture['cssClass']) ? ' ' . $Picture['cssClass'] : ''; ?>"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+<?php if ($Picture['href']): ?>
+                     <a href="<?php echo $Picture['href']; ?>" <?php echo $Picture['lightbox']; ?> title="<?php echo $Picture['comment'] ? $Picture['comment'] : ($Picture['title'] ? $Picture['title'] : $Picture['filename']); ?>">
 <?php endif; ?>
-                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture['size'][0]; ?>" height="<?php echo $Picture['size'][1]; ?>" height="<?php echo $Picture["thumb_height"]; ?>" alt="<?php echo $Picture["alt"]; ?>" />
-<?php if ($Picture["href"]!=""): ?>
+                            <img src="<?php echo $Picture['thumb_src']; ?>" width="<?php echo $Picture['size'][0]; ?>" height="<?php echo $Picture['size'][1]; ?>" height="<?php echo $Picture['thumb_height']; ?>" alt="<?php echo $Picture['alt']; ?>" />
+<?php if ($Picture['href'] != ""): ?>
                      </a>
 <?php endif; ?>
               </div>				
