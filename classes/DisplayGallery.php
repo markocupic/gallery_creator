@@ -613,7 +613,7 @@ abstract class DisplayGallery extends \Module
             'owners_name' => $objOwner->name,
             //[int] album_id oder pid
             'album_id' => $objPicture->pid,
-            //[string] name (basename of the file)
+            //[string] name (basename/filename of the file)
             'name' => specialchars($objPicture->name),
             //[string] filename without extension
             'filename' => $arrFile["filename"],
@@ -625,7 +625,9 @@ abstract class DisplayGallery extends \Module
             'dirname' => $arrFile["dirname"],
             //[string] file-extension
             'extension' => $arrFile["extension"],
-            //[string] Bildtitel
+            //[string] alt-attribut
+            'alt' => specialchars($objPicture->title ? $objPicture->title : $objPicture->name),
+            //[string] title-attribut
             'title' => specialchars($objPicture->title),
             //[string] Bildkommentar oder Bildbeschreibung
             'comment' => specialchars($objPicture->comment),
@@ -735,7 +737,9 @@ abstract class DisplayGallery extends \Module
         $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
 
         // Overwrite the page description
-        $objPage->description =  $objPage->description . ': ' . $objAlbum->alias;
+        if (TL_MODE == 'FE') {
+            $objPage->description = $objPage->description . ': ' . $objAlbum->alias;
+        }
 
         //store all album-data in the array
         $this->Template->arrAlbumdata = $objAlbum->fetchAssoc();

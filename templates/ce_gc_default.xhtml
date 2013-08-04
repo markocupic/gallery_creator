@@ -133,11 +133,11 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
        <li class="col_<?php echo $col; ?><?php echo ($col==0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
-              <div<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo (strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''); ?>" style="<?php echo $this->imagemargin; ?>">
+              <div<?php echo (strlen($Picture["cssID"]) ? ' id="' . $Picture["cssID"] . '"' : ''); ?> class="image_container<?php echo strlen($Picture["cssClass"]) ? ' ' . $Picture["cssClass"] : ''; ?>" style="<?php echo $this->imagemargin; ?>">
 <?php if ($Picture["href"]): ?>
-                     <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"] ? $Picture["comment"] : $Picture["title"] ? $Picture["title"] : $Picture["filename"]; ?>">
+                     <a href="<?php echo $Picture["href"]; ?>" <?php echo $Picture["lightbox"]; ?> title="<?php echo $Picture["comment"] ? $Picture["comment"] : ($Picture["title"] ? $Picture["title"] : $Picture["filename"]); ?>">
 <?php endif; ?>
-                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture['size'][0]; ?>" height="<?php echo $Picture['size'][1]; ?>" height="<?php echo $Picture["thumb_height"]; ?>" alt="<?php echo $Picture["title"] ? $Picture["title"] : $Picture["name"]; ?>" />
+                            <img src="<?php echo $Picture["thumb_src"]; ?>" width="<?php echo $Picture['size'][0]; ?>" height="<?php echo $Picture['size'][1]; ?>" height="<?php echo $Picture["thumb_height"]; ?>" alt="<?php echo $Picture["alt"]; ?>" />
 <?php if ($Picture["href"]!=""): ?>
                      </a>
 <?php endif; ?>
