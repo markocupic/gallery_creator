@@ -1014,7 +1014,7 @@ class tl_gallery_creator_albums extends Backend
             // import Images from filesystem and write entries to tl_gallery_creator_pictures
             GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
         }
-        $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId);
+        $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
     }
 
     /**
