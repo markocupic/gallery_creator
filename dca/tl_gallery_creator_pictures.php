@@ -374,7 +374,7 @@ class tl_gallery_creator_pictures extends Backend
             'tl_gallery_creator_pictures',
             'myParseBackendTemplate'
         );
-        
+
         // set the referer when redirecting from import files from the filesystem
         if (\Input::get('filesImported'))
         {

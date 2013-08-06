@@ -25,8 +25,8 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Content Elements
-	'GalleryCreator\ContentDisplayGallery'       => 'system/modules/gallery_creator/modules/ContentDisplayGallery.php',
+	// Elements
+	'GalleryCreator\ContentDisplayGallery'       => 'system/modules/gallery_creator/elements/ContentDisplayGallery.php',
 
 	// Classes
 	'GalleryCreator\DisplayGallery'              => 'system/modules/gallery_creator/classes/DisplayGallery.php',
