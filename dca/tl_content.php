@@ -226,22 +226,11 @@ class ce_gallery_creator extends Backend
 
        /**
         * Return all gallery_creator frontent-templates as array
-        * @param object
         * @return array
         */
-       public function getTemplates(DataContainer $dc)
+       public function getTemplates()
        {
-              // Get the page ID
-              $objArticle = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")->limit(1)->execute($dc->activeRecord->pid);
-
-              // Inherit the page settings
-              $objPage = $this->getPageDetails($objArticle->pid);
-
-              // Get the theme ID
-              $objLayout = $this->Database->prepare("SELECT pid FROM tl_layout WHERE id=?")->limit(1)->execute($objPage->layout);
-
-              // Return all gallery templates
-              return $this->getTemplateGroup('ce_gc_', $objLayout->pid);
+           return $this->getTemplateGroup('ce_gc_');
        }
 
        /**

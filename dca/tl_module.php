@@ -146,13 +146,11 @@ class mod_gallery_creator extends Backend
 {
        /**
         * Return all gallery_creator frontent-templates as array
-        * @param object
         * @return array
         */
-       public function getTemplates(DataContainer $dc)
+       public function getTemplates()
        {
-              $intPid = $dc->activeRecord->pid;
-              return $this->getTemplateGroup('ce_gc_', $intPid);
+              return $this->getTemplateGroup('ce_gc_');
        }
 
 }
