@@ -886,16 +886,8 @@ class tl_gallery_creator_albums extends Backend
                 $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                 if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
                     // remove the deleted directory from tl_files
-                    GalleryCreator\GcHelpers::deleteFromFilesystem($this->uploadPath . '/' . $objAlb->alias);
+                    Dbafs::deleteResource($this->uploadPath . '/' . $objAlb->alias);
 
-                    // remove all pictures from tl_files
-                    $objFile = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($idDelAlbum);
-                    while ($objFile->next()) {
-                        // preserve pictures from external directories
-                        if (strstr($objFile->path, $this->uploadPath)) {
-                            GalleryCreator\GcHelpers::deleteFromFilesystem($objFile->path);
-                        }
-                    }
                     // remove all pictures from tl_gallery_creator_pictures
                     $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE pid=?')->execute($idDelAlbum);
 
@@ -924,8 +916,7 @@ class tl_gallery_creator_albums extends Backend
     {
         // create the upload directory if it doesn't already exists
         $folder = new Folder($this->uploadPath);
-
-        GalleryCreator\GcHelpers::registerInFilesystem($this->uploadPath);
+        Dbafs::addResource($this->uploadPath, false);
 
         Files::getInstance()->chmod($this->uploadPath, 0777);
         if (!is_writable(TL_ROOT . '/' . $this->uploadPath)) {
@@ -1206,7 +1197,7 @@ class tl_gallery_creator_albums extends Backend
         if (!strlen($objAlbum->alias)) {
             // create the new folder and register it in tl_files
             $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
-            GalleryCreator\GcHelpers::registerInFilesystem($objFolder->path);
+            Dbafs::addResource($objFolder->path, true);
 
             // chmod
             Files::getInstance()->chmod($objFolder->path, 0777);
@@ -1221,22 +1212,23 @@ class tl_gallery_creator_albums extends Backend
                 $objPic = $this->Database->prepare('SELECT id, name FROM tl_gallery_creator_pictures WHERE pid=? AND externalFile=?')->execute($dc->activeRecord->id, "");
                 while ($objPic->next()) {
                     // update the paths in tl_gallery_creator_pictures
-                    $newFilePath = $this->uploadPath . '/' . $strAlias . '/' . $objPic->name;
-                    $this->Database->prepare('UPDATE tl_gallery_creator_pictures SET path=? WHERE id=?')->execute($newFilePath, $objPic->id);
+                    $strDestination = $this->uploadPath . '/' . $strAlias . '/' . $objPic->name;
+                    $this->Database->prepare('UPDATE tl_gallery_creator_pictures SET path=? WHERE id=?')->execute($strDestination, $objPic->id);
 
                     // update the path of each file in tl_files
-                    $oldFilePath = $this->uploadPath . '/' . $objAlbum->alias . '/' . $objPic->name;
-                    GalleryCreator\GcHelpers::registerInFilesystem($oldFilePath, $newFilePath);
+                    $strResource = $this->uploadPath . '/' . $objAlbum->alias . '/' . $objPic->name;
+                    Dbafs::moveResource($strResource, $strDestination);
                 }
             }
 
-            $oldFolderPath = $this->uploadPath . '/' . $objAlbum->alias;
-            $newFolderPath = $this->uploadPath . '/' . $strAlias;
-            GalleryCreator\GcHelpers::registerInFilesystem($oldFolderPath, $newFolderPath);
+            $strResource = $this->uploadPath . '/' . $objAlbum->alias;
+            $strDestination = $this->uploadPath . '/' . $strAlias;
 
-            // rename the dir to the new albumalias
-            Files::getInstance()->chmod($this->uploadPath . '/' . $objAlbum->alias, 0777);
-            Files::getInstance()->rename($this->uploadPath . '/' . $objAlbum->alias, $this->uploadPath . '/' . $strAlias);
+            // rename the folder
+            Files::getInstance()->chmod($strResource, 0777);
+            Files::getInstance()->rename($strResource, $strDestination);
+            Dbafs::moveResource($strResource, $strDestination);
+
         }
 
         return $strAlias;

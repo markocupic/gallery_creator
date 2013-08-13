@@ -88,9 +88,8 @@ class GcHelpers extends \System
                 if (!$objFile->isGdImage)
                     return false;
 
-                // update or insert entries in tl_files
-                self::registerInFilesystem($strFilepath);
-                self::registerInFilesystem(dirname($strFilepath));
+                // add Resource to tl_files
+               \Dbafs::addResource($strFilepath, true);
 
                 //get the userId
                 $userId = '0';
@@ -132,31 +131,7 @@ class GcHelpers extends \System
         return false;
     }
 
-    /**
-     * deletes entries in tl_files
-     * @param sting|integer
-     */
-    public static function deleteFromFilesystem($value)
-    {
-        //$value can either be an id or a path
-        if ($value == '')
-            return;
-        //checks if $value is of type integer
-        if (strval(intval($value)) == strval($value)) {
-            $field = 'id';
-        } else {
-            $field = 'path';
-        }
-        switch ($field) {
-            case 'id' :
-                \Database::getInstance()->prepare('DELETE FROM tl_files WHERE id=?')->execute($value);
-                break;
 
-            case 'path' :
-                \Database::getInstance()->prepare('DELETE FROM tl_files WHERE path=?')->execute($value);
-                break;
-        }
-    }
 
     /**
      * move uploaded file to the album directory
@@ -460,102 +435,7 @@ class GcHelpers extends \System
 
     }
 
-    /**
-     * Register a file or folder in tl_files
-     * @param string
-     * @param string
-     * @return integer
-     */
-    public static function registerInFilesystem($strSrc = '', $strSrcUpdateTo = null)
-    {
-        /**
-         * $strSrc: the path to the file/folder: 'files/mydir/myfile.txt' or 'files/mydir'
-         * $strSrcUpdateTo: the new path to the file/folder if file was moved or renamed
-         */
 
-        if (!strlen($strSrc) || strstr($strSrc, '.svn') || strstr($strSrc, '.DS_Store'))
-            return false;
-
-        // Exempt folders from the synchronisation
-        $arrExempt = array();
-        if ($GLOBALS['TL_CONFIG']['fileSyncExclude'] != '') {
-            $arrExempt = array_map(function ($e) {
-                return $GLOBALS['TL_CONFIG']['uploadPath'] . '/' . $e;
-            }, trimsplit(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
-
-            foreach ($arrExempt as $strExemptFolder) {
-                if (strpos($strSrc, $strExemptFolder . '/') !== false) {
-                    return false;
-                }
-            }
-        }
-
-        if (is_dir(TL_ROOT . '/' . $strSrc)) {
-            $type = 'folder';
-        } else {
-            $type = 'file';
-        }
-
-        // for files
-        if ($type == 'file') {
-            $objFile = new \File($strSrc);
-            $hash = $objFile->hash;
-            $extension = $objFile->extension;
-        }
-
-        // for folders
-        if ($type == 'folder') {
-            $objFolder = new \Folder($strSrc);
-            $strSrc = $objFolder->path;
-            if (version_compare(VERSION, '3.0', '>')) {
-                // in versions > 3.0 contao collects the hash from the filenames
-                $hash = $objFolder->hash;
-            } else {
-                // in old versions contao collects the hash from the file content
-                // creating hash of folders causes memory-limit-problems
-                $hash = $objFolder->isEmpty() ? $objFolder->hash : '';
-            }
-            $extension = '';
-        }
-
-        //get the pid
-        $parentFolder = dirname($strSrc);
-        $objTlFile = \Database::getInstance()->prepare('SELECT * FROM tl_files WHERE path=?')->executeUncached($parentFolder);
-        $pid = $objTlFile->numRows ? $objTlFile->id : '0';
-        if ($parentFolder == $GLOBALS['TL_CONFIG']['uploadPath']) {
-            $pid = 0;
-        }
-
-        //if entry allready exists, update only
-        $objFile = \Database::getInstance()->prepare('SELECT * FROM tl_files WHERE path=?')->executeUncached($strSrc);
-        if ($objFile->numRows) {
-            // if the file/folder war renamed, change the path in tl_files
-            $set['path'] = strlen($strSrcUpdateTo) ? $strSrcUpdateTo : $objFile->path;
-            $set['type'] = $type;
-            $set['pid'] = $pid;
-            $set['name'] = basename($strSrc);
-            $set['extension'] = $extension;
-            $set['hash'] = $hash;
-            $set['tstamp'] = time();
-            $set['found'] = 1;
-            \Database::getInstance()->prepare('UPDATE tl_files %s WHERE id=?')->set($set)->execute($objFile->id);
-            $fileId = $objFile->id;
-        } else {
-            // if file is not registered in tl_files register now
-            $objFiles = new \FilesModel();
-            $objFiles->hash = $hash;
-            $objFiles->tstamp = time();
-            $objFiles->path = $strSrc;
-            $objFiles->name = basename($strSrc);
-            $objFiles->type = $type;
-            $objFiles->pid = $pid;
-            $objFiles->extension = $extension;
-            $objFiles->found = 1;
-            $objFiles->save();
-            $fileId = $objFile->id;
-        }
-        return $fileId;
-    }
 
     /**
      * reviseTable

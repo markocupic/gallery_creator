@@ -376,8 +376,7 @@ class tl_gallery_creator_pictures extends Backend
         );
 
         // set the referer when redirecting from import files from the filesystem
-        if (\Input::get('filesImported'))
-        {
+        if (\Input::get('filesImported')) {
             $this->import('Session');
             $session = $this->Session->get('referer');
             $session[TL_REFERER_ID]['current'] = 'contao/main.php?do=gallery_creator';
@@ -392,7 +391,7 @@ class tl_gallery_creator_pictures extends Backend
                 // Rotate image anticlockwise
                 $angle = 270;
                 GalleryCreator\GcHelpers::imageRotate($objPic->path, $angle);
-                GalleryCreator\GcHelpers::registerInFilesystem($objPic->path);
+                Dbafs::addResource($objPic->path, true);
                 $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . Input::get('id'));
                 break;
             default :
@@ -694,8 +693,8 @@ class tl_gallery_creator_pictures extends Backend
                 //Datei vom Server loeschen
                 $this->Files->delete($objImg->path);
                 //Datensatz aus tl_files loeschen
-                GalleryCreator\GcHelpers::deleteFromFilesystem($objImg->path);
-                GalleryCreator\GcHelpers::registerInFilesystem($this->uploadPath);
+                Dbafs::deleteResource($objImg->path);
+                Dbafs::addResource($this->uploadPath);
             }
         }
         if (!$this->User->isAdmin && $objImg->owner != $this->User->id) {

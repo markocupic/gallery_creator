@@ -11,8 +11,8 @@
 	<param name="uc_imageEditorEnabled" value="true"/>
 	<param name="uc_useLosslessJpegTransformations" value="true"/>
        <param name="vc_lookAndFeel" value="system" />
-	
-       <param name="ac_fireAppletInitialized" value="true"/> 
+
+       <param name="ac_fireAppletInitialized" value="true"/>
 
        <!-- send the PHPSESSIONID and the BE_USER_AUTH cookie -->
        <!-- Contao requires these parameters for the user-authentification -->
@@ -42,10 +42,10 @@
 	<param name="uc_scaledInstanceQualityFactors" value="<?php echo $this->imageQuality; ?>"/>
 <?php endif; ?>
 	<param name="uc_deleteTempFilesOnRemove" value="true"/>
-		
+
 	<!-- Sprachdatei-Einstellungen -->
 	<param name="ac_messagesZipUrl" value="<?php echo $this->jumploaderLanguageFiles; ?>"/>
-    
+
     <!-- eval server response -->
     <param name="ac_fireUploaderFileStatusChanged" value="true" />
 
