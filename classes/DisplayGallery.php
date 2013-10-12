@@ -97,8 +97,8 @@ abstract class DisplayGallery extends \Module
      */
     protected function checkThumbSizeSettings()
     {
-        if ($this->gc_size_albumlist == "")
-            $this->gc_size_albumlist = serialize(array(
+        if ($this->gc_size_albumlisting == "")
+            $this->gc_size_albumlisting = serialize(array(
                 "110",
                 "110",
                 "crop"
@@ -266,7 +266,7 @@ abstract class DisplayGallery extends \Module
         //thumbslider der Albenübersicht
         if (\Input::get('isAjax') && \Input::get('thumbSlider')) {
             $this->checkThumbSizeSettings();
-            $arrSize = unserialize($this->gc_size_albumlist);
+            $arrSize = unserialize($this->gc_size_albumlisting);
 
             $objAlbum = $this->Database->prepare('SELECT thumb,alias FROM tl_gallery_creator_albums WHERE id=?')->execute(\Input::get('AlbumId'));
             //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
@@ -479,7 +479,7 @@ abstract class DisplayGallery extends \Module
             'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : null,
             //[string] css-Classname
             'class' => 'thumb',
-            //[int] Thumbnailbreite
+            //[int] Thumbnailgrösse
             'size' => $arrSize,
             //[array] array mit exif metatags
             'exif' => $exif,
@@ -536,8 +536,12 @@ abstract class DisplayGallery extends \Module
             //Thumbnailbreite
             $arrSize = unserialize($strSize);
             //Thumbnails generieren
+
             $thumbSrc = \Image::get($strImageSrc, $arrSize[0], $arrSize[1], $arrSize[2]);
+            // die($thumbSrc);
             $objFile = new \File($thumbSrc);
+            $arrSize[0] = $objFile->width;
+            $arrSize[1] = $objFile->height;
             $arrFile["thumb_width"] = $objFile->width;
             $arrFile["thumb_height"] = $objFile->height;
         }
@@ -571,8 +575,12 @@ abstract class DisplayGallery extends \Module
                 if (is_file(TL_ROOT . '/' . $objFile->path)) {
                     $objFile = new \File($objFile->path);
                     if ($objFile->isGdImage) {
-                        //$thumbSrc = $objFile->path;
                         $thumbSrc = \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
+                        $objFile = new \File($thumbSrc);
+                        $arrSize[0] = $objFile->width;
+                        $arrSize[1] = $objFile->height;
+                        $arrFile["thumb_width"] = $objFile->width;
+                        $arrFile["thumb_height"] = $objFile->height;
                     }
                 }
             }
@@ -766,7 +774,7 @@ abstract class DisplayGallery extends \Module
         //Das Event-Datum des Albums formatiert
         $this->Template->eventDate = $this->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
         //Abstaende
-        $this->Template->imagemargin = $strContentType == 'cte' ? $this->generateMargin(unserialize($this->imagemargin)) : $this->generateMargin(unserialize($this->gc_imagemargin));
+        $this->Template->imagemargin = $this->DETAIL_VIEW === true ? $this->generateMargin(unserialize($this->gc_imagemargin_detailview)) : $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
         //Anzahl Spalten pro Reihe
         $this->Template->colsPerRow = $this->gc_rows == "" ? 4 : $this->gc_rows;
         //Pfad zur xml-Ausgabe fuer jw_imagerotator
