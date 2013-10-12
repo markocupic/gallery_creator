@@ -167,9 +167,9 @@ class ContentDisplayGallery extends DisplayGallery
                                    {
                                           continue;
                                    }
-                                   $arrAlbums[$objAlbum->id] = $this->getAlbumInformationArray($objAlbum->id, $this->gc_size_albumlist, 'cte');
+                                   $arrAlbums[$objAlbum->id] = $this->getAlbumInformationArray($objAlbum->id, $this->gc_size_albumlisting, 'cte');
                             }
-                            $this->Template->imagemargin = $this->generateMargin(unserialize($this->imagemargin));
+                            $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
                             $this->getAlbumTemplateVars($objAlbum->id, 'cte');
                             break;

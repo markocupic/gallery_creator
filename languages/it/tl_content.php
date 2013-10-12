@@ -16,8 +16,8 @@
  */
  
 $GLOBALS['TL_LANG']['tl_content']['miscellaneous_legend'] = "Altri settaggi";
-$GLOBALS['TL_LANG']['tl_content']['sorting'] = "Opzioni di ordinamento lista album";
-$GLOBALS['TL_LANG']['tl_content']['picture_sorting'] = "Opzioni di ordinamento immagini";
+$GLOBALS['TL_LANG']['tl_content']['sorting_legend'] = "Opzioni di ordinamento lista album";
+$GLOBALS['TL_LANG']['tl_content']['picture_sorting_legend'] = "Opzioni di ordinamento immagini";
 $GLOBALS['TL_LANG']['tl_content']['thumb_legend'] = "Impostazioni miniature";
 $GLOBALS['TL_LANG']['tl_content']['gc_rows']['0'] = "Miniature per riga";
 $GLOBALS['TL_LANG']['tl_content']['gc_rows']['1'] = "Seleziona il numero di miniature per riga.(0=Quante più possibili)";
@@ -43,7 +43,7 @@ $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting_direction']['0'] = "Ordina
 $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting_direction']['1'] = "DESC: decrescente, ASC: crescente";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['0'] = "Vista dettaglio: larghezza e altezza miniatura";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['1'] = "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.";
-$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlist']['1'] = "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.";
+$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['1'] = "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Visione a dimensione intera / in una nuova finestra";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Apri l'immagine a dimensione intera in una lightbox oppure il link in una nuova finestra del browser";
  

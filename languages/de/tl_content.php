@@ -16,8 +16,8 @@
  */
  
 $GLOBALS['TL_LANG']['tl_content']['miscellaneous_legend'] = "Allgemeine Einstellungen";
-$GLOBALS['TL_LANG']['tl_content']['sorting'] = "Alben-Auflistung-Sortieroptionen";
-$GLOBALS['TL_LANG']['tl_content']['picture_sorting'] = "Bild-Auflistung-Sortieroptionen";
+$GLOBALS['TL_LANG']['tl_content']['sorting_legend'] = "Alben-Auflistung-Sortieroptionen";
+$GLOBALS['TL_LANG']['tl_content']['picture_sorting_legend'] = "Bild-Auflistung-Sortieroptionen";
 $GLOBALS['TL_LANG']['tl_content']['thumb_legend'] = "Thumbnail-Einstellungen";
 $GLOBALS['TL_LANG']['tl_content']['gc_rows']['0'] = "Vorschaubilder pro Reihe";
 $GLOBALS['TL_LANG']['tl_content']['gc_rows']['1'] = "W&auml;hlen Sie die Anzahl Vorschaubilder pro Reihe aus. (0=So viele wie m&ouml;glich)";
@@ -44,8 +44,12 @@ $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting_direction']['0'] = "Sortie
 $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting_direction']['1'] = "DESC: absteigend, ASC: aufsteigend";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['0'] = "Detailansicht: Thumbnailbreite und Thumbnailh&ouml;he";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
-$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlist']['0'] = "Albumauflistung: Thumbnailbreite und Thumbnailh&ouml;he";
-$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlist']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
+$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_detailview']['0'] = "Detailansicht: Bildabstand";
+$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_detailview']['1'] =  "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
+$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['0'] = "Albumauflistung: Thumbnailbreite und Thumbnailh&ouml;he";
+$GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
+$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['0'] = "Albumauflistung: Bildabstand";
+$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['1'] = "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Großansicht/Neues Fenster";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster &ouml;ffnen.";
  

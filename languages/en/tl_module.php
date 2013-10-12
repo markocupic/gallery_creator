@@ -28,6 +28,8 @@ $GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage'] = array('Items per page in 
 $GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage'] = array('Thumbs per page in the detailview', 'The number of thumbnails per page in the detailview. Set to 0 to disable pagination.');
 $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput'] = array('Hierarchically Frontend-Album-Output', 'Hierarchically Frontend-Album-Output (Albums and Subalbums)');
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview'] = array('Detailview: Thumbnail width and height', 'Here you can set the image dimensions and the resize mode.');
-$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist'] = array('Albumlist: Thumbnail width and height', 'Here you can set the image dimensions and the resize mode.');
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview'] = array('Image margin detailview', 'Here you can enter the top, right, bottom and left margin.');
+$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting'] = array('Albumlist: Thumbnail width and height', 'Here you can set the image dimensions and the resize mode.');
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting'] = array('Image margin albumlisting', 'Here you can enter the top, right, bottom and left margin.');
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']     = array('Full-size view/new window', 'Open the full-size image in a lightbox or the link in a new browser window.');
 ?>

@@ -31,9 +31,13 @@ $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['0'] = "Alben im Front
 $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['1'] = "Sollen die Alben im Frontend hierarchisch anhand der Albumstruktur ausgegeben werden (Alben und Unteralben)?";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview']['0'] = "Detailansicht: Thumbnailbreite und Thumbnailh&ouml;he";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
-$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist']['0'] = "Albumauflistung: Thumbnailbreite und Thumbnailh&ouml;he";
-$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview']['0'] = "Detailansicht: Bildabstand";
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview']['1'] =  "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
+$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['0'] = "Albumauflistung: Thumbnailbreite und Thumbnailh&ouml;he";
+$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting']['0'] = "Albumauflistung: Bildabstand";
+$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting']['1'] =  "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['0'] = "Großansicht/Neues Fenster";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['1'] = "Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster &ouml;ffnen.";
- 
+
 ?>

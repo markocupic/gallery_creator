@@ -13,7 +13,7 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,headline;{thumb_legend},gc_size_albumlist,gc_size_detailview,gc_imagemargin,gc_fullsize;{image_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,headline;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{image_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
 
 /**
  * Add fields to tl_module
@@ -26,6 +26,30 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_rows'] = array(
        'options' => range(0, 30),
        'eval' => array('tl_class' => ''),
        'sql' => "smallint(5) unsigned NOT NULL default '4'"
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_albumlisting'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting'],
+    'exclude' => true,
+    'inputType' => 'imageSize',
+    'options' => $GLOBALS['TL_CROP'],
+    'reference' => &$GLOBALS['TL_LANG']['MSC'],
+    'eval' => array(
+        'rgxp' => 'digit',
+        'nospace' => true,
+        'tl_class' => 'clr'
+    ),
+    'sql' => "varchar(64) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin_albumlisting'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting'],
+    'exclude' => true,
+    'inputType' => 'trbl',
+    'options' => array('px', '%', 'em', 'ex', 'pt', 'pc', 'in', 'cm', 'mm'),
+    'eval' => array('includeBlankOption' => true, 'tl_class' => 'clr'),
+    'sql' => "varchar(128) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_detailview'] = array(
@@ -42,18 +66,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_detailview'] = array(
        'sql' => "varchar(64) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['gc_size_albumlist'] = array(
-       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_size_albumlist'],
-       'exclude' => true,
-       'inputType' => 'imageSize',
-       'options' => $GLOBALS['TL_CROP'],
-       'reference' => &$GLOBALS['TL_LANG']['MSC'],
-       'eval' => array(
-              'rgxp' => 'digit',
-              'nospace' => true,
-              'tl_class' => ''
-       ),
-       'sql' => "varchar(64) NOT NULL default ''"
+$GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin_detailview'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview'],
+    'exclude' => true,
+    'inputType' => 'trbl',
+    'options' => array('px', '%', 'em', 'ex', 'pt', 'pc', 'in', 'cm', 'mm'),
+    'eval' => array('includeBlankOption' => true, 'tl_class' => 'clr'),
+    'sql' => "varchar(128) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_fullsize'] = array(
