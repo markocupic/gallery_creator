@@ -49,5 +49,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['0'] = "Bild u
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['1'] = "Bild um 90° drehen.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['0'] = "Bilder uploaden";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['1'] = "Bilder uploaden";
- 
-?>

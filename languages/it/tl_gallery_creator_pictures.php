@@ -41,5 +41,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['0'] = "Ruota 
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['1'] = "Ruota l'immagine di 90°";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['0'] = "Carica immagini";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['1'] = "Carica immagini";
- 
-?>

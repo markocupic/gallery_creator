@@ -174,5 +174,3 @@ class mod_gallery_creator extends Backend
        }
 
 }
-
-?>

@@ -42,5 +42,3 @@ $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting'] = array('Albumlist: Th
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting'] = array('Image margin albumlisting', 'Here you can enter the top, right, bottom and left margin.');
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize'] = array('Full-size view/new window', 'Open the full-size image in a lightbox or the link in a new browser window.');
 
-
-?>

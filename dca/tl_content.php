@@ -285,5 +285,3 @@ class ce_gallery_creator extends Backend
     }
 
 }
-
-?>

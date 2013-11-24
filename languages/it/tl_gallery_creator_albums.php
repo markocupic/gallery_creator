@@ -53,5 +53,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['0'] = "Copia dop
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Copia dopo l'album con ID %s";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Copia dentro";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Copia dentro l'album con ID %s";
- 
-?>

@@ -52,5 +52,3 @@ $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['0'] = "Albumau
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['1'] = "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Großansicht/Neues Fenster";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster &ouml;ffnen.";
- 
-?>

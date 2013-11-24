@@ -24,5 +24,3 @@ $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['0'] = 
 $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['1'] = "Maakt het mogelijk dat alle backend gebruikers dit album bewerken, niet alleen de eigenaar van het album.";
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files']['0'] = "Kopieën van geïmporteerde bestanden";
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files']['1'] = "Het systeem maakt een kopie van elk geïmporteerde bestand.";
- 
-?>

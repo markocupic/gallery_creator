@@ -21,5 +21,3 @@ $GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Presenta album gallery_creator come un modulo frontend.";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['1'] = "Presenta album gallery_creator come un elemento di contenuto frontend.";
- 
-?>

@@ -35,5 +35,3 @@ $GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['0'] = "Albumlijst: thu
 $GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['1'] = "Geef hier de thumbnail maten en de resize mode.";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['0'] = "Ware grootte/nieuw venster";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['1'] = "Open de afbeelding op ware grootte in een lightbox of de link in een nieuw browser venster.";
- 
-?>

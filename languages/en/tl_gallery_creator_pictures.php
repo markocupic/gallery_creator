@@ -47,5 +47,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cut'] = array('change order'
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['paste'] = array('paste below', 'Paste below image with ID %s.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate'] = array('rotate image', 'Rotate image by 90°.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader'] = array('upload images', 'upload images');
-
-?>

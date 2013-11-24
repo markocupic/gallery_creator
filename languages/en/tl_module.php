@@ -32,4 +32,3 @@ $GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview'] = array('Image mar
 $GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting'] = array('Albumlist: Thumbnail width and height', 'Here you can set the image dimensions and the resize mode.');
 $GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting'] = array('Image margin albumlisting', 'Here you can enter the top, right, bottom and left margin.');
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']     = array('Full-size view/new window', 'Open the full-size image in a lightbox or the link in a new browser window.');
-?>

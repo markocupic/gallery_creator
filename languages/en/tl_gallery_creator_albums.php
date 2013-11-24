@@ -64,5 +64,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']  = array('Paste in
  */
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'] = 'CE with id=%s in article "%s" on page "%s"';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = 'Do not scale images during the upload process.';
-
-?>

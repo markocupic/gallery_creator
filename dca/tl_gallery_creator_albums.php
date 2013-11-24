@@ -1254,4 +1254,3 @@ class tl_gallery_creator_albums extends Backend
 
 }
 
-?>

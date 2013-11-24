@@ -24,6 +24,3 @@ $GLOBALS['TL_LANG']['tl_settings']['gc_watermark_path'] = array('Add a watermark
 $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection'] = array('Remove Backend Album Protection', 'If you choose this setting, you will enable "album-non-owners" deleting and editing albums in the backend.');
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files'] = array('Do a copy of each imported file in the "gallery_creator_albums-directory" when importing images', 'If you choose this setting, the system will do copy of each image when importing images from the server.');
 
-
-
-?>

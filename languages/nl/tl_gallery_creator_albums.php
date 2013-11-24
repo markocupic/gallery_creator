@@ -54,5 +54,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['0'] = "Plak acht
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Plak achter album ID %s.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Plak in";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Plak in album ID %s.";
- 
-?>

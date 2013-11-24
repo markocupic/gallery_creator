@@ -67,5 +67,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = "Bilder vor dem Upload nicht skalieren.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['0'] = "Datenbank aufr&auml;umen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['1'] = "Alte/fehlerhafte Datenbankeinträge l&ouml;schen";
- 
-?>

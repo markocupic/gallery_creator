@@ -39,5 +39,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['0'] = "Roteer
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['1'] = "Roteer afbeelding 90°.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['0'] = "Upload afbeeldingen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['1'] = "Upload afbeeldingen";
- 
-?>

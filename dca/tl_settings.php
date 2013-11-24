@@ -66,5 +66,3 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['gc_album_import_copy_files'] = arra
 );
 
 
-
-?>

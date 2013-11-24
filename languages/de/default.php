@@ -29,5 +29,3 @@ $GLOBALS['TL_LANG']['gallery_creator']['contains'] = "enth&auml;lt";
 $GLOBALS['TL_LANG']['gallery_creator']['visitors'] = "Aufrufe";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['0'] = "Authentifizierungsfehler";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['1'] = "Der Zugriff auf dieses Album wurde verweigert. Bitte melden Sie sich als Frontend-User an oder &uuml;berpr&uuml;fen Sie Ihre Benutzerrechte.";
- 
-?>

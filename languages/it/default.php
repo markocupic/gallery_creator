@@ -26,5 +26,3 @@ $GLOBALS['TL_LANG']['gallery_creator']['pictures'] = "immagini";
 $GLOBALS['TL_LANG']['gallery_creator']['contains'] = "contiene";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['0'] = "Errore di autenticazione";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['1'] = "Hai cercato di accedere a un album protetto. Prego effettua il login come utente frontend o controlla i tuoi permessi.";
- 
-?>

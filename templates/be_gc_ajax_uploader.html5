@@ -1,0 +1,207 @@
+<?php  $GLOBALS['TL_JAVASCRIPT'][] = '../system/modules/gallery_creator/assets/plugins/bla.js'; ?>
+<?php
+$url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN);
+?>
+
+
+<input type="file" name="image" id="filesToUpload" onchange="javascript:showSelectedFiles();" multiple><br/>
+<button type="button" id="btn" onclick="javascript:return sendRequest(); return false;">Upload</button>
+<ul id="fileList"></ul>
+<div id="imageContainer"></div>
+<a href="contao/main.php?do=gallery_creator&id=178&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=450ba8130a19890ff6499347e860eaf5&ref=40b7a497">link</a>
+<script>
+    var uploader = new Object();
+    <
+    ? php
+    if ($this - > scaleImages):
+    ?
+    >
+    uploader.scaleImages = true;
+    uploader.maxWidth =
+    <
+    ? php echo
+    $this - > maxWidth;
+    ?
+    >
+    ;
+    uploader.maxHeight =
+    <
+    ? php echo
+    $this - > maxHeight;
+    ?
+    >
+    ;
+    <
+    ? php endif;
+    ?
+    >
+
+
+    var fileContainer = new Object();
+
+    function showSelectedFiles() {
+        //get the input and UL list
+        var input = document.getElementById('filesToUpload');
+        var list = document.getElementById('fileList');
+
+        //empty list for now...
+        $$('#fileList li').each(function (el, index) {
+            el.destroy();
+        });
+
+        //for every file...
+        for (var x = 0; x < input.files.length; x++) {
+            //add to list
+            var li = document.createElement('li');
+            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name;
+            li.inject(list);
+        }
+
+
+        var fileInputObject = document.id('filesToUpload').files;
+        var i = 0;
+        Object.each(fileInputObject, function (file, index) {
+
+            if (!file.type.match(/image.*/)) {
+                alert('this file is not an image.');
+            }
+
+            if (file.name == undefined)return;
+            if (!file.name)return;
+            if (file.name == 'undefined')return;
+            if (file.name == '')return;
+            var filename = file.name;
+
+            var img = document.createElement("img");
+            img.src = window.URL.createObjectURL(file);
+
+
+            //https://bugzilla.mozilla.org/show_bug.cgi?id=574330
+            img.onload = function () {
+                canvas = document.createElement("canvas");
+                canvas.id = "mycanvas";
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, img.width, img.height);// this is line 14
+                width = img.width;
+                height = img.height;
+                var MAX_WIDTH = uploader.maxWidth;
+                var MAX_HEIGHT = uploader.maxHeight;
+
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                var url = canvas.toDataURL('');
+
+                var newImg = document.createElement("img");
+                newImg.addClass('resizedImage');
+                newImg.src = url;
+                newImg.setStyle('width', '80px');
+                newImg.inject(document.id('imageContainer'));
+
+                //for firefox only
+                fileContainer[i] = canvas.mozGetAsFile(file.name, 'image/jpeg');
+
+
+                // for chrome ansd iexplorer send the blob via $_POST
+                // var dataURL = canvas.toDataURL('image/jpeg', 0.5);
+                //var blob = dataURItoBlob(dataURL);
+                //fileContainer[i] = dataURL;
+                i++;
+            };
+        });
+    }
+
+
+    //http://www.html5rocks.com/de/tutorials/file/xhr2/
+    //resize image: tutorial -->  https://hacks.mozilla.org/2011/01/how-to-develop-a-html5-image-uploader/
+    function sendRequest() {
+        Object.each(fileContainer, function (file, index) {
+            var oMyForm = new FormData();
+            // HTML file input user's choice...
+            oMyForm.append("file", file, file.name);
+
+            oMyForm.append("FORM_SUBMIT", "tl_gallery_creator_albums");
+            oMyForm.append("REQUEST_TOKEN", "<?php echo REQUEST_TOKEN; ?>");
+            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+
+            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+
+            var xhr = new XMLHttpRequest();
+            //xhr.withCredentials = true;
+            xhr.open("POST", "<?php echo $url; ?>");
+            xhr.addEventListener("progress", updateProgress, false);
+            xhr.addEventListener("load", transferComplete, false);
+            xhr.addEventListener("error", transferFailed, false);
+            xhr.addEventListener("abort", transferCanceled, false);
+            xhr.send(oMyForm);
+
+        });
+        document.id('filesToUpload').value = '';
+        return false;
+    }
+
+    function pause() {
+        return true;
+    }
+
+
+    // progress on transfers from the server to the client (downloads)
+    function updateProgress(oEvent) {
+        if (oEvent.lengthComputable) {
+            var percentComplete = oEvent.loaded / oEvent.total;
+            // ...
+        } else {
+            // Unable to compute progress information since the total size is unknown
+        }
+    }
+
+    function transferComplete(evt) {
+        alert("The transfer is complete.");
+    }
+
+    function transferFailed(evt) {
+        alert("An error occurred while transferring the file.");
+    }
+
+    function transferCanceled(evt) {
+        alert("The transfer has been canceled by the user.");
+    }
+
+    function dataURItoBlob(dataURI) {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs
+        var byteString = atob(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+        // write the bytes of the string to an ArrayBuffer
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        // write the ArrayBuffer to a blob, and you're done
+        var bb = new BlobBuilder();
+        bb.append(ab);
+        return bb.getBlob(mimeString);
+    }
+
+</script>

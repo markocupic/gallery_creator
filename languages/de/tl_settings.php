@@ -24,5 +24,3 @@ $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['0'] = 
 $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['1'] = "Backend-Album-Protection aufheben, damit auch Nichtbesitzer von Alben oder Bildern diese bearbeiten und l&ouml;schen k&ouml;nnen.";
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files']['0'] = "Beim Import von Bildern eine Kopie jeder Bilddatei im Verzeichnis \"tl_files/gallery_creator_albums\" erstellen";
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files']['1'] = "Wenn diese Einstellung gew&auml;hlt wird, erstellt contao beim Importieren von Bildern in ein Album automatisch eine Kopie im Verzeichnis \"tl_files/gallery_creator_albums\".";
- 
-?>

@@ -774,7 +774,7 @@ abstract class DisplayGallery extends \Module
         //Das Event-Datum des Albums formatiert
         $this->Template->eventDate = $this->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
         //Abstaende
-        $this->Template->imagemargin = $this->DETAIL_VIEW === true ? $this->generateMargin(unserialize($this->gc_imagemargin_detailview)) : $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
+        $this->Template->imagemargin = $this->DETAIL_VIEW ? $this->generateMargin(deserialize($this->gc_imagemargin_detailview), 'margin') : $this->generateMargin(deserialize($this->gc_imagemargin_albumlisting), 'margin');
         //Anzahl Spalten pro Reihe
         $this->Template->colsPerRow = $this->gc_rows == "" ? 4 : $this->gc_rows;
         //Pfad zur xml-Ausgabe fuer jw_imagerotator

@@ -46,5 +46,3 @@ $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['1'] = "Qui puoi imposta
 $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['1'] = "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Visione a dimensione intera / in una nuova finestra";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Apri l'immagine a dimensione intera in una lightbox oppure il link in una nuova finestra del browser";
- 
-?>

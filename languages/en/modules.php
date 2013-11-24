@@ -29,5 +29,3 @@ $GLOBALS['TL_LANG']['FMD']['gallery_creator'] = array('Gallery-Creator-Frontend-
  */
 $GLOBALS['TL_LANG']['CTE']['ce_type_gallery_creator'] = 'Gallery Creator';
 $GLOBALS['TL_LANG']['CTE']['gallery_creator'] = array('Gallery-Creator-Content-Element','Present gallery_creator albums as a frontend content element.');
-
-?>
