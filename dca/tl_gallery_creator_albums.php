@@ -995,7 +995,7 @@ class tl_gallery_creator_albums extends Backend
         $blnPreserveFilename = Input::post('preserve_filename');
         $intAlbumId = Input::get('id');
 
-        // comma separated list with folder ids => 45,55,84
+        // comma separated list with folder uuid's => 10585872-5f1f-11e3-858a-0025900957c8,105e9de0-5f1f-11e3-858a-0025900957c8,105e9dd6-5f1f-11e3-858a-0025900957c8
         $strMultiSRC = $this->Input->post('multiSRC');
 
         if (strlen(trim($strMultiSRC))) {

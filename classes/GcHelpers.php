@@ -2,9 +2,7 @@
 
 /**
  * Contao Open Source CMS
- *
  * Copyright (C) 2005-2012 Leo Feyer
- *
  * @package Gallery Creator
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
@@ -17,7 +15,6 @@ namespace GalleryCreator;
 
 /**
  * Class GcHelpers
- *
  * Provide methods for using the gallery_creator extension
  * @copyright  Marko Cupic 2012
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
@@ -89,7 +86,7 @@ class GcHelpers extends \System
                     return false;
 
                 // add Resource to tl_files
-               \Dbafs::addResource($strFilepath, true);
+                \Dbafs::addResource($strFilepath, true);
 
                 //get the userId
                 $userId = '0';
@@ -169,7 +166,7 @@ class GcHelpers extends \System
         }
 
         //dateinamen romanisieren und auf Einmaligkeit testen
-        $strFilename = self::generateUniqueFilename($strFilename);
+        $strFilename = static::generateUniqueFilename($strFilename);
 
         //chmod-settings
         \Files::getInstance()->chmod($strUploadPath . '/' . $strAlbumAlias, 0777);
@@ -381,45 +378,59 @@ class GcHelpers extends \System
      */
     public static function importFromFilesystem($intAlbumId, $strMultiSRC)
     {
-        $arrFileSrc = array();
-        foreach (explode(',', $strMultiSRC) AS $src) {
-            $objFiles = \FilesModel::findById($src);
-            if ($objFiles !== null) {
-                //if item is a file, then store it in the array
-                if (is_file(TL_ROOT . '/' . $objFiles->path)) {
-                    $objFile = new \File($objFiles->path);
-                    if ($objFile->isGdImage) {
-                        $arrFileSrc[] = array(
-                            'name' => $objFile->basename,
-                            'path' => $objFiles->path
-                        );
+        $images = array();
+        $objFiles = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
+
+        if ($objFiles === null) return;
+
+        while ($objFiles->next()) {
+            // Continue if the files has been processed or does not exist
+            if (isset($images[$objFiles->path]) || !file_exists(TL_ROOT . '/' . $objFiles->path)) {
+                continue;
+            }
+            // If item is a file, then store it in the array
+            if ($objFiles->type == 'file') {
+                $objFile = new \File($objFiles->path);
+                if ($objFile->isGdImage) {
+                    $images[$objFile->path] = array(
+                        'name' => $objFile->basename,
+                        'path' => $objFile->path
+                    );
+                }
+
+            } else {
+                // if it is a directory, then store its files in the array
+                $objSubfiles = \FilesModel::findByPid($objFiles->uuid);
+
+                if ($objSubfiles === null) {
+                    continue;
+                }
+
+                while ($objSubfiles->next()) {
+                    // Skip subfolders
+                    if ($objSubfiles->type == 'folder') {
+                        continue;
                     }
 
-                }
-                // if item is a directory, then store its files in the array
-                if (is_dir(TL_ROOT . '/' . $objFiles->path)) {
-                    $arrFiles = scan(TL_ROOT . '/' . $objFiles->path);
-                    foreach ($arrFiles as $fileSrc) {
-                        if (is_file(TL_ROOT . '/' . $objFiles->path . '/' . $fileSrc)) {
-                            $objFile = new \File($objFiles->path . '/' . $fileSrc);
-                            if ($objFile->isGdImage) {
-                                $arrFileSrc[] = array(
-                                    // only the basename
-                                    'name' => $objFile->basename,
-                                    // path (incl. filename)
-                                    'path' => $objFile->value
-                                );
-                            }
-                        }
+                    $objFile = new \File($objSubfiles->path, true);
+
+                    if ($objFile->isGdImage) {
+                        $images[$objFile->path] = array(
+                            // only the basename
+                            'name' => $objFile->basename,
+                            // path (incl. filename)
+                            'path' => $objFile->path
+                        );
                     }
                 }
             }
         }
 
-        if (count($arrFileSrc)) {
+
+        if (count($images)) {
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
             $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
-            foreach ($arrFileSrc as $image) {
+            foreach ($images as $image) {
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files']) {
                     $strFilename = GcHelpers::generateUniqueFilename($image['name']);
                     $strSourceSrc = $image['path'];
@@ -440,7 +451,6 @@ class GcHelpers extends \System
     /**
      * reviseTable
      * @param bool
-     *
      */
     public static function reviseTable($blnCleanDb = false)
     {

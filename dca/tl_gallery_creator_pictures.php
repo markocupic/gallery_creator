@@ -321,7 +321,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                 'filesOnly' => true,
                 'fieldType' => 'radio'
             ),
-            'sql' => "varchar(255) NOT NULL default ''"
+            'sql' =>  "binary(16) NULL",
         ),
         'cssID' => array(
             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cssID'],

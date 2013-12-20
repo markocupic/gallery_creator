@@ -594,10 +594,11 @@ abstract class DisplayGallery extends \Module
         }
         //video-integration
         $strMediaSrc = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : "";
-        if (is_int((int)$objPicture->localMediaSRC)) {
+
+        if (\Validator::isUuid($objPicture->localMediaSRC)) {
             //get path of a local Media
             $objMovieFile = \FilesModel::findById($objPicture->localMediaSRC);
-            $strMediaSrc = is_object($objMovieFile) ? $objMovieFile->path : $strMediaSrc;
+            $strMediaSrc = $objMovieFile !== null ? $objMovieFile->path : $strMediaSrc;
         }
 
         $href = null;
@@ -708,7 +709,7 @@ abstract class DisplayGallery extends \Module
 
         $objPicture = \GalleryCreatorPicturesModel::findById($intPictureId);
         $objFiles = \FilesModel::findByPath($objPicture->path);
-        if (!is_object($objFiles))
+        if ($objFiles === null)
             return null;
 
         $objFile = new \File($objPicture->path);
