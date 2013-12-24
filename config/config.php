@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contao Open Source CMS
  *
@@ -30,6 +29,13 @@ array_insert($GLOBALS['FE_MOD'], 2, array('module_type_gallery_creator' => array
  */
 if (TL_MODE == 'BE')
 {
+       // Jumploader bypass
+       if ($_GET['mode'] == 'fileupload' && isset($_FILES['file']) && $_GET['rt'] != '')
+       {
+              $_POST['REQUEST_TOKEN'] = $_GET['rt'];
+              $_POST['FORM_SUBMIT'] = $_GET['tl_upload'];
+       }
+
        $GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
               'icon' => 'system/modules/gallery_creator/assets/images/photo.png',
               'tables' => array(

@@ -46,6 +46,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'ce_gc_default'    => 'system/modules/gallery_creator/templates',
-	'be_gc_jumploader' => 'system/modules/gallery_creator/templates',
+	'ce_gc_default'        => 'system/modules/gallery_creator/templates',
+	'be_gc_html5_uploader' => 'system/modules/gallery_creator/templates',
+	'be_gc_jumploader'     => 'system/modules/gallery_creator/templates',
 ));
