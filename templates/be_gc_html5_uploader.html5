@@ -3,7 +3,8 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 ?>
 
 <br><br>
-<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" onchange="javascript:showSelectedFiles();" multiple>
+<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload"
+       onchange="javascript:showSelectedFiles();" multiple>
 <br><br><br>
 <button type="button" id="btn" onclick="javascript:return sendRequest(); return false;">Upload</button>
 <ul id="fileList"></ul>
@@ -23,7 +24,7 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
         for (var x = 0; x < input.files.length; x++) {
             //add to list
             var li = document.createElement('li');
-            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name + ' (' + Math.round(input.files[x].size/1000) + ' kb)' ;
+            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name + ' (' + Math.round(input.files[x].size / 1000) + ' kb)';
             li.inject(list);
             var requestId = parseInt(x) + 1;
             li.setProperty('id', 'upload_' + requestId);
@@ -34,58 +35,83 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 
     //http://www.html5rocks.com/de/tutorials/file/xhr2/
     function sendRequest() {
-        var oMyForm = new FormData();
+        var myRequests = new Object();
+        var myForms = new Object();
+
 
         var objFiles = document.id('filesToUpload').files;
-        Object.each(objFiles, function (el, index) {
-            if (el.name == undefined)return;
-            if (!el.name)return;
-            if (el.name == 'undefined')return;
-            if (el.name == '')return;
+        var i = 0;
+        Object.each(objFiles, function (objFile, index) {
+            i++;
+            if (objFile.name == undefined)return;
+            if (!objFile.name)return;
+            if (objFile.name == 'undefined')return;
+            if (objFile.name == '')return;
 
-            //alert(el.name);
-            oMyForm.append("FORM_SUBMIT", "tl_gallery_creator_albums");
-            oMyForm.append("REQUEST_TOKEN", "<?php echo REQUEST_TOKEN; ?>");
-            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+            var objForm = new FormData();
+            objForm.append("FORM_SUBMIT", "tl_gallery_creator_albums");
+            objForm.append("REQUEST_TOKEN", "<?php echo REQUEST_TOKEN; ?>");
+            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
 
-            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
-            oMyForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
 
             // Add the request Id
-            var requestId = parseInt(index) + 1;
-            oMyForm.append("requestId", requestId);
+            objForm.requestId = i;
+            objForm.append("requestId", i);
 
             // HTML file input user's choice...
-            oMyForm.append("file", el);
-            //oMyForm.append("file[]", objFiles[0]);
-            //oMyForm.append("file[]", objFiles[1]);
+            objForm.append("file", objFile);
 
 
             var xhr = new XMLHttpRequest();
+            xhr.requestId = i;
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
+                    // get the server-response
                     var json = JSON.decode(xhr.responseText);
+                    // if error
                     if (json.status == 'error') {
                         document.id('upload_' + json.requestId).setStyle('color', 'red');
                         document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
-
+                        document.id('upload_' + json.requestId).addClass('error');
                     }
+
+                    // if success
                     if (json.status == 'success') {
                         document.id('upload_' + json.requestId).setStyle('color', 'green');
                         document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
+                        document.id('upload_' + json.requestId).addClass('loaded');
+                    }
+
+                    // Send next file to server
+                    var nextId = parseInt(this.requestId) + 1;
+                    if (myRequests['r' + nextId]) {
+                        myRequests['r' + nextId].open("POST", "<?php echo $url; ?>", true);
+                        myRequests['r' + nextId].send(myForms['r' + nextId]);
+                        document.id('upload_' + nextId).addClass('onprogress');
                     }
                 }
+
             }
-            //oReq.withCredentials = true;
 
-            xhr.open("POST", "<?php echo $url; ?>", true);
-
-            xhr.addEventListener("progress", updateProgress, false);
-            xhr.addEventListener("load", transferComplete, false);
+            // add events
+            xhr.upload.addEventListener('load', function (evt) {
+                document.id('upload_' + xhr.requestId).removeClass('onprogress');
+            }, false);
             xhr.addEventListener("error", transferFailed, false);
             xhr.addEventListener("abort", transferCanceled, false);
-            xhr.send(oMyForm);
+
+            myRequests['r' + xhr.requestId] = xhr;
+            myForms['r' + xhr.requestId] = objForm;
         });
+
+        // open and send first request
+        document.id('upload_1').addClass('onprogress');
+        myRequests['r1'].open("POST", "<?php echo $url; ?>", true);
+        myRequests['r1'].send(myForms['r1']);
+
+
         document.id('filesToUpload').value = '';
         return false;
     }
@@ -94,22 +120,18 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
     function updateProgress(oEvent) {
         if (oEvent.lengthComputable) {
             var percentComplete = oEvent.loaded / oEvent.total;
-            // ...
         } else {
             // Unable to compute progress information since the total size is unknown
         }
     }
 
-    function transferComplete(evt) {
-        //alert("The transfer is complete.");
-    }
 
     function transferFailed(evt) {
-        alert("An error occurred while transferring the file.");
+        //
     }
 
     function transferCanceled(evt) {
-        alert("The transfer has been canceled by the user.");
+        //
     }
 
 </script>
