@@ -4,72 +4,102 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 
 <br><br>
 <input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload"
-       onchange="javascript:showSelectedFiles();" multiple>
+       onchange="javascript:objUpload.listSelectedFiles();" multiple>
 <br><br><br>
-<button type="button" id="btn" onclick="javascript:return sendRequest(); return false;">Upload</button>
+<button type="button" id="btn" onclick="javascript:return objUpload.initUpload(); return false;">Upload</button>
+<br><br>
 <ul id="fileList"></ul>
+
+
+
+
 <script>
-
-    function showSelectedFiles() {
-        //get the input and UL list
-        var input = document.getElementById('filesToUpload');
-        var list = document.getElementById('fileList');
-
-        //empty list for now...
-        $$('#fileList li').each(function (el, index) {
-            el.destroy();
-        });
-
-        //for every file...
-        for (var x = 0; x < input.files.length; x++) {
-            //add to list
-            var li = document.createElement('li');
-            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name + ' (' + Math.round(input.files[x].size / 1000) + ' kb)';
-            li.inject(list);
-            var requestId = parseInt(x) + 1;
-            li.setProperty('id', 'upload_' + requestId);
-        }
-
-    }
+    window.addEvent('domready', function () {
+        objUpload = new Html5Upload('<?php echo sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN); ?>');
+    });
 
 
-    //http://www.html5rocks.com/de/tutorials/file/xhr2/
-    function sendRequest() {
-        var myRequests = new Object();
-        var myForms = new Object();
+    Html5Upload = new Class({
 
+        initialize: function (url) {
+            // object properties
+            this.url = url;
+            this.objFiles;
+            this.countFiles;
 
-        var objFiles = document.id('filesToUpload').files;
-        var i = 0;
-        Object.each(objFiles, function (objFile, index) {
-            i++;
-            if (objFile.name == undefined)return;
-            if (!objFile.name)return;
-            if (objFile.name == 'undefined')return;
-            if (objFile.name == '')return;
+        },
 
+        listSelectedFiles: function () {
+            //get the input and UL list
+            var input = document.getElementById('filesToUpload');
+            var list = document.getElementById('fileList');
+
+            //empty list for now...
+            $$('#fileList li').each(function (el, index) {
+                el.destroy();
+            });
+
+            //for every file...
+            for (var i = 0; i < input.files.length; i++) {
+                //add to list
+                var li = document.createElement('li');
+                li.innerHTML = 'File ' + (i + 1) + ':  ' + input.files[i].name + ' (' + Math.round(input.files[i].size / 1000) + ' kb)';
+                li.inject(list);
+                li.setProperty('id', 'upload_' + i);
+            }
+        },
+
+        initUpload: function () {
+
+            this.objFiles = document.id('filesToUpload').files;
+            if (Object.keys(this.objFiles).length == 0) {
+                alert('Please select at least 1 file!');
+                return;
+            }
+            this.countFiles = Object.keys(this.objFiles).length
+            this.uploadFile('0');
+        },
+        uploadFile: function (index) {
+            var self = this;
+            if (!index) {
+                index = '0';
+            }
+            // if all files are loaded
+            if (index >= this.countFiles)
+            {
+                this.completeUpload();
+                return;
+            }
+
+            // create the file object
+            var objFile = this.objFiles[index];
+
+            if (!objFile)
+            {
+                nextIndex = parseInt(index) + 1;
+                this.uploadFile(nextIndex);
+            }
+
+            // prepare the form object
             var objForm = new FormData();
             objForm.append("FORM_SUBMIT", "tl_gallery_creator_albums");
             objForm.append("REQUEST_TOKEN", "<?php echo REQUEST_TOKEN; ?>");
             objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
-
             objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
             objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
-
-            // Add the request Id
-            objForm.requestId = i;
-            objForm.append("requestId", i);
-
-            // HTML file input user's choice...
+            objForm.requestId = index;
+            objForm.append("requestId", index);
             objForm.append("file", objFile);
 
-
+            // prepare the xhr object
             var xhr = new XMLHttpRequest();
-            xhr.requestId = i;
+            xhr.requestId = index;
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     // get the server-response
                     var json = JSON.decode(xhr.responseText);
+                    json.requestId = !json.requestId ? '0' : json.requestId;
+
                     // if error
                     if (json.status == 'error') {
                         document.id('upload_' + json.requestId).setStyle('color', 'red');
@@ -86,52 +116,27 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 
                     // Send next file to server
                     var nextId = parseInt(this.requestId) + 1;
-                    if (myRequests['r' + nextId]) {
-                        myRequests['r' + nextId].open("POST", "<?php echo $url; ?>", true);
-                        myRequests['r' + nextId].send(myForms['r' + nextId]);
-                        document.id('upload_' + nextId).addClass('onprogress');
-                    }
+                    self.uploadFile(nextId);
                 }
-
             }
 
             // add events
             xhr.upload.addEventListener('load', function (evt) {
                 document.id('upload_' + xhr.requestId).removeClass('onprogress');
             }, false);
-            xhr.addEventListener("error", transferFailed, false);
-            xhr.addEventListener("abort", transferCanceled, false);
-
-            myRequests['r' + xhr.requestId] = xhr;
-            myForms['r' + xhr.requestId] = objForm;
-        });
-
-        // open and send first request
-        document.id('upload_1').addClass('onprogress');
-        myRequests['r1'].open("POST", "<?php echo $url; ?>", true);
-        myRequests['r1'].send(myForms['r1']);
 
 
-        document.id('filesToUpload').value = '';
-        return false;
-    }
+            // open and send xhr
+            xhr.open("POST", this.url, true);
+            xhr.send(objForm);
+            document.id('upload_' + index).addClass('onprogress');
+        },
 
-    // progress on transfers from the server to the client (downloads)
-    function updateProgress(oEvent) {
-        if (oEvent.lengthComputable) {
-            var percentComplete = oEvent.loaded / oEvent.total;
-        } else {
-            // Unable to compute progress information since the total size is unknown
+        completeUpload: function()
+        {
+            document.id('filesToUpload').value = '';
+            return false;
         }
-    }
-
-
-    function transferFailed(evt) {
-        //
-    }
-
-    function transferCanceled(evt) {
-        //
-    }
+    });
 
 </script>
