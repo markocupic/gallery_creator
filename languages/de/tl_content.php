@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_content.php 
  * 
- * Contao extension: gallery_creator 4.1.0 stable 
+ * Contao extension: gallery_creator 4.6.0 rc1 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -45,10 +45,12 @@ $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting_direction']['1'] = "DESC: 
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['0'] = "Detailansicht: Thumbnailbreite und Thumbnailh&ouml;he";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_detailview']['0'] = "Detailansicht: Bildabstand";
-$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_detailview']['1'] =  "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
+$GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_detailview']['1'] = "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['0'] = "Albumauflistung: Thumbnailbreite und Thumbnailh&ouml;he";
 $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['1'] = "Hier k&ouml;nnen Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.";
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['0'] = "Albumauflistung: Bildabstand";
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting']['1'] = "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Großansicht/Neues Fenster";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster &ouml;ffnen.";
+ 
+?>

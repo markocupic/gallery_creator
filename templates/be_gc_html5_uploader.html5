@@ -1,11 +1,10 @@
 <?php
 $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN);
 ?>
-
+<h3><label><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][0]; ?></label></h3>
+<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" onchange="javascript:objUpload.listSelectedFiles();" multiple>
+<p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
 <br><br>
-<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload"
-       onchange="javascript:objUpload.listSelectedFiles();" multiple>
-<br><br><br>
 <button type="button" id="btn" onclick="javascript:return objUpload.initUpload(); return false;">Upload</button>
 <br><br>
 <ul id="fileList"></ul>
@@ -46,6 +45,9 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
                 li.innerHTML = 'File ' + (i + 1) + ':  ' + input.files[i].name + ' (' + Math.round(input.files[i].size / 1000) + ' kb)';
                 li.inject(list);
                 li.setProperty('id', 'upload_' + i);
+                li.addClass('tl_confirm');
+                li.addClass('listview');
+
             }
         },
 
@@ -102,16 +104,16 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 
                     // if error
                     if (json.status == 'error') {
-                        document.id('upload_' + json.requestId).setStyle('color', 'red');
                         document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
                         document.id('upload_' + json.requestId).addClass('error');
+                        document.id('upload_' + xhr.requestId).removeClass('tl_confirm');
+                        document.id('upload_' + xhr.requestId).removeClass('onprogress');
                     }
 
                     // if success
                     if (json.status == 'success') {
-                        document.id('upload_' + json.requestId).setStyle('color', 'green');
                         document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
-                        document.id('upload_' + json.requestId).addClass('loaded');
+                        document.id('upload_' + xhr.requestId).removeClass('onprogress');
                     }
 
                     // Send next file to server
@@ -120,16 +122,11 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
                 }
             }
 
-            // add events
-            xhr.upload.addEventListener('load', function (evt) {
-                document.id('upload_' + xhr.requestId).removeClass('onprogress');
-            }, false);
-
-
             // open and send xhr
             xhr.open("POST", this.url, true);
             xhr.send(objForm);
             document.id('upload_' + index).addClass('onprogress');
+            document.id('upload_' + index).removeClass('listview');
         },
 
         completeUpload: function()

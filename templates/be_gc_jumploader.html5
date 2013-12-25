@@ -1,4 +1,4 @@
-<br>
+<h3><label><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][0]; ?></label></h3>
 <div class="jumploaderApplet">
     <applet id="jumpLoaderApplet" name="jumpLoaderApplet"
             code="jmaster.jumploader.app.JumpLoaderApplet.class"
@@ -56,6 +56,7 @@
         <param name="watermark" value="halign=<?php echo $this->watermarkHalign; ?>;valign=<?php echo $this->watermarkValign; ?>;opacityPercent=<?php echo $this->watermarkOpacity; ?>;imageUrl=<?php echo $this->watermarkSource; ?>"/>
         <?php endif; ?>
     </applet>
+    <p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
 
 
     <table id="jumploaderServerResponseBox">

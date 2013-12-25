@@ -1,62 +1,50 @@
-
-*.clear
-{
-	clear:both;
+*.clear {
+    clear: both;
 }
-.led_clean_db
-{
-	padding:2px 0 3px 22px;
-	background:url("../images/page_white_wrench.png") no-repeat left center;
+.led_clean_db {
+    padding: 2px 0 3px 22px;
+    background: url("../images/page_white_wrench.png") no-repeat left center;
 }
 
-.led_new
-{
-	padding:2px 0 3px 22px;
-	background:url("../images/photo.png") no-repeat left center;
+.led_new {
+    padding: 2px 0 3px 22px;
+    background: url("../images/photo.png") no-repeat left center;
 }
 
-.led_pencil
-{
-	padding:2px 0 3px 22px;
-	background:url("../images/pencil.png") no-repeat left center;
+.led_pencil {
+    padding: 2px 0 3px 22px;
+    background: url("../images/pencil.png") no-repeat left center;
 }
 
-.onprogress
- {
-     padding:2px 0 3px 22px;
-     background:url("../images/wait.png") no-repeat left center;
- }
-
-.loaded
-{
-    padding:2px 0 3px 22px;
-    background:url("../images/accept.png") no-repeat left center;
+.onprogress {
+    padding:4px 5px 5px 25px;
+    background: #f3f8ee url("../images/up.gif") no-repeat left center;
 }
 
-.error
-{
-    padding:2px 0 3px 22px;
-    background:url("../images/cancel.png") no-repeat left center;
+.listview {
+    padding:4px 5px 5px 25px;
+    background-image: url(0);
 }
 
-.album_infos td
-{
-	padding:4px;
+.error {
+    padding:4px 5px 5px 25px;
+    background: url("../images/error.gif") no-repeat left center;
+    color: #c33;
+    background-color: #faeeee;
 }
 
-
-#fileList li
-{
-    padding:2px 0 3px 22px;
+.album_infos td {
+    padding: 4px;
 }
 
-.album_infos tr.odd>td
-{
-	background-color:#CCCCCC;
+#fileList li {
+    padding: 2px 0 3px 22px;
 }
 
+.album_infos tr.odd>td {
+    background-color: #CCCCCC;
+}
 
-div.readonly input
-{
-	background-color:#CCCCCC;
+div.readonly input {
+    background-color: #CCCCCC;
 }

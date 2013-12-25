@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/default.php 
  * 
- * Contao extension: gallery_creator 4.1.0 stable 
+ * Contao extension: gallery_creator 4.6.0 rc1 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -29,3 +29,5 @@ $GLOBALS['TL_LANG']['gallery_creator']['contains'] = "enth&auml;lt";
 $GLOBALS['TL_LANG']['gallery_creator']['visitors'] = "Aufrufe";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['0'] = "Authentifizierungsfehler";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['1'] = "Der Zugriff auf dieses Album wurde verweigert. Bitte melden Sie sich als Frontend-User an oder &uuml;berpr&uuml;fen Sie Ihre Benutzerrechte.";
+ 
+?>

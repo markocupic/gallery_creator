@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/modules.php 
  * 
- * Contao extension: gallery_creator 4.1.0 stable 
+ * Contao extension: gallery_creator 4.6.0 rc1 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -23,3 +23,5 @@ $GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Gallery-Creator-Album als 
 $GLOBALS['TL_LANG']['CTE']['ce_type_gallery_creator'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery-Creator-Inhaltselement";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator']['1'] = "Gallery-Creator-Album als Inhaltselement einbinden.";
+ 
+?>

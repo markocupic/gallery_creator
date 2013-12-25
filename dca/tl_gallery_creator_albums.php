@@ -284,9 +284,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'sql' => "varchar(255) NOT NULL default ''"
               ),
               'fileupload' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'],
                      'input_field_callback' => array(
                             'tl_gallery_creator_albums',
-                            'inputFieldCbGenerateJumpLoader'
+                            'inputFieldCbGenerateUploaderMarkup'
                      ),
                      'eval' => array('doNotShow' => true)
               ),
@@ -752,10 +753,10 @@ class tl_gallery_creator_albums extends Backend
 
        /**
         * Input Field Callback for fileupload
-        * return the html for the jumploader-applet
+        * return the markup for the fileuploader
         * @return string
         */
-       public function inputFieldCbGenerateJumpLoader()
+       public function inputFieldCbGenerateUploaderMarkup()
        {
 
               return GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_uploader);
