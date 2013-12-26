@@ -18,8 +18,8 @@
             form_submit: 'tl_gallery_creator_albums',
             request_token: '<?php echo $this->requestToken; ?>',
             be_user_auth: '<?php echo $this->beUserAuth; ?>',
-            inputId: 'filesToUpload',
-            fileListId: 'fileList'
+            input_id: 'filesToUpload',
+            file_list_id: 'fileList'
         });
     });
 </script>
@@ -39,8 +39,8 @@
             request_token: null,
             form_submit: null,
             be_user_auth: null,
-            inputId: null,
-            fileListId: null,
+            input_id: null,
+            file_list_id: null,
 
             // options that are set by the system
             _files: null
@@ -50,7 +50,7 @@
             var self = this;
             this.setOptions(options);
             var input = this.get('input');
-            document.id(this.get('inputId')).addEvent('change', function () {
+            document.id(this.get('input_id')).addEvent('change', function () {
                 self.listSelectedFiles();
             });
 
@@ -66,12 +66,12 @@
 
         listSelectedFiles: function () {
 
-            var inputEl = document.id(this.get('inputId'));
+            var inputEl = document.id(this.get('input_id'));
             this.set('_files', inputEl.files);
 
             //inject a list element for every file
             this.resetList();
-            var ul = document.id(this.get('fileListId'));
+            var ul = document.id(this.get('file_list_id'));
             var files = this.getFiles();
             for (var i = 0; i < files.length; i++) {
                 //add to list
@@ -157,11 +157,11 @@
         },
 
         resetForm: function () {
-            document.id(this.get('inputId')).value = null;
+            document.id(this.get('input_id')).value = null;
         },
 
         resetList: function () {
-            document.id(this.get('fileListId')).getChildren('li').each(function (el) {
+            document.id(this.get('file_list_id')).getChildren('li').each(function (el) {
                 el.destroy();
             });
         },
