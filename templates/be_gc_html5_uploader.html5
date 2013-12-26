@@ -2,9 +2,8 @@
 <input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" multiple>
 <p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
 <br><br>
-<button type="button" id="btn" onclick="javascript:objUpload.initUpload(); return false;">Upload</button>
-<button type="button" id="btn" onclick="javascript:objUpload.resetForm(); objUpload.resetList(); return false;">Reset
-</button>
+<button type="button" id="upload_btn">Upload</button>
+<button type="button" id="reset_btn">Reset</button>
 
 <br><br>
 <ul id="fileList"></ul>
@@ -14,7 +13,7 @@
 
 <script>
     window.addEvent('domready', function () {
-        objUpload = new Html5Upload({
+        new Html5Upload({
             url: '<?php echo $url; ?>',
             form_submit: 'tl_gallery_creator_albums',
             request_token: '<?php echo REQUEST_TOKEN; ?>',
@@ -53,6 +52,15 @@
             var input = this.get('input');
             document.id(this.get('inputId')).addEvent('change', function () {
                 self.listSelectedFiles();
+            });
+
+            document.id('upload_btn').addEvent('click', function () {
+                self.initUpload();
+            });
+
+            document.id('reset_btn').addEvent('click', function () {
+                self.resetForm();
+                self.resetList();
             });
         },
 
@@ -93,14 +101,14 @@
             // if all files are loaded
             if (index >= this.getFiles().length) {
                 this.resetForm();
-                return false;
+                return;
             }
 
             // create the file object
             var objFile = this.getFiles()[index];
 
             if (!objFile) {
-                nextIndex = parseInt(index) + 1;
+                var nextIndex = parseInt(index) + 1;
                 this.upload(nextIndex);
             }
 
@@ -116,7 +124,7 @@
             // prepare the xhr object
             var xhr = new XMLHttpRequest();
             xhr.requestId = index;
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = (function () {
                 if (xhr.readyState == 4) {
                     // get the server-response
                     var json = JSON.decode(xhr.responseText);
@@ -124,7 +132,7 @@
 
                     // if error
                     if (json.status == 'error') {
-                        document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
+                        document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
                         document.id('upload_' + json.requestId).addClass('error');
                         document.id('upload_' + xhr.requestId).removeClass('tl_confirm');
                         document.id('upload_' + xhr.requestId).removeClass('onprogress');
@@ -132,7 +140,7 @@
 
                     // if success
                     if (json.status == 'success') {
-                        document.id('upload_' + json.requestId).innerHTML = json.serverResponse;
+                        document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
                         document.id('upload_' + xhr.requestId).removeClass('onprogress');
                     }
 
@@ -140,7 +148,7 @@
                     var nextIndex = parseInt(this.requestId) + 1;
                     self.upload(nextIndex);
                 }
-            }
+            });
 
             // open and send xhr
             xhr.open("POST", this.get('url'), true);
@@ -154,7 +162,7 @@
         },
 
         resetList: function () {
-            $$('#' + this.get('fileListId') + ' li').each(function (el, index) {
+            document.id(this.get('fileListId')).getChildren('li').each(function (el) {
                 el.destroy();
             });
         },
