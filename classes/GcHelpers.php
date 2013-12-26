@@ -223,6 +223,12 @@ class GcHelpers extends \System
               $objTemplate->securityTokens = sprintf('PHPSESSID=%s; path=/; %s_USER_AUTH=%s; path=/;', session_id(), TL_MODE, $_COOKIE[TL_MODE . '_USER_AUTH']);
               //request token
               $objTemplate->requestToken = REQUEST_TOKEN;
+              // user auth token
+              if (TL_MODE == 'BE') {
+                     $objTemplate->beUserAuth = $_COOKIE['BE_USER_AUTH'];
+              } else {
+                     $objTemplate->feUserAuth = $_COOKIE['FE_USER_AUTH'];
+              }
               //get the domain
               $domain = str_replace(array('http%3A', 'https%3A'), array('http:', 'https:'), \System::urlEncode(\Environment::get('base')));
               //languageFiles

@@ -16,8 +16,8 @@
         new Html5Upload({
             url: '<?php echo $url; ?>',
             form_submit: 'tl_gallery_creator_albums',
-            request_token: '<?php echo REQUEST_TOKEN; ?>',
-            be_user_auth: '<?php echo $_COOKIE["BE_USER_AUTH"]; ?>',
+            request_token: '<?php echo $this->requestToken; ?>',
+            be_user_auth: '<?php echo $this->beUserAuth; ?>',
             inputId: 'filesToUpload',
             fileListId: 'fileList'
         });
