@@ -2,10 +2,12 @@
 $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN);
 ?>
 <h3><label><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][0]; ?></label></h3>
-<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" onchange="javascript:objUpload.listSelectedFiles();" multiple>
+<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" onchange="javascript:objUpload.listSelectedFiles(this);" multiple>
 <p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
 <br><br>
-<button type="button" id="btn" onclick="javascript:return objUpload.initUpload(); return false;">Upload</button>
+<button type="button" id="btn" onclick="javascript:objUpload.initUpload(); return false;">Upload</button>
+<button type="button" id="btn" onclick="javascript:objUpload.resetForm(); objUpload.resetList(); return false;">Reset</button>
+
 <br><br>
 <ul id="fileList"></ul>
 
@@ -23,26 +25,25 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
         initialize: function (url) {
             // object properties
             this.url = url;
-            this.objFiles;
-            this.countFiles;
-
+            this.objFiles = null;
+            this._input = null;
+            this._files = null;
         },
 
-        listSelectedFiles: function () {
+        listSelectedFiles: function (input) {
             //get the input and UL list
-            var input = document.getElementById('filesToUpload');
+            this._input = document.getElementById('filesToUpload');
+            this._files = this._input.files;
+
+
+            this.resetList();
             var list = document.getElementById('fileList');
-
-            //empty list for now...
-            $$('#fileList li').each(function (el, index) {
-                el.destroy();
-            });
-
             //for every file...
-            for (var i = 0; i < input.files.length; i++) {
+            var files = this.getFiles();
+            for (var i = 0; i < files.length; i++) {
                 //add to list
                 var li = document.createElement('li');
-                li.innerHTML = 'File ' + (i + 1) + ':  ' + input.files[i].name + ' (' + Math.round(input.files[i].size / 1000) + ' kb)';
+                li.innerHTML = 'File ' + (i + 1) + ':  ' + files[i].name + ' (' + Math.round(files[i].size / 1000) + ' kb)';
                 li.inject(list);
                 li.setProperty('id', 'upload_' + i);
                 li.addClass('tl_confirm');
@@ -51,35 +52,37 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             }
         },
 
-        initUpload: function () {
+        getFiles: function()
+        {
+            return this._files;
+        },
 
-            this.objFiles = document.id('filesToUpload').files;
-            if (Object.keys(this.objFiles).length == 0) {
+        initUpload: function () {
+            if (!this.getFiles() || Object.getLength(this.getFiles()) == 0) {
                 alert('Please select at least 1 file!');
                 return;
             }
-            this.countFiles = Object.keys(this.objFiles).length
-            this.uploadFile('0');
+            this.upload('0');
         },
-        uploadFile: function (index) {
+        upload: function (index) {
             var self = this;
             if (!index) {
                 index = '0';
             }
             // if all files are loaded
-            if (index >= this.countFiles)
+            if ( index >= Object.getLength(this.getFiles()) )
             {
-                this.completeUpload();
-                return;
+                this.resetForm();
+                return false;
             }
 
             // create the file object
-            var objFile = this.objFiles[index];
+            var objFile = this.getFiles()[index];
 
             if (!objFile)
             {
                 nextIndex = parseInt(index) + 1;
-                this.uploadFile(nextIndex);
+                this.upload(nextIndex);
             }
 
             // prepare the form object
@@ -118,7 +121,7 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
 
                     // Send next file to server
                     var nextId = parseInt(this.requestId) + 1;
-                    self.uploadFile(nextId);
+                    self.upload(nextId);
                 }
             }
 
@@ -129,10 +132,16 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             document.id('upload_' + index).removeClass('listview');
         },
 
-        completeUpload: function()
+        resetForm: function()
         {
-            document.id('filesToUpload').value = '';
-            return false;
+           this._input.value = null;
+        },
+
+        resetList: function()
+        {
+            $$('#fileList li').each(function (el, index) {
+                el.destroy();
+            });
         }
     });
 
