@@ -1,43 +1,83 @@
-<?php
-$url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN);
-?>
+
 <h3><label><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][0]; ?></label></h3>
-<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" onchange="javascript:objUpload.listSelectedFiles(this);" multiple>
+<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" multiple>
 <p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
 <br><br>
 <button type="button" id="btn" onclick="javascript:objUpload.initUpload(); return false;">Upload</button>
-<button type="button" id="btn" onclick="javascript:objUpload.resetForm(); objUpload.resetList(); return false;">Reset</button>
+<button type="button" id="btn" onclick="javascript:objUpload.resetForm(); objUpload.resetList(); return false;">Reset
+</button>
 
 <br><br>
 <ul id="fileList"></ul>
 
 
-
+<?php $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN); ?>
 
 <script>
     window.addEvent('domready', function () {
-        objUpload = new Html5Upload('<?php echo sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN); ?>');
+        objUpload = new Html5Upload({
+            url: '<?php echo $url; ?>',
+            form_submit: 'tl_gallery_creator_albums',
+            request_token: '<?php echo REQUEST_TOKEN; ?>',
+            be_user_auth: '<?php echo $_COOKIE["BE_USER_AUTH"]; ?>',
+            inputId: 'filesToUpload',
+            fileListId: 'fileList'
+        });
     });
+</script>
 
 
+
+
+<script>
+    /**
+     * Mootools Class to handle fileuploads
+     * @type {Class}
+     */
     Html5Upload = new Class({
-
-        initialize: function (url) {
-            // object properties
-            this.url = url;
-            this.objFiles = null;
-            this._input = null;
-            this._files = null;
+        Implements: [Options, Events],
+        options: {
+            url: null,
+            request_token: null,
+            form_submit: null,
+            be_user_auth: null,
+            inputId: null,
+            fileListId: null,
+            files: null
         },
 
-        listSelectedFiles: function (input) {
-            //get the input and UL list
-            this._input = document.getElementById('filesToUpload');
-            this._files = this._input.files;
+        initialize: function (options) {
+            var self = this;
+            this.setOptions(options);
+            var input = this.get('input');
+            document.id(this.get('inputId')).addEvent('change', function () {
+                self.listSelectedFiles();
+            });
+        },
 
+        get: function (option) {
+            if (this.options[option]) {
+                return this.options[option];
+            } else {
+                return null;
+            }
+        },
+
+        set: function (option, value) {
+            if (option != '')
+            {
+                this.options[option] = value;
+            }
+        },
+
+
+        listSelectedFiles: function () {
+            //get the input and UL list
+            var input = document.id(this.get('inputId'));
+            this.set('files', input.files);
 
             this.resetList();
-            var list = document.getElementById('fileList');
+            var list = document.id(this.get('fileListId'));
             //for every file...
             var files = this.getFiles();
             for (var i = 0; i < files.length; i++) {
@@ -52,9 +92,8 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             }
         },
 
-        getFiles: function()
-        {
-            return this._files;
+        getFiles: function () {
+            return this.get('files');
         },
 
         initUpload: function () {
@@ -64,14 +103,14 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             }
             this.upload('0');
         },
+
         upload: function (index) {
             var self = this;
             if (!index) {
                 index = '0';
             }
             // if all files are loaded
-            if ( index >= Object.getLength(this.getFiles()) )
-            {
+            if (index >= Object.getLength(this.getFiles())) {
                 this.resetForm();
                 return false;
             }
@@ -79,19 +118,16 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             // create the file object
             var objFile = this.getFiles()[index];
 
-            if (!objFile)
-            {
+            if (!objFile) {
                 nextIndex = parseInt(index) + 1;
                 this.upload(nextIndex);
             }
 
             // prepare the form object
             var objForm = new FormData();
-            objForm.append("FORM_SUBMIT", "tl_gallery_creator_albums");
-            objForm.append("REQUEST_TOKEN", "<?php echo REQUEST_TOKEN; ?>");
-            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
-            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
-            objForm.append("BE_USER_AUTH", "<?php echo $_COOKIE['BE_USER_AUTH']; ?>");
+            objForm.append("FORM_SUBMIT", this.get('form_submit'));
+            objForm.append("REQUEST_TOKEN", this.get('request_token'));
+            objForm.append("BE_USER_AUTH", this.get('be_user_auth'));
             objForm.requestId = index;
             objForm.append("requestId", index);
             objForm.append("file", objFile);
@@ -126,20 +162,18 @@ $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_galle
             }
 
             // open and send xhr
-            xhr.open("POST", this.url, true);
+            xhr.open("POST", this.get('url'), true);
             xhr.send(objForm);
             document.id('upload_' + index).addClass('onprogress');
             document.id('upload_' + index).removeClass('listview');
         },
 
-        resetForm: function()
-        {
-           this._input.value = null;
+        resetForm: function () {
+            document.id(this.get('inputId')).value = null;
         },
 
-        resetList: function()
-        {
-            $$('#fileList li').each(function (el, index) {
+        resetList: function () {
+            $$('#' + this.get('fileListId') + ' li').each(function (el, index) {
                 el.destroy();
             });
         }
