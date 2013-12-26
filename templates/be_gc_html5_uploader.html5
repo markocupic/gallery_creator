@@ -117,7 +117,6 @@
             objForm.append("FORM_SUBMIT", this.get('form_submit'));
             objForm.append("REQUEST_TOKEN", this.get('request_token'));
             objForm.append("BE_USER_AUTH", this.get('be_user_auth'));
-            objForm.requestId = index;
             objForm.append("requestId", index);
             objForm.append("file", objFile);
 
