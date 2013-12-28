@@ -1,188 +1,266 @@
-<h3><label><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][0]; ?></label></h3>
-<input type="file" name="image" accept="image/jpg,image/jpeg" id="filesToUpload" multiple>
-<p class="tl_help tl_tip" title=""><?php echo $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'][1]; ?></p>
-<br><br>
-<button type="button" id="upload_btn">Upload</button>
-<button type="button" id="reset_btn">Reset</button>
-
-<br><br>
-<ul id="fileList"></ul>
-
+<div class="html5_uploader">
+    <div id="uploadDropArea">...add files</div>
+</div>
 
 <?php $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN); ?>
 
 <script>
     window.addEvent('domready', function () {
-        new Html5Upload({
+        var uploader = new Html5Upload({
             url: '<?php echo $url; ?>',
-            formSubmit: 'tl_gallery_creator_albums',
-            requestToken: '<?php echo $this->requestToken; ?>',
-            beUserAuth: '<?php echo $this->beUserAuth; ?>',
-            inputId: 'filesToUpload',
-            fileListId: 'fileList'
+            acceptedFileTypes: 'image/jpg,image/jpeg'
         });
+        // append a few post params
+        uploader.setPost("FORM_SUBMIT", 'tl_gallery_creator_albums');
+        uploader.setPost("REQUEST_TOKEN", '<?php echo $this->requestToken; ?>');
+        uploader.setPost("BE_USER_AUTH", '<?php echo $this->beUserAuth; ?>');
     });
 </script>
 
 
 <script>
-    /**
-     * Mootools Class to handle fileuploads
-     * @type {Class}
-     * @author Marko Cupic
-     */
-    Html5Upload = new Class({
-        Implements: [Options, Events],
-        options: {
-            // mandatory options
-            url: null,
-            requestToken: null,
-            formSubmit: null,
-            beUserAuth: null,
-            inputId: null,
-            fileListId: null,
+/**
+ * Mootools Class to handle fileuploads
+ * @type {Class}
+ * @author Marko Cupic
+ */
+Html5Upload = new Class({
+    Implements: [Options, Events],
+    options: {
+        // mandatory option
+        url: null,
+        allowedFileTypes: null
+    },
 
-            // options that are set by the system
-            _files: null
-        },
+    // class properties
+    uploadDropArea: {},
+    fileInput: {},
+    uploadList: {},
+    _post: {},
+    _files: {},
 
-        initialize: function (options) {
-            var self = this;
-            this.setOptions(options);
-            var input = this.get('input');
-            document.id(this.get('inputId')).addEvent('change', function () {
-                self.listSelectedFiles();
-            });
+    initialize: function (options) {
+        var self = this;
+        this.setOptions(options);
 
-            document.id('upload_btn').addEvent('click', function () {
-                self.initUpload();
-            });
-
-            document.id('reset_btn').addEvent('click', function () {
-                self.resetForm();
-                self.resetList();
-            });
-        },
-
-        listSelectedFiles: function () {
-
-            var inputEl = document.id(this.get('inputId'));
-            this.set('_files', inputEl.files);
-
-            //inject a list element for every file
-            this.resetList();
-            var ul = document.id(this.get('fileListId'));
-            var files = this.getFiles();
-            for (var i = 0; i < files.length; i++) {
-                //add to list
-                var li = new Element('li', {
-                    id: 'upload_' + i,
-                    'class': 'tl_confirm listview',
-                    html: 'File ' + (i + 1) + ':  ' + files[i].name + ' (' + Math.round(files[i].size / 1000) + ' kb)'
-                });
-                li.inject(ul);
-            }
-        },
-
-        initUpload: function () {
-            if (!this.getFiles() || this.getFiles().length == 0) {
-                alert('Please select at least 1 file!');
-                return;
-            }
-            this.upload('0');
-        },
-
-        upload: function (index) {
-            var self = this;
-            if (!index) {
-                index = '0';
-            }
-
-            // if all files are loaded
-            if (index >= this.getFiles().length) {
-                this.resetForm();
-                return;
-            }
-
-            // create the file object
-            var objFile = this.getFiles()[index];
-
-            if (!objFile) {
-                var nextIndex = parseInt(index) + 1;
-                this.upload(nextIndex);
-            }
-
-            // prepare the form object
-            var objForm = new FormData();
-            objForm.append("FORM_SUBMIT", this.get('formSubmit'));
-            objForm.append("REQUEST_TOKEN", this.get('requestToken'));
-            objForm.append("BE_USER_AUTH", this.get('beUserAuth'));
-            objForm.append("requestId", index);
-            objForm.append("file", objFile);
-
-            // prepare the xhr object
-            var xhr = new XMLHttpRequest();
-            xhr.requestId = index;
-            xhr.onreadystatechange = (function () {
-                if (xhr.readyState == 4) {
-                    // get the server-response
-                    var json = JSON.decode(xhr.responseText);
-                    json.requestId = (!json.requestId) ? '0' : json.requestId;
-
-                    // if error
-                    if (json.status == 'error') {
-                        document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
-                        document.id('upload_' + json.requestId).addClass('error');
-                        document.id('upload_' + xhr.requestId).removeClass('tl_confirm');
-                        document.id('upload_' + xhr.requestId).removeClass('onprogress');
-                    }
-
-                    // if success
-                    if (json.status == 'success') {
-                        document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
-                        document.id('upload_' + xhr.requestId).removeClass('onprogress');
-                    }
-
-                    // Send next file to server
-                    var nextIndex = parseInt(this.requestId) + 1;
-                    self.upload(nextIndex);
-                }
-            });
-
-            // open and send xhr
-            xhr.open("POST", this.get('url'), true);
-            xhr.send(objForm);
-            document.id('upload_' + index).addClass('onprogress');
-            document.id('upload_' + index).removeClass('listview');
-        },
-
-        resetForm: function () {
-            document.id(this.get('inputId')).value = null;
-        },
-
-        resetList: function () {
-            document.id(this.get('fileListId')).getChildren('li').each(function (el) {
-                el.destroy();
-            });
-        },
-
-        get: function (option) {
-            if (this.options[option]) {
-                return this.options[option];
-            } else {
-                return null;
-            }
-        },
-
-        set: function (option, value) {
-            if (option != '') {
-                this.options[option] = value;
-            }
-        },
-
-        getFiles: function () {
-            return this.get('_files');
+        // check for uploadDropArea in the html markup
+        if (!document.id('uploadDropArea')) {
+            alert('Error: Add a uploadDropArea (<div id="uploadDropArea">...add files</div>) to the html markup!')
         }
-    });
+        this.uploadDropArea = document.id('uploadDropArea');
+
+        // check for the url option
+        if (!this.getOption('url')) {
+            alert('Error: url option is missing!')
+        }
+
+        // inject the hidden file input field
+        this.fileInput = new Element('input');
+        this.fileInput.setProperties({
+            type: 'file',
+            multiple: 'multiple',
+            id: 'filesToUpload'
+        });
+        if (this.getOption('acceptedFileTypes'))
+        {
+            this.fileInput.setProperty('accept', this.getOption('acceptedFileTypes'));
+        }
+        this.fileInput.setStyle('display', 'none');
+        this.fileInput.inject(this.uploadDropArea, 'top');
+
+        // inject the buttons
+        var buttonBox = new Element('div', {
+            'class': 'buttonBox'
+        });
+        buttonBox.inject(this.uploadDropArea, 'after');
+
+        var buttonReset = new Element('button', {
+            type: 'button',
+            'class': 'button reset',
+            id: 'reset_btn',
+            html: 'Reset'
+        });
+        buttonReset.inject(buttonBox, 'top');
+
+        var buttonUpload = new Element('button', {
+            type: 'button',
+            'class': 'button upload',
+            id: 'upload_btn',
+            html: 'Upload'
+        });
+        buttonUpload.inject(buttonBox);
+
+        // inject the upload list
+        this.uploadList = new Element('ul', {
+            id: 'uploadList'
+        });
+        this.uploadList.inject(buttonBox, 'after');
+
+        // add the Events to the uploadDropArea
+        this.uploadDropArea.addEvent('click', function () {
+            self.fileInput.click();
+        });
+
+        // add event to the hidden file input field
+        this.fileInput.addEvent('change', function () {
+            self.listSelectedFiles();
+        });
+
+        // add event to the reset button
+        document.id('reset_btn').addEvent('click', function () {
+            self.resetForm();
+            self.resetList();
+        });
+
+        // add event to the upload button
+        document.id('upload_btn').addEvent('click', function () {
+            self.initUpload();
+        });
+    },
+
+    listSelectedFiles: function () {
+        var inputEl = this.fileInput;
+        this.set('_files', inputEl.files);
+
+        //inject a list element for every file
+        this.resetList();
+        var ul = document.id('uploadList');
+        var files = this.getFiles();
+        for (var i = 0; i < files.length; i++) {
+            //add to list
+            var li = new Element('li', {
+                id: 'upload_' + i,
+                'class': 'uploadlist',
+                html: 'File ' + (i + 1) + ':  ' + files[i].name + ' (' + Math.round(files[i].size / 1000) + ' kb)'
+            });
+            li.inject(ul);
+        }
+    },
+
+    initUpload: function () {
+        if (!this.getFiles() || this.getFiles().length == 0) {
+            alert('Please select at least 1 file!');
+            return;
+        }
+        this.upload('0');
+    },
+
+    upload: function (index) {
+        var self = this;
+        if (!index) {
+            index = '0';
+        }
+
+        // if all files are loaded
+        if (index >= this.getFiles().length) {
+            this.resetForm();
+            return;
+        }
+
+        // create the file object
+        var objFile = this.getFiles()[index];
+
+        if (!objFile) {
+            var nextIndex = parseInt(index) + 1;
+            this.upload(nextIndex);
+        }
+
+        // prepare the form object
+        var objForm = new FormData();
+        Object.each(self._post, function (value, key) {
+            objForm.append(key, value);
+        });
+
+        objForm.append("requestId", index);
+        objForm.append("file", objFile);
+
+        // prepare the xhr object
+        var xhr = new XMLHttpRequest();
+        xhr.requestId = index;
+        xhr.onreadystatechange = (function () {
+            if (xhr.readyState == 4) {
+                // get the server-response
+                var json = JSON.decode(xhr.responseText);
+                json.requestId = (!json.requestId) ? '0' : json.requestId;
+
+                // if error
+                if (json.status == 'error') {
+                    document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
+                    document.id('upload_' + json.requestId).addClass('error');
+                    document.id('upload_' + xhr.requestId).removeClass('tl_confirm');
+                    document.id('upload_' + xhr.requestId).removeClass('onprogress');
+                }
+
+                // if success
+                if (json.status == 'success') {
+                    document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
+                    document.id('upload_' + xhr.requestId).removeClass('onprogress');
+                    document.id('upload_' + xhr.requestId).addClass('loaded');
+
+                }
+
+                // Send next file to server
+                var nextIndex = parseInt(this.requestId) + 1;
+                self.upload(nextIndex);
+            }
+        });
+
+        // open and send xhr
+        xhr.open("POST", this.getOption('url'), true);
+        xhr.send(objForm);
+        document.id('upload_' + index).addClass('onprogress');
+    },
+
+    resetForm: function () {
+        this.fileInput.value = null;
+    },
+
+    resetList: function () {
+        this.uploadList.getChildren('li').each(function (el) {
+            el.destroy();
+        });
+    },
+
+    getOption: function (option) {
+        if (this.options[option]) {
+            return this.options[option];
+        } else {
+            return null;
+        }
+    },
+
+    // set class property
+    set: function (index, value) {
+        this[index] = value;
+    },
+
+    // get class property
+    get: function (index) {
+        if (this[index]) {
+            return this[index];
+        } else {
+            return null;
+        }
+    },
+
+    // get the file object (selected files)
+    getFiles: function () {
+        return this._files;
+    },
+
+    // set post param
+    setPost: function (index, value) {
+        this._post[index] = value;
+    },
+
+    // get post param
+    getPost: function (index) {
+        if (this._post[index]) {
+            return this._post[index];
+        } else {
+            return null;
+        }
+    }
+});
 
 </script>
