@@ -20,6 +20,7 @@ $GLOBALS['TL_LANG']['ERR']['uploadError'] = "Die Datei \"%s\" konnte nicht hochg
 $GLOBALS['TL_LANG']['ERR']['fileDontExist'] = "Die Datei \"%s\" existiert nicht!";
 $GLOBALS['TL_LANG']['ERR']['fileNotReadable'] = "Die Datei \"%s\" ist nicht lesbar! Zugriffsrechte m&uuml;ssen &uuml;berpr&uuml;ft werden.";
 $GLOBALS['TL_LANG']['ERR']['dirNotWriteable'] = "Das Verzeichnis \"%s\" ist nicht beschreibbar! Zugriffsrechte m&uuml;ssen manuell &uuml;berpr&uuml;ft werden.";
+$GLOBALS['TL_LANG']['ERR']['accept_jpg'] = "Gallery Creator unterstützt nur jpeg/jpg-Dateien.";
 $GLOBALS['TL_LANG']['ERR']['upploadSuccessful'] = "Datei erfolgreich auf den Server geladen.";
 $GLOBALS['TL_LANG']['gallery_creator']['back_to_general_view'] = "zur&uuml;ck zur &Uuml;bersicht";
 $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] = "Unteralben";

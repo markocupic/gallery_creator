@@ -22,7 +22,7 @@ $GLOBALS['TL_LANG']['ERR']['uploadError'] = 'The file "%s" could not been upload
 $GLOBALS['TL_LANG']['ERR']['fileDontExist'] = 'The file "%s" does not exist!';
 $GLOBALS['TL_LANG']['ERR']['fileNotReadable'] = 'The file "%s" ist not readable! Check access rights.';
 $GLOBALS['TL_LANG']['ERR']['dirNotWriteable'] = 'The directory "%s" is not writeable! Check chmod settings!';
-
+$GLOBALS['TL_LANG']['ERR']['accept_jpg'] = 'Gallery Creator only supports jpeg/jpg files.';
 /**
  * jumploader
  */
