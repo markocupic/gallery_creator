@@ -1,3 +1,4 @@
+<div id="progressBox"></div>
 <div class="html5_uploader">
     <div id="uploadDropArea">
         <div>Drag images here or <br>...browse files.</div>
@@ -32,15 +33,31 @@ Html5Upload = new Class({
         // mandatory argument
         url: null,
         // optional arguments
-        allowedFileTypes: null
+        allowedFileTypes: null,
+        // simultaneous requests
+        simultaneousRequests: 3
     },
 
-    // class properties
+    // HTML DIV Object
     uploadDropArea: {},
+    // HTML file Input Object
     fileInput: {},
+    // HTML List Object
     uploadList: {},
+    // post params
     _post: {},
+    // selected file list
     _files: {},
+    // last fired request-id
+    recentRequestId: null,
+    //count running requests
+    currentRequests: 0,
+    // upload timer
+    uploadTimer: null,
+    // xhr
+    xhr: {},
+    // bool files selected
+    blnFormSubmitted: false,
 
     initialize: function (options) {
         var self = this;
@@ -100,26 +117,29 @@ Html5Upload = new Class({
 
         // add the Events to the uploadDropArea
         this.uploadDropArea.addEvent('click', function () {
+            clearInterval(self.uploadTimer);
+            self.abortAllRequests();
             self.fileInput.click();
         });
 
 
-        this.uploadDropArea.addEventListener("dragenter", function (ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
+        this.uploadDropArea.addEventListener("dragenter", function (event) {
+            event.stopPropagation();
+            event.preventDefault();
         }, false);
 
-        this.uploadDropArea.addEventListener("dragover", function (ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
+        this.uploadDropArea.addEventListener("dragover", function (event) {
+            event.stopPropagation();
+            event.preventDefault();
         }, false);
 
-        this.uploadDropArea.addEventListener("drop", function (ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
+        this.uploadDropArea.addEventListener("drop", function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            self.abortAllRequests();
             self.resetForm();
             self.resetList();
-            self.set('_files', ev.dataTransfer.files);
+            self.set('_files', event.dataTransfer.files);
             self.listSelectedFiles();
         }, false);
 
@@ -143,6 +163,8 @@ Html5Upload = new Class({
 
     listSelectedFiles: function () {
 
+        this.blnFormSubmitted = false;
+
         //inject a list element for every file
         this.resetList();
         var ul = document.id('uploadList');
@@ -152,39 +174,67 @@ Html5Upload = new Class({
             var li = new Element('li', {
                 id: 'upload_' + i,
                 'class': 'uploadlist',
-                html: 'File ' + (i + 1) + ':  ' + files[i].name + ' (' + Math.round(files[i].size / 1000) + ' kb)'
+                html: 'File ' + (i + 1) + ':  ' + files[i].name + ' (' + Math.round(files[i].size / 1000) + ' kb) <span class="progress"></span>'
             });
             li.inject(ul);
         }
     },
 
     initUpload: function () {
+        var self = this;
+
+        // prevent multiple form submit
+        if (this.blnFormSubmitted === true) {
+            alert('Please select some new/different files for the upload!');
+            return;
+        }
+        this.blnFormSubmitted = true;
+
         if (!this.getFiles() || this.getFiles().length == 0 || !this.getFiles().length) {
             alert('Please select at least 1 file!');
             return;
         }
-        this.upload('0');
+        // reset class properties
+        this.recentRequestId = null;
+        this.currentRequests = 0;
+        clearInterval(this.uploadTimer);
+        this.abortAllRequests();
+
+        // fire uploads
+        this.upload();
+        this.uploadTimer = (function () {
+            if (self.currentRequests < self.getOption('simultaneousRequests')) {
+                self.upload();
+            }
+        }.periodical(2000));
     },
 
-    upload: function (index) {
+    upload: function () {
         var self = this;
+
+        if (this.recentRequestId === null) {
+            this.recentRequestId = 0;
+        } else {
+            this.recentRequestId++;
+        }
+        var index = this.recentRequestId;
+
         if (!index) {
             index = '0';
         }
 
         // if all files are loaded
         if (index >= this.getFiles().length) {
-            this.resetForm();
+            // stop firing requests
+            clearInterval(this.uploadTimer);
             return;
         }
 
         // create the file object
         var objFile = this.getFiles()[index];
 
-        if (!objFile) {
-            var nextIndex = parseInt(index) + 1;
-            this.upload(nextIndex);
-        }
+        // increase request counter by 1
+        this.currentRequests++;
 
         // prepare the form object
         var objForm = new FormData();
@@ -197,22 +247,43 @@ Html5Upload = new Class({
 
         // prepare the xhr object
         var xhr = new XMLHttpRequest();
+        this.xhr[index] = xhr;
         xhr.requestId = index;
+        // show upload progress
+        xhr.upload.addEventListener("progress", function (event) {
+            if (event.lengthComputable) {
+                var percentComplete = event.loaded / event.total * 100;
+                if ($$('li#upload_' + xhr.requestId + ' .progress')[0]) {
+                    $$('li#upload_' + xhr.requestId + ' .progress')[0].innerHTML = ' Progress: ' + Math.round(percentComplete) + '%';
+                }
+            } else {
+                document.id('progressBox').innerHTML = '';
+            }
+        }, false);
+
+        // onload event
         xhr.addEventListener("load", function (event) {
             self.transferComplete(event, xhr);
         }, false);
 
+        xhr.addEventListener("error", function (event) {
+            self.currentRequests--;
+        }, false);
+        xhr.addEventListener("abort", function (event) {
+            self.currentRequests--;
+        }, false);
         // open and send xhr
         xhr.open("POST", this.getOption('url'), true);
+
         xhr.send(objForm);
-        document.id('upload_' + index).addClass('onprogress');
+        document.id('upload_' + xhr.requestId).addClass('onprogress');
     },
 
     transferComplete: function (event, xhr) {
+        this.currentRequests--;
         // get the server-response
         var json = JSON.decode(xhr.responseText);
         json.requestId = (!json.requestId) ? '0' : json.requestId;
-
         // if server returns error
         if (json.status == 'error') {
             document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
@@ -228,20 +299,29 @@ Html5Upload = new Class({
             document.id('upload_' + xhr.requestId).addClass('loaded');
 
         }
-
-        // Send next file to server
-        var nextIndex = parseInt(xhr.requestId) + 1;
-        this.upload(nextIndex);
     },
 
     resetForm: function () {
+        var self = this;
         this.fileInput.value = null;
+        clearInterval(this.uploadTimer);
+        this.abortAllRequests();
     },
 
     resetList: function () {
         this.uploadList.getChildren('li').each(function (el) {
             el.destroy();
         });
+    },
+
+    abortAllRequests: function () {
+        var self = this;
+        // abort all open requests
+        Object.each(self.xhr, function (objXHR, key, obj) {
+            objXHR.abort();
+            objXHR = null;
+        });
+        this.xhr = {};
     },
 
     getOption: function (option) {
