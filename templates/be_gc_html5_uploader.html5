@@ -1,4 +1,3 @@
-<div id="progressBox"></div>
 <div class="html5_uploader">
     <div id="uploadDropArea">
         <div>Drag images here or <br>...browse files.</div>
