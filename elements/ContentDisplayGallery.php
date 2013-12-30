@@ -32,6 +32,7 @@ class ContentDisplayGallery extends DisplayGallery
         */
        public function generate()
        {
+
               $this->moduleType = 'cte';
 
               // set the item from the auto_item parameter
@@ -59,6 +60,7 @@ class ContentDisplayGallery extends DisplayGallery
         */
        protected function compile()
        {
+
               // process request variables
               $this->evalRequestVars();
 
@@ -240,6 +242,7 @@ class ContentDisplayGallery extends DisplayGallery
         */
        protected function listAllAlbums()
        {
+
               $objContent = $this->Database->prepare('SELECT gc_sorting, gc_sorting_direction FROM tl_content WHERE id=?')->execute($this->id);
               $strSorting = $objContent->gc_sorting == '' || $objContent->gc_sorting_direction == '' ? 'date DESC' : $objContent->gc_sorting . ' ' . $objContent->gc_sorting_direction;
               $objAlbums = $this->Database->prepare('SELECT id, name FROM tl_gallery_creator_albums WHERE published=? ORDER BY ' . $strSorting)->execute('1');

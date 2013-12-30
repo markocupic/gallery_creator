@@ -258,6 +258,7 @@ class tl_gallery_creator_pictures extends Backend
 
        public function __construct()
        {
+
               parent::__construct();
 
               $this->import('BackendUser', 'User');
@@ -332,6 +333,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function buttonCbDeletePicture($row, $href, $label, $title, $icon, $attributes)
        {
+
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
               return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
        }
@@ -366,6 +368,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function buttonCbCutImage($row, $href, $label, $title, $icon, $attributes)
        {
+
               return '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
        }
 
@@ -381,6 +384,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function buttonCbPasteImage($row, $href, $label, $title, $icon, $attributes)
        {
+
               //get the CLIPBOARD settings from the current Session
               $arrClipboard = $this->Session->get('CLIPBOARD');
               $arrClipboard = $arrClipboard['tl_gallery_creator_pictures'];
@@ -419,6 +423,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
        {
+
               return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
        }
 
@@ -429,6 +434,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function childRecordCb($arrRow)
        {
+
               $time = time();
               $key = ($arrRow['published'] == '1') ? 'published' : 'unpublished';
               $date = $this->parseDate($GLOBALS['TL_CONFIG']['datimFormat'], $arrRow['date']);
@@ -474,6 +480,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function inputFieldCbGenerateImage()
        {
+
               $objImg = $this->Database->prepare('SELECT path,name,pid FROM tl_gallery_creator_pictures WHERE id=?')->limit(1)->execute(Input::get('id'));
               $src = $objImg->path;
               return '
@@ -492,6 +499,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function inputFieldCbGenerateImageInformation(DataContainer $dc)
        {
+
               $objImg = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')->execute($dc->id);
               $objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objImg->owner);
               $output = '
@@ -557,6 +565,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function myParseBackendTemplate($strContent, $strTemplate)
        {
+
               if (Input::get('table') == 'tl_gallery_creator_pictures')
               {
                      //da alle neuen Bilder (neue Datensaetze) nur über fileupload oder importImages realisiert werden, ist der "Create-Button" obsolet
@@ -592,6 +601,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function ondeleteCb(DC_Table $dc)
        {
+
               $objImg = $this->Database->prepare('SELECT id,owner,path,name FROM tl_gallery_creator_pictures WHERE id=?')->execute($dc->id);
 
               if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
@@ -624,6 +634,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function onloadCbCheckPermission()
        {
+
               // admin hat keine Einschraenkungen
               if ($this->User->isAdmin)
               {
@@ -655,6 +666,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function onloadCbSetUpPalettes()
        {
+
               if ($this->restrictedUser)
               {
                      $this->restrictedUser = true;

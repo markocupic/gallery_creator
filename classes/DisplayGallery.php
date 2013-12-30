@@ -75,10 +75,6 @@ abstract class DisplayGallery extends \Module
               {
                      $this->DETAIL_VIEW = true;
               }
-              else
-              {
-
-              }
 
               //assigning the frontend template
               $this->strTemplate = $this->gc_template != "" ? $this->gc_template : $this->strTemplate;
@@ -92,7 +88,9 @@ abstract class DisplayGallery extends \Module
                      unset($_SESSION['gallery_creator']['PAGINATION']);
               }
               if (\Input::get('page') && !$this->DETAIL_VIEW)
+              {
                      $_SESSION['gallery_creator']['PAGINATION'] = \Input::get('page');
+              }
 
               return parent::generate();
 
@@ -103,14 +101,19 @@ abstract class DisplayGallery extends \Module
         */
        protected function checkThumbSizeSettings()
        {
+
               if ($this->gc_size_albumlisting == "")
+              {
                      $this->gc_size_albumlisting = serialize(array(
                                                                   "110", "110", "crop"
                                                              ));
+              }
               if ($this->gc_size_detailview == "")
+              {
                      $this->gc_size_detailview = serialize(array(
                                                                 "110", "110", "crop"
                                                            ));
+              }
        }
 
        /**
@@ -121,6 +124,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function countGcContentElementsOnPage($intPageId = null)
        {
+
               if ($intPageId)
               {
                      $objPage = $this->Database->prepare('SELECT * FROM tl_page WHERE id=?')->execute($intPageId);
@@ -159,6 +163,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function doRedirectOnSingleAlbum()
        {
+
               if (TL_MODE == 'BE')
               {
                      return false;
@@ -193,6 +198,7 @@ abstract class DisplayGallery extends \Module
         */
        public function evalRequestVars()
        {
+
               if ($this->gc_publish_all_albums != 1)
               {
                      if (!unserialize($this->gc_publish_albums))
@@ -254,6 +260,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function feUserAuthentication($strAlbumalias)
        {
+
               if (TL_MODE == 'FE')
               {
                      $objAlb = $this->Database->prepare('SELECT protected AS protected_album,groups FROM tl_gallery_creator_albums WHERE alias=?')->execute($strAlbumalias);
@@ -282,6 +289,7 @@ abstract class DisplayGallery extends \Module
         */
        public function generateAjax()
        {
+
               //gibt ein Array mit allen Bildinformationen des Bildes mit der id imageId zurück
               if (\Input::get('isAjax') && \Input::get('getImage') && strlen(\Input::get('imageId')))
               {
@@ -299,7 +307,9 @@ abstract class DisplayGallery extends \Module
                      //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
                      $this->feUserAuthentication($objAlbum->alias);
                      if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
+                     {
                             return false;
+                     }
 
                      $objPictures = $this->Database->prepare('SELECT count(id) AS Anzahl FROM tl_gallery_creator_pictures WHERE published=? AND pid=? AND id!=?')->execute(1, \Input::get('AlbumId'), $objAlbum->thumb);
                      if ($objPictures->Anzahl < 2)
@@ -325,7 +335,9 @@ abstract class DisplayGallery extends \Module
                      $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')->execute(\Input::get('albumId'));
                      $this->feUserAuthentication($objAlbum->alias);
                      if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
+                     {
                             return false;
+                     }
 
                      $json = "";
 
@@ -364,6 +376,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function getJwImagerotatorXml($strAlbumalias)
        {
+
               $objAlbum = $this->Database->prepare('SELECT id, owners_name FROM tl_gallery_creator_albums WHERE alias=? and published=1')->execute($strAlbumalias);
               $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY sorting')->execute('1', $objAlbum->id);
 
@@ -390,6 +403,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function getAlbumPreviewThumb($intAlbumId)
        {
+
               $objAlb = $this->Database->prepare('SELECT thumb FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
               if ($objAlb->thumb)
               {
@@ -435,6 +449,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function getAlbumInformationArray($intAlbumId, $strSize, $strContentType)
        {
+
               global $objPage;
 
               if ($strContentType != 'fmd' && $strContentType != 'cte')
@@ -536,6 +551,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function getPictureInformationArray($intPictureId, $strSize = NULL, $strContentType)
        {
+
               global $objPage;
 
               if ($strContentType != 'fmd' && $strContentType != 'cte')
@@ -591,7 +607,9 @@ abstract class DisplayGallery extends \Module
               {
                      $objFile = new \File($strImageSrc);
                      if (!$objFile->isGdImage)
+                     {
                             return null;
+                     }
 
                      $arrFile["filename"] = $objFile->filename;
                      $arrFile["basename"] = $objFile->basename;
@@ -724,16 +742,21 @@ abstract class DisplayGallery extends \Module
         */
        public function getMetaContent($intPictureId)
        {
+
               global $objPage;
 
               $objPicture = \GalleryCreatorPicturesModel::findById($intPictureId);
               $objFiles = \FilesModel::findByPath($objPicture->path);
               if ($objFiles === null)
+              {
                      return null;
+              }
 
               $objFile = new \File($objPicture->path);
               if (!$objFile->isGdImage)
+              {
                      return null;
+              }
 
               $arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
 
@@ -753,6 +776,7 @@ abstract class DisplayGallery extends \Module
         */
        protected function getAlbumTemplateVars($intAlbumId, $strContentType)
        {
+
               global $objPage;
               if ($strContentType != 'fmd' && $strContentType != 'cte')
               {
@@ -830,6 +854,7 @@ abstract class DisplayGallery extends \Module
         */
        public function generateBackLink($strContentType, $intAlbumId)
        {
+
               global $objPage;
 
               if (TL_MODE == 'BE')
@@ -841,7 +866,9 @@ abstract class DisplayGallery extends \Module
               {
                      //Nur, wenn nicht automatisch zu overview weitergeleitet wurde, wird der back Link angezeigt
                      if ($this->doRedirectOnSingleAlbum())
+                     {
                             return NULL;
+                     }
               }
 
               //generiert den Link zum Parent-Album
@@ -864,6 +891,7 @@ abstract class DisplayGallery extends \Module
         */
        public static function initCounter($intAlbumId)
        {
+
               if (preg_match('/bot|sp[iy]der|crawler|lib(?:cur|www)|search|archive/i', $_SERVER['HTTP_USER_AGENT']))
               {
                      // do not count spiders/bots

@@ -30,6 +30,7 @@ class GcHelpers extends \System
         */
        public static function createNewImage($intAlbumId, $strFilepath)
        {
+
               //get the file-object
               $objFile = new \File($strFilepath);
               if (!$objFile->isGdImage)
@@ -140,6 +141,7 @@ class GcHelpers extends \System
         */
        public static function fileupload($intAlbumId, $arrFile, $requestId = '')
        {
+
               $strUploadPath = GALLERY_CREATOR_UPLOAD_PATH;
               $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
               $strAlbumAlias = $objAlb->alias;
@@ -250,6 +252,7 @@ class GcHelpers extends \System
         */
        public static function generateUniqueFilename($strFilename)
        {
+
               $strFilename = utf8_romanize($strFilename);
               $strFilename = str_replace('"', '', $strFilename);
               $strFilename = str_replace(' ', '_', $strFilename);
@@ -302,6 +305,7 @@ class GcHelpers extends \System
         */
        public static function generateUploader($intAlbumId, $uploader = 'be_gc_jumploader')
        {
+
               //create the template object
               $objTemplate = new \BackendTemplate($uploader);
               $objUser = \BackendUser::getInstance();
@@ -386,6 +390,7 @@ class GcHelpers extends \System
         */
        public static function getAllSubalbums($parentId)
        {
+
               $arrSubAlbums = array();
               $objAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE pid=?')->execute($parentId);
               while ($objAlb->next())
@@ -403,6 +408,7 @@ class GcHelpers extends \System
         */
        public static function getParentAlbum($AlbumId)
        {
+
               $objAlbPid = \Database::getInstance()->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->execute($AlbumId);
               $parentAlb = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($objAlbPid->pid);
               if ($parentAlb->numRows == 0)
@@ -423,6 +429,7 @@ class GcHelpers extends \System
         */
        public static function imageRotate($imgPath, $angle)
        {
+
               if ($angle == 0)
               {
                      return false;
@@ -473,6 +480,7 @@ class GcHelpers extends \System
         */
        public static function importFromFilesystem($intAlbumId, $strMultiSRC)
        {
+
               $images = array();
               $objFiles = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
               if ($objFiles === null)
@@ -553,6 +561,7 @@ class GcHelpers extends \System
         */
        public static function reviseTable($blnCleanDb = false)
        {
+
               //Upload-Verzeichnis erstellen, falls nicht mehr vorhanden
               new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
 

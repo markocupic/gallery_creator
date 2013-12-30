@@ -116,6 +116,7 @@ class mod_gallery_creator extends Backend
         */
        public function getTemplates()
        {
+
               return $this->getTemplateGroup('ce_gc_');
        }
 

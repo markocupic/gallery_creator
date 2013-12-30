@@ -26,6 +26,7 @@ class ModuleDisplayGallery extends DisplayGallery
         */
        public function generate()
        {
+
               $this->moduleType = 'fmd';
               // set the item from the auto_item parameter
               if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
@@ -40,6 +41,7 @@ class ModuleDisplayGallery extends DisplayGallery
         */
        protected function compile()
        {
+
               // use a private template
               if (TL_MODE == 'FE' && $this->gc_template != '')
               {

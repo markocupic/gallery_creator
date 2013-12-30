@@ -157,6 +157,7 @@ class ce_gallery_creator extends Backend
 {
        public function __construct()
        {
+
               parent::__construct();
 
        }
@@ -167,6 +168,7 @@ class ce_gallery_creator extends Backend
         */
        public function getTemplates()
        {
+
               return $this->getTemplateGroup('ce_gc_');
        }
 
@@ -176,6 +178,7 @@ class ce_gallery_creator extends Backend
         */
        public function optionsCallbackListAlbums()
        {
+
               $objContent = $this->Database->prepare('SELECT gc_sorting, gc_sorting_direction FROM tl_content WHERE id=?')->execute(Input::get('id'));
 
               $str_sorting = $objContent->gc_sorting == '' || $objContent->gc_sorting_direction == '' ? 'date DESC' : $objContent->gc_sorting . ' ' . $objContent->gc_sorting_direction;
@@ -196,6 +199,7 @@ class ce_gallery_creator extends Backend
         */
        public function onloadCbSetUpPalettes()
        {
+
               $objContent = $this->Database->prepare('SELECT gc_publish_all_albums FROM tl_content WHERE id=?')->execute(Input::get('id'));
               if ($objContent->gc_publish_all_albums)
               {
