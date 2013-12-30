@@ -8,6 +8,11 @@
 
 <script>
     window.addEvent('domready', function () {
+        // Hide the image-quality input select field
+        if ($$('#pal_upload_settings > div.w50')[1]) {
+            $$('#pal_upload_settings > div.w50')[1].setStyle('visibility', 'hidden');
+        }
+
         var uploader = new Html5Upload({
             url: '<?php echo $url; ?>',
             acceptedFileTypes: 'image/jpg,image/jpeg'
@@ -16,6 +21,8 @@
         uploader.setPost("FORM_SUBMIT", 'tl_gallery_creator_albums');
         uploader.setPost("REQUEST_TOKEN", '<?php echo $this->requestToken; ?>');
         uploader.setPost("BE_USER_AUTH", '<?php echo $this->beUserAuth; ?>');
+        // serverside image resizing
+        uploader.setPost("RESIZE_IMAGE_TO", document.id('ctrl_img_resolution').value);
     });
 </script>
 
@@ -35,6 +42,7 @@ Html5Upload = new Class({
         allowedFileTypes: null,
         // simultaneous requests
         simultaneousRequests: 3
+
     },
 
     // HTML DIV Object

@@ -28,7 +28,8 @@ class ModuleDisplayGallery extends DisplayGallery
        {
               $this->moduleType = 'fmd';
               // set the item from the auto_item parameter
-              if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item'])) {
+              if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
+              {
                      \Input::setGet('items', \Input::get('auto_item'));
               }
               return parent::generate();
@@ -40,21 +41,25 @@ class ModuleDisplayGallery extends DisplayGallery
        protected function compile()
        {
               // use a private template
-              if (TL_MODE == 'FE' && $this->gc_template != '') {
+              if (TL_MODE == 'FE' && $this->gc_template != '')
+              {
                      $this->Template->style = count($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
                      $this->Template->cssID = strlen($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
                      $this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
               }
 
               // redirect to the detailview if there is only 1 album
-              if (!\Input::get('items') && $this->gc_redirectSingleAlb) {
+              if (!\Input::get('items') && $this->gc_redirectSingleAlb)
+              {
                      $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
-                     if ($objAlbum->numRows === 1) {
+                     if ($objAlbum->numRows === 1)
+                     {
                             \Input::setGet('items', $objAlbum->alias);
                      }
               }
 
-              if (\Input::get('items')) {
+              if (\Input::get('items'))
+              {
                      $this->strAlbumalias = \Input::get('items');
                      // authenticate user if album is protected
                      $this->feUserAuthentication($this->strAlbumalias);
@@ -63,30 +68,38 @@ class ModuleDisplayGallery extends DisplayGallery
                      $objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')->execute($this->strAlbumalias);
                      $this->intAlbumId = $objAlbum->id;
               }
-              
+
               // moduleType is used for ajax applications
               $this->Template->moduleType = $this->moduleType;
               $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
               $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
 
-              switch ($switch) {
+              switch ($switch)
+              {
 
                      case 'albumlisting' :
 
                             // get all published albums
                             $arrAllowedAlbums = array();
-                            if ($this->gc_hierarchicalOutput) {
+                            if ($this->gc_hierarchicalOutput)
+                            {
                                    $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND pid=?')->execute('1', '0');
-                            } else {
+                            }
+                            else
+                            {
                                    $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
                             }
 
-                            while ($objAlbum->next()) {
-                                   if (TL_MODE == 'FE' && $objAlbum->protected == true) {
+                            while ($objAlbum->next())
+                            {
+                                   if (TL_MODE == 'FE' && $objAlbum->protected == true)
+                                   {
                                           $this->import('FrontendUser', 'User');
                                           // check if the frontend user is allowed
-                                          if (FE_USER_LOGGED_IN && is_array(unserialize($this->User->allGroups))) {
-                                                 if (array_intersect(unserialize($this->User->allGroups), unserialize($objAlbum->groups))) {
+                                          if (FE_USER_LOGGED_IN && is_array(unserialize($this->User->allGroups)))
+                                          {
+                                                 if (array_intersect(unserialize($this->User->allGroups), unserialize($objAlbum->groups)))
+                                                 {
                                                         // user is allowed
                                                         $arrAllowedAlbums[] = $objAlbum->id;
                                                  }
@@ -99,7 +112,8 @@ class ModuleDisplayGallery extends DisplayGallery
 
                             // pagination settings
                             $limit = $this->gc_AlbumsPerPage;
-                            if ($limit > 0) {
+                            if ($limit > 0)
+                            {
                                    $page = \Input::get('page') ? \Input::get('page') : 1;
                                    $offset = ($page - 1) * $limit;
                                    $itemsTotal = count($arrAllowedAlbums);
@@ -111,14 +125,16 @@ class ModuleDisplayGallery extends DisplayGallery
 
                             // get all published albums
                             $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id IN(' . implode(",", $arrAllowedAlbums) . ') ORDER BY sorting ASC');
-                            if ($limit > 0) {
+                            if ($limit > 0)
+                            {
                                    $objAlbum->limit($limit, $offset);
                             }
                             $objAlbum = $objAlbum->execute('1', '0');
 
                             // album array
                             $arrAlbums = array();
-                            while ($objAlbum->next()) {
+                            while ($objAlbum->next())
+                            {
                                    $arrAlbums[$objAlbum->id] = $this->getAlbumInformationArray($objAlbum->id, $this->gc_size_albumlisting, 'fmd');
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
@@ -129,10 +145,12 @@ class ModuleDisplayGallery extends DisplayGallery
                      case 'detailview' :
 
                             // generate the subalbum array
-                            if ($this->gc_hierarchicalOutput) {
+                            if ($this->gc_hierarchicalOutput)
+                            {
                                    $objSubAlbums = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY sorting ASC')->execute($this->intAlbumId, '1');
                                    $arrSubalbums = array();
-                                   while ($objSubAlbums->next()) {
+                                   while ($objSubAlbums->next())
+                                   {
                                           $arrSubalbum = $this->getAlbumInformationArray($objSubAlbums->id, $this->gc_size_albumlisting, 'fmd');
                                           array_push($arrSubalbums, $arrSubalbum);
                                    }
@@ -141,7 +159,8 @@ class ModuleDisplayGallery extends DisplayGallery
 
                             // pagination settings
                             $limit = $this->gc_ThumbsPerPage;
-                            if ($limit > 0) {
+                            if ($limit > 0)
+                            {
                                    $page = \Input::get('page') ? \Input::get('page') : 1;
                                    $offset = ($page - 1) * $limit;
 
@@ -155,14 +174,16 @@ class ModuleDisplayGallery extends DisplayGallery
                             }
 
                             $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=?  AND pid=? ORDER BY sorting');
-                            if ($limit > 0) {
+                            if ($limit > 0)
+                            {
                                    $objPictures->limit($limit, $offset);
                             }
 
                             $objPictures = $objPictures->execute('1', $this->intAlbumId);
                             $arrPictures = array();
 
-                            while ($objPictures->next()) {
+                            while ($objPictures->next())
+                            {
                                    // picture array
                                    $arrPictures[$objPictures->id] = $this->getPictureInformationArray($objPictures->id, $this->gc_size_detailview, 'fmd');
                             }
