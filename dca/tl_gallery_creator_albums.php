@@ -322,7 +322,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
               // save value in tl_user
               'uploader' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader'],
-                     'default' => 'jumploader',
+                     'default' => 'be_gc_jumploader',
                      'inputType' => 'select',
                      'load_callback' => array(
                             array(
@@ -759,7 +759,7 @@ class tl_gallery_creator_albums extends Backend
        public function inputFieldCbGenerateUploaderMarkup()
        {
 
-              return GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_uploader);
+              return GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
        }
 
        /**
@@ -797,7 +797,7 @@ class tl_gallery_creator_albums extends Backend
         */
        public function loadCbGetUploader()
        {
-              return $this->User->gc_uploader;
+              return $this->User->gc_be_uploader_template;
        }
 
        /**
@@ -1232,7 +1232,7 @@ class tl_gallery_creator_albums extends Backend
         */
        public function saveCbSaveUploader($value)
        {
-              $db = $this->Database->prepare('UPDATE tl_user SET gc_uploader=? WHERE id=?')->execute($value, $this->User->id);
+              $db = $this->Database->prepare('UPDATE tl_user SET gc_be_uploader_template=? WHERE id=?')->execute($value, $this->User->id);
        }
 
 

@@ -22,8 +22,8 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['gc_img_quality'] = array(
        'sql' => "smallint(5) unsigned NOT NULL default '1000'"
 );
 
-$GLOBALS['TL_DCA']['tl_user']['fields']['gc_uploader'] = array(
-       'sql' => "varchar(32) NOT NULL default 'be_gc_jumploader'"
+$GLOBALS['TL_DCA']['tl_user']['fields']['gc_be_uploader_template'] = array(
+       'sql' => "varchar(32) NOT NULL default 'be_gc_html5_uploader'"
 );
 
 
