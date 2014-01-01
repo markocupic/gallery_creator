@@ -54,7 +54,7 @@ Html5Upload = new Class({
     // post params
     _post: {},
     // selected file list
-    _files: {},
+    _files: [],
     // last fired request-id
     recentRequestId: null,
     //count running requests
@@ -124,8 +124,7 @@ Html5Upload = new Class({
 
         // add the Events to the uploadDropArea
         this.uploadDropArea.addEvent('click', function () {
-            clearInterval(self.uploadTimer);
-            self.abortAllRequests();
+            self.resetForm();
             self.fileInput.click();
         });
 
@@ -143,23 +142,22 @@ Html5Upload = new Class({
         this.uploadDropArea.addEventListener("drop", function (event) {
             event.stopPropagation();
             event.preventDefault();
-            self.abortAllRequests();
             self.resetForm();
-            self.resetList();
-            self.set('_files', event.dataTransfer.files);
+            self.clearList();
+            self.addFiles(event.dataTransfer.files);
             self.listSelectedFiles();
         }, false);
 
         // add event to the hidden file input field
         this.fileInput.addEvent('change', function () {
-            self.set('_files', self.fileInput.files);
+            self.addFiles(self.fileInput.files);
             self.listSelectedFiles();
         });
 
         // add event to the reset button
         document.id('reset_btn').addEvent('click', function () {
             self.resetForm();
-            self.resetList();
+            self.clearList();
         });
 
         // add event to the upload button
@@ -173,7 +171,7 @@ Html5Upload = new Class({
         this.blnFormSubmitted = false;
 
         //inject a list element for every file
-        this.resetList();
+        this.clearList();
         var ul = document.id('uploadList');
         var files = this.getFiles();
         for (var i = 0; i < files.length; i++) {
@@ -201,11 +199,6 @@ Html5Upload = new Class({
             alert('Please select at least 1 file!');
             return;
         }
-        // reset class properties
-        this.recentRequestId = null;
-        this.currentRequests = 0;
-        clearInterval(this.uploadTimer);
-        this.abortAllRequests();
 
         // fire uploads
         this.upload();
@@ -233,7 +226,6 @@ Html5Upload = new Class({
         // if all files are loaded
         if (index >= this.getFiles().length) {
             // stop firing requests
-            clearInterval(this.uploadTimer);
             return;
         }
 
@@ -256,7 +248,8 @@ Html5Upload = new Class({
         var xhr = new XMLHttpRequest();
         this.xhr[index] = xhr;
         xhr.requestId = index;
-        // show upload progress
+
+        // onprogress event
         xhr.upload.addEventListener("progress", function (event) {
             if (event.lengthComputable) {
                 var percentComplete = event.loaded / event.total * 100;
@@ -264,7 +257,7 @@ Html5Upload = new Class({
                     $$('li#upload_' + xhr.requestId + ' .progress')[0].innerHTML = ' Progress: ' + Math.round(percentComplete) + '%';
                 }
             } else {
-                document.id('progressBox').innerHTML = '';
+                //
             }
         }, false);
 
@@ -273,15 +266,20 @@ Html5Upload = new Class({
             self.transferComplete(event, xhr);
         }, false);
 
+        // onerror event
         xhr.addEventListener("error", function (event) {
             self.currentRequests--;
         }, false);
+
+        // onabort event
         xhr.addEventListener("abort", function (event) {
             self.currentRequests--;
         }, false);
+
         // open and send xhr
         xhr.open("POST", this.getOption('url'), true);
 
+        // send request
         xhr.send(objForm);
         document.id('upload_' + xhr.requestId).addClass('onprogress');
     },
@@ -313,9 +311,11 @@ Html5Upload = new Class({
         this.fileInput.value = null;
         clearInterval(this.uploadTimer);
         this.abortAllRequests();
+        this.recentRequestId = null;
+        this.currentRequests = 0;
     },
 
-    resetList: function () {
+    clearList: function () {
         this.uploadList.getChildren('li').each(function (el) {
             el.destroy();
         });
@@ -353,8 +353,20 @@ Html5Upload = new Class({
         }
     },
 
-    // get the file object (selected files)
-    getFiles: function () {
+    // add files to the _files array
+    addFiles: function (objFiles) {
+        if (typeof objFiles == 'object' && objFiles !== null) {
+            var self = this;
+            self._files = [];
+            Object.each(objFiles, function (value, key) {
+                Array.push(self._files, value);
+            })
+        }
+        this.fileInput.value = null;
+    },
+
+    // get the file array (selected files)
+    getFiles: function (objFiles) {
         return this._files;
     },
 
