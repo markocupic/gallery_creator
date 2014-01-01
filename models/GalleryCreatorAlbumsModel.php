@@ -20,6 +20,7 @@ namespace GalleryCreator;
  */
 class GalleryCreatorAlbumsModel extends \Model
 {
+
        /**
         * Table name
         * @var string

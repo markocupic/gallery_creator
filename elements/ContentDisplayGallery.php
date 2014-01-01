@@ -55,6 +55,7 @@ class ContentDisplayGallery extends DisplayGallery
               return parent::generate();
        }
 
+
        /**
         * Generate module
         */
@@ -235,6 +236,7 @@ class ContentDisplayGallery extends DisplayGallery
               }
               // end switch
        }
+
 
        /**
         * return a sorted array with all albums selected in the content element settings

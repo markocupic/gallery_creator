@@ -20,6 +20,7 @@ namespace GalleryCreator;
  */
 class ModuleDisplayGallery extends DisplayGallery
 {
+
        /**
         * Parse the template
         * @return string
@@ -35,6 +36,7 @@ class ModuleDisplayGallery extends DisplayGallery
               }
               return parent::generate();
        }
+
 
        /**
         * Generate module

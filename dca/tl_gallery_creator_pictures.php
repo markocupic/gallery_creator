@@ -13,32 +13,50 @@
 $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
        // Config
        'config' => array(
-              'ptable' => 'tl_gallery_creator_albums', 'enableVersioning' => true, 'dataContainer' => 'Table',
+              'ptable' => 'tl_gallery_creator_albums',
+              'enableVersioning' => true,
+              'dataContainer' => 'Table',
               'onload_callback' => array(
                      array(
-                            'tl_gallery_creator_pictures', 'onloadCbCheckPermission'
-                     ), array(
-                            'tl_gallery_creator_pictures', 'onloadCbSetUpPalettes'
+                            'tl_gallery_creator_pictures',
+                            'onloadCbCheckPermission'
+                     ),
+                     array(
+                            'tl_gallery_creator_pictures',
+                            'onloadCbSetUpPalettes'
                      )
               ),
 
               'ondelete_callback' => array(
                      array(
-                            'tl_gallery_creator_pictures', 'ondeleteCb'
+                            'tl_gallery_creator_pictures',
+                            'ondeleteCb'
                      )
-              ), 'sql' => array(
+              ),
+              'sql' => array(
                      'keys' => array(
-                            'id' => 'primary', 'pid' => 'index'
+                            'id' => 'primary',
+                            'pid' => 'index'
                      )
               )
-       ), //list
+       ),
+       //list
        'list' => array(
               'sorting' => array(
-                     'mode' => 4, 'fields' => array('sorting'), 'panelLayout' => 'filter;search,limit',
+                     'mode' => 4,
+                     'fields' => array('sorting'),
+                     'panelLayout' => 'filter;search,limit',
                      'headerFields' => array(
-                            'id', 'date', 'owners_name', 'name', 'comment', 'thumb'
-                     ), 'child_record_callback' => array(
-                            'tl_gallery_creator_pictures', 'childRecordCb'
+                            'id',
+                            'date',
+                            'owners_name',
+                            'name',
+                            'comment',
+                            'thumb'
+                     ),
+                     'child_record_callback' => array(
+                            'tl_gallery_creator_pictures',
+                            'childRecordCb'
                      ),
               ),
 
@@ -48,12 +66,14 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'global_operations' => array(
                      'jumpLoader' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader'],
-                            'href' => 'act=edit&table=tl_gallery_creator_albums&mode=fileupload', 'class' => 'led_new',
+                            'href' => 'act=edit&table=tl_gallery_creator_albums&mode=fileupload',
+                            'class' => 'led_new',
                             'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
                      ),
 
                      'all' => array(
-                            'label' => &$GLOBALS['TL_LANG']['MSC']['all'], 'href' => 'act=select',
+                            'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
+                            'href' => 'act=select',
                             'class' => 'header_edit_all',
                             'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
                      )
@@ -62,34 +82,44 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'operations' => array(
                      'edit' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['edit'],
-                            'href' => 'act=edit', 'icon' => 'edit.gif', 'button_callback' => array(
-                                   'tl_gallery_creator_pictures', 'buttonCbEditImage'
+                            'href' => 'act=edit',
+                            'icon' => 'edit.gif',
+                            'button_callback' => array(
+                                   'tl_gallery_creator_pictures',
+                                   'buttonCbEditImage'
                             )
                      ),
 
                      'delete' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['delete'],
-                            'href' => 'act=delete', 'icon' => 'delete.gif',
+                            'href' => 'act=delete',
+                            'icon' => 'delete.gif',
                             'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
                             'button_callback' => array(
-                                   'tl_gallery_creator_pictures', 'buttonCbDeletePicture'
+                                   'tl_gallery_creator_pictures',
+                                   'buttonCbDeletePicture'
                             )
                      ),
 
                      'cut' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cut'],
-                            'href' => 'act=paste&mode=cut', 'icon' => 'cut.gif',
-                            'attributes' => 'onclick="Backend.getScrollOffset();"', 'button_callback' => array(
-                                   'tl_gallery_creator_pictures', 'buttonCbCutImage'
+                            'href' => 'act=paste&mode=cut',
+                            'icon' => 'cut.gif',
+                            'attributes' => 'onclick="Backend.getScrollOffset();"',
+                            'button_callback' => array(
+                                   'tl_gallery_creator_pictures',
+                                   'buttonCbCutImage'
                             )
                      ),
 
                      'paste' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['paste'],
-                            'href' => 'act=cut&mode=1', 'icon' => 'pasteafter.gif',
+                            'href' => 'act=cut&mode=1',
+                            'icon' => 'pasteafter.gif',
                             'attributes' => 'class="blink" onclick="Backend.getScrollOffset();"',
                             'button_callback' => array(
-                                   'tl_gallery_creator_pictures', 'buttonCbPasteImage'
+                                   'tl_gallery_creator_pictures',
+                                   'buttonCbPasteImage'
                             )
                      ),
 
@@ -97,8 +127,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate'],
                             'href' => 'mode=imagerotate',
                             'icon' => 'system/modules/gallery_creator/assets/images/rotate.png',
-                            'attributes' => 'onclick="Backend.getScrollOffset();"', 'button_callback' => array(
-                                   'tl_gallery_creator_pictures', 'buttonCbRotateImage'
+                            'attributes' => 'onclick="Backend.getScrollOffset();"',
+                            'button_callback' => array(
+                                   'tl_gallery_creator_pictures',
+                                   'buttonCbRotateImage'
                             )
                      )
               )
@@ -122,9 +154,12 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'pid' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'],
                      'foreignKey' => 'tl_gallery_creator_albums.alias',
-                     'sql' => "int(10) unsigned NOT NULL default '0'", 'relation' => array(
-                            'type' => 'belongsTo', 'load' => 'lazy'
-                     ), 'eval' => array(
+                     'sql' => "int(10) unsigned NOT NULL default '0'",
+                     'relation' => array(
+                            'type' => 'belongsTo',
+                            'load' => 'lazy'
+                     ),
+                     'eval' => array(
                             'doNotShow' => true
                      ),
               ),
@@ -135,28 +170,44 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
               'published' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'],
-                     'inputType' => 'checkbox', 'filter' => true, 'eval' => array(
-                            'isBoolean' => true, 'submitOnChange' => true, 'tl_class' => 'long'
-                     ), 'sql' => "char(1) NOT NULL default '1'"
+                     'inputType' => 'checkbox',
+                     'filter' => true,
+                     'eval' => array(
+                            'isBoolean' => true,
+                            'submitOnChange' => true,
+                            'tl_class' => 'long'
+                     ),
+                     'sql' => "char(1) NOT NULL default '1'"
               ),
 
               'image_info' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'],
                      'input_field_callback' => array(
-                            'tl_gallery_creator_pictures', 'inputFieldCbGenerateImageInformation'
-                     ), 'eval' => array(
+                            'tl_gallery_creator_pictures',
+                            'inputFieldCbGenerateImageInformation'
+                     ),
+                     'eval' => array(
                             'tl_class' => 'clr',
                      )
-              ), 'title' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'], 'exclude' => true,
-                     'inputType' => 'text', 'filter' => true, 'search' => true, 'eval' => array(
-                            'allowHtml' => false, 'decodeEntities' => true, 'rgxp' => 'alnum'
-                     ), 'sql' => "varchar(255) NOT NULL default ''"
+              ),
+              'title' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'],
+                     'exclude' => true,
+                     'inputType' => 'text',
+                     'filter' => true,
+                     'search' => true,
+                     'eval' => array(
+                            'allowHtml' => false,
+                            'decodeEntities' => true,
+                            'rgxp' => 'alnum'
+                     ),
+                     'sql' => "varchar(255) NOT NULL default ''"
               ),
 
               //filename
               'name' => array(
-                     'sql' => "varchar(255) NOT NULL default ''", 'search' => true,
+                     'sql' => "varchar(255) NOT NULL default ''",
+                     'search' => true,
               ),
 
               //path
@@ -167,69 +218,125 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
               'comment' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['comment'],
-                     'inputType' => 'textarea', 'exclude' => true, 'filter' => true, 'search' => true, 'cols' => 20,
-                     'rows' => 6, 'eval' => array(
-                            'decodeEntities' => true, 'tl_class' => 'w50 ',
+                     'inputType' => 'textarea',
+                     'exclude' => true,
+                     'filter' => true,
+                     'search' => true,
+                     'cols' => 20,
+                     'rows' => 6,
+                     'eval' => array(
+                            'decodeEntities' => true,
+                            'tl_class' => 'w50 ',
                             'style' => 'margin-right:-15px; width:90%; height:150px;'
-                     ), 'sql' => "text NULL"
+                     ),
+                     'sql' => "text NULL"
               ),
 
               'picture' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture'],
                      'input_field_callback' => array(
-                            'tl_gallery_creator_pictures', 'inputFieldCbGenerateImage'
-                     ), 'eval' => array('doNotShow' => true)
+                            'tl_gallery_creator_pictures',
+                            'inputFieldCbGenerateImage'
+                     ),
+                     'eval' => array('doNotShow' => true)
               ),
 
               'date' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'], 'inputType' => 'text',
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'],
+                     'inputType' => 'text',
                      // when upload a new image, the image inherits the date of the parent album
-                     'default' => time(), 'filter' => true, 'search' => true, 'eval' => array(
-                            'mandatory' => true, 'maxlength' => 10, 'datepicker' => true, 'submitOnChange' => false,
-                            'rgxp' => 'date', 'tl_class' => 'm12 w50 wizard ', 'submitOnChange' => false
-                     ), 'sql' => "int(10) unsigned NOT NULL default '0'"
+                     'default' => time(),
+                     'filter' => true,
+                     'search' => true,
+                     'eval' => array(
+                            'mandatory' => true,
+                            'maxlength' => 10,
+                            'datepicker' => true,
+                            'submitOnChange' => false,
+                            'rgxp' => 'date',
+                            'tl_class' => 'm12 w50 wizard ',
+                            'submitOnChange' => false
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'"
               ),
 
               'addCustomThumb' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb'],
-                     'exclude' => true, 'filter' => true, 'inputType' => 'checkbox', 'eval' => array(
+                     'exclude' => true,
+                     'filter' => true,
+                     'inputType' => 'checkbox',
+                     'eval' => array(
                             'submitOnChange' => true,
-                     ), 'sql' => "char(1) NOT NULL default ''"
+                     ),
+                     'sql' => "char(1) NOT NULL default ''"
               ),
 
               'customThumb' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['customThumb'], 'exclude' => true,
-                     'inputType' => 'fileTree', 'eval' => array(
-                            'fieldType' => 'radio', 'files' => true, 'filesOnly' => true,
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['customThumb'],
+                     'exclude' => true,
+                     'inputType' => 'fileTree',
+                     'eval' => array(
+                            'fieldType' => 'radio',
+                            'files' => true,
+                            'filesOnly' => true,
                             'extensions' => 'jpeg,jpg,gif,png,bmp,tiff'
-                     ), 'sql' => "int(10) unsigned NOT NULL default '0'"
+                     ),
+                     'sql' => "int(10) unsigned NOT NULL default '0'"
               ),
 
               'owner' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'],
-                     'default' => $this->User->id, 'foreignKey' => 'tl_user.name', 'inputType' => 'select',
-                     'filter' => true, 'search' => true, 'eval' => array(
-                            'includeBlankOption' => true, 'blankOptionLabel' => 'noName', 'doNotShow' => true,
-                            'nospace' => true, 'tl_class' => 'clr m12 w50'
-                     ), 'sql' => "int(10) NOT NULL default '0'", 'relation' => array(
-                            'type' => 'hasOne', 'load' => 'eager'
+                     'default' => $this->User->id,
+                     'foreignKey' => 'tl_user.name',
+                     'inputType' => 'select',
+                     'filter' => true,
+                     'search' => true,
+                     'eval' => array(
+                            'includeBlankOption' => true,
+                            'blankOptionLabel' => 'noName',
+                            'doNotShow' => true,
+                            'nospace' => true,
+                            'tl_class' => 'clr m12 w50'
+                     ),
+                     'sql' => "int(10) NOT NULL default '0'",
+                     'relation' => array(
+                            'type' => 'hasOne',
+                            'load' => 'eager'
                      )
               ),
 
               'socialMediaSRC' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['socialMediaSRC'],
-                     'exclude' => true, 'filter' => true, 'search' => true, 'inputType' => 'text',
-                     'eval' => array('tl_class' => 'clr'), 'sql' => "varchar(255) NOT NULL default ''"
-              ), 'localMediaSRC' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['localMediaSRC'], 'exclude' => true,
-                     'filter' => true, 'search' => true, 'inputType' => 'fileTree', 'eval' => array(
-                            'files' => true, 'filesOnly' => true, 'fieldType' => 'radio'
-                     ), 'sql' => "binary(16) NULL",
-              ), 'cssID' => array(
-                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cssID'], 'exclude' => true,
-                     'inputType' => 'text', 'eval' => array(
-                            'multiple' => true, 'size' => 2, 'tl_class' => 'w50 clr'
-                     ), 'sql' => "varchar(255) NOT NULL default ''"
+                     'exclude' => true,
+                     'filter' => true,
+                     'search' => true,
+                     'inputType' => 'text',
+                     'eval' => array('tl_class' => 'clr'),
+                     'sql' => "varchar(255) NOT NULL default ''"
+              ),
+              'localMediaSRC' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['localMediaSRC'],
+                     'exclude' => true,
+                     'filter' => true,
+                     'search' => true,
+                     'inputType' => 'fileTree',
+                     'eval' => array(
+                            'files' => true,
+                            'filesOnly' => true,
+                            'fieldType' => 'radio'
+                     ),
+                     'sql' => "binary(16) NULL",
+              ),
+              'cssID' => array(
+                     'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cssID'],
+                     'exclude' => true,
+                     'inputType' => 'text',
+                     'eval' => array(
+                            'multiple' => true,
+                            'size' => 2,
+                            'tl_class' => 'w50 clr'
+                     ),
+                     'sql' => "varchar(255) NOT NULL default ''"
               )
        )
 );
@@ -256,6 +363,7 @@ class tl_gallery_creator_pictures extends Backend
         */
        public $restrictedUser = false;
 
+
        public function __construct()
        {
 
@@ -269,7 +377,8 @@ class tl_gallery_creator_pictures extends Backend
 
               //parse Backend Template Hook registrieren
               $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array(
-                     'tl_gallery_creator_pictures', 'myParseBackendTemplate'
+                     'tl_gallery_creator_pictures',
+                     'myParseBackendTemplate'
               );
 
               // set the referer when redirecting from import files from the filesystem
@@ -309,7 +418,8 @@ class tl_gallery_creator_pictures extends Backend
                             {
                                    $GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['list']['sorting']['filter'] = array(
                                           array(
-                                                 'owner=?', $this->User->id
+                                                 'owner=?',
+                                                 $this->User->id
                                           )
                                    );
                             }
@@ -320,6 +430,7 @@ class tl_gallery_creator_pictures extends Backend
                             break;
               } //end switch
        }
+
 
        /**
         * Return the delete-image-button
@@ -337,6 +448,7 @@ class tl_gallery_creator_pictures extends Backend
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
               return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
        }
+
 
        /**
         * Return the edit-image-button
@@ -356,6 +468,7 @@ class tl_gallery_creator_pictures extends Backend
 
        }
 
+
        /**
         * Return the cut-image-button
         * @param array
@@ -371,6 +484,7 @@ class tl_gallery_creator_pictures extends Backend
 
               return '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
        }
+
 
        /**
         * Return the paste-image-button
@@ -411,6 +525,7 @@ class tl_gallery_creator_pictures extends Backend
               }
        }
 
+
        /**
         * Return the rotate-image-button
         * @param array
@@ -426,6 +541,7 @@ class tl_gallery_creator_pictures extends Backend
 
               return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
        }
+
 
        /**
         * child-record-callback
@@ -473,6 +589,7 @@ class tl_gallery_creator_pictures extends Backend
               }
        }
 
+
        /**
         * input-field-callback generate image
         * Returns the html-img-tag
@@ -491,6 +608,7 @@ class tl_gallery_creator_pictures extends Backend
 </div>
 		';
        }
+
 
        /**
         * input-field-callback generate image information
@@ -557,6 +675,7 @@ class tl_gallery_creator_pictures extends Backend
               return $output;
        }
 
+
        /**
         * Parse Backend Template Hook
         * @param string
@@ -595,6 +714,7 @@ class tl_gallery_creator_pictures extends Backend
               return $strContent;
        }
 
+
        /**
         * ondelete-callback
         * prevents deleting images by unauthorised users
@@ -627,6 +747,7 @@ class tl_gallery_creator_pictures extends Backend
 
        }
 
+
        /**
         * child-record-callback
         * @param array
@@ -658,6 +779,7 @@ class tl_gallery_creator_pictures extends Backend
                      }
               }
        }
+
 
        /**
         * onload-callback

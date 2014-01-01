@@ -25,6 +25,7 @@ namespace GalleryCreator;
  */
 abstract class DisplayGallery extends \Module
 {
+
        /**
         * Albumalias
         * @var string
@@ -54,6 +55,7 @@ abstract class DisplayGallery extends \Module
         * @var boolean
         */
        protected $DETAIL_VIEW = false;
+
 
        /**
         * Parse the template
@@ -96,6 +98,7 @@ abstract class DisplayGallery extends \Module
 
        }
 
+
        /**
         * do some default-settings for the thumb-size if no settings are done in the module-/content-settings
         */
@@ -105,16 +108,21 @@ abstract class DisplayGallery extends \Module
               if ($this->gc_size_albumlisting == "")
               {
                      $this->gc_size_albumlisting = serialize(array(
-                                                                  "110", "110", "crop"
+                                                                    "110",
+                                                                    "110",
+                                                                    "crop"
                                                              ));
               }
               if ($this->gc_size_detailview == "")
               {
                      $this->gc_size_detailview = serialize(array(
-                                                                "110", "110", "crop"
+                                                                  "110",
+                                                                  "110",
+                                                                  "crop"
                                                            ));
               }
        }
+
 
        /**
         * Hilfsmethode
@@ -156,6 +164,7 @@ abstract class DisplayGallery extends \Module
               return $gcElementCounter;
        }
 
+
        /**
         * Hilfsmethode
         * Ueberprueft, ob bei nur einem ausgewaehlten Album direkt zur Thumnailuebersicht des Albums weitergeleitet werden soll.
@@ -192,6 +201,7 @@ abstract class DisplayGallery extends \Module
               }
               return false;
        }
+
 
        /**
         * evaluate the request and extracts the album-id and the content-element-id
@@ -253,6 +263,7 @@ abstract class DisplayGallery extends \Module
               }
        }
 
+
        /**
         * Check if fe-user is allowed watching this album
         * @param string
@@ -281,6 +292,7 @@ abstract class DisplayGallery extends \Module
               }
               return true;
        }
+
 
        /**
         * responds to ajax-requests
@@ -369,6 +381,7 @@ abstract class DisplayGallery extends \Module
               return null;
        }
 
+
        /**
         * Generate the xml-output for jwImagerotator
         * @param string
@@ -395,6 +408,7 @@ abstract class DisplayGallery extends \Module
               $xml .= "</playlist>\n";
               return $xml;
        }
+
 
        /**
         * Returns the path to the preview-thumbnail of an album
@@ -424,7 +438,10 @@ abstract class DisplayGallery extends \Module
                      $arrRow = $objPreviewThumb->fetchAssoc();
                      if (!is_file(TL_ROOT . '/' . $arrRow['path']))
                      {
-                            return array('name' => basename($this->defaultThumb), 'path' => $this->defaultThumb);
+                            return array(
+                                   'name' => basename($this->defaultThumb),
+                                   'path' => $this->defaultThumb
+                            );
                      }
               }
 
@@ -436,9 +453,13 @@ abstract class DisplayGallery extends \Module
               }
               else
               {
-                     return array('name' => basename($this->defaultThumb), 'path' => $this->defaultThumb);
+                     return array(
+                            'name' => basename($this->defaultThumb),
+                            'path' => $this->defaultThumb
+                     );
               }
        }
+
 
        /**
         * Returns the information-array about an album
@@ -492,41 +513,60 @@ abstract class DisplayGallery extends \Module
 
               $arrAlbum = array(
                      //[int] Album-Id
-                     'id' => $objAlbum->id, //[int] pid parent Album-Id
-                     'pid' => $objAlbum->pid, //[int] Sortierindex
-                     'sorting' => $objAlbum->sorting, //[boolean] veroeffentlicht (true/false)
-                     'published' => $objAlbum->published, //[int] id des Albumbesitzers
-                     'owner' => $objAlbum->owner, //[string] Benutzername des Albumbesitzers
-                     'owners_name' => $objAlbum->owners_name, //[int] Zeitstempel der letzten Aenderung
-                     'tstamp' => $objAlbum->tstamp, //[int] Event-Unix-timestamp (unformatiert)
-                     'event_tstamp' => $objAlbum->date, 'date' => $objAlbum->date, //[string] Event-Datum (formatiert)
+                     'id' => $objAlbum->id,
+                     //[int] pid parent Album-Id
+                     'pid' => $objAlbum->pid,
+                     //[int] Sortierindex
+                     'sorting' => $objAlbum->sorting,
+                     //[boolean] veroeffentlicht (true/false)
+                     'published' => $objAlbum->published,
+                     //[int] id des Albumbesitzers
+                     'owner' => $objAlbum->owner,
+                     //[string] Benutzername des Albumbesitzers
+                     'owners_name' => $objAlbum->owners_name,
+                     //[int] Zeitstempel der letzten Aenderung
+                     'tstamp' => $objAlbum->tstamp,
+                     //[int] Event-Unix-timestamp (unformatiert)
+                     'event_tstamp' => $objAlbum->date,
+                     'date' => $objAlbum->date,
+                     //[string] Event-Datum (formatiert)
                      'event_date' => $this->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date),
                      //[string] Event-Location
-                     'event_location' => specialchars($objAlbum->event_location), //[string] Albumname
-                     'name' => specialchars($objAlbum->name), //[string] Albumalias (=Verzeichnisname)
-                     'alias' => $objAlbum->alias, //[string] Albumkommentar
+                     'event_location' => specialchars($objAlbum->event_location),
+                     //[string] Albumname
+                     'name' => specialchars($objAlbum->name),
+                     //[string] Albumalias (=Verzeichnisname)
+                     'alias' => $objAlbum->alias,
+                     //[string] Albumkommentar
                      'comment' => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
                      'caption' => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
                      //[int] Albumbesucher (Anzahl Klicks)
-                     'visitors' => $objAlbum->visitors, //[string] Link zur Detailansicht
+                     'visitors' => $objAlbum->visitors,
+                     //[string] Link zur Detailansicht
                      'href' => TL_MODE == 'FE' ? sprintf($href, $objAlbum->alias) : NULL,
                      //[string] Inhalt fuer das title Attribut
                      'title' => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
                      //[int] Anzahl Bilder im Album
-                     'count' => $objPics->numRows, //[int] Anzahl Unteralben
+                     'count' => $objPics->numRows,
+                     //[int] Anzahl Unteralben
                      'count_subalbums' => count(GcHelpers::getAllSubalbums($objAlbum->id)),
                      //[string] alt Attribut fuer das Vorschaubild
-                     'alt' => $arrPreviewThumb['name'], //[string] Pfad zum Originalbild
-                     'src' => $arrPreviewThumb['path'], //[string] Pfad zum Thumbnail
+                     'alt' => $arrPreviewThumb['name'],
+                     //[string] Pfad zum Originalbild
+                     'src' => $arrPreviewThumb['path'],
+                     //[string] Pfad zum Thumbnail
                      'thumb_src' => \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
                      //[int] article id
                      'insert_article_pre' => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
                      //[int] article id
                      'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : null,
                      //[string] css-Classname
-                     'class' => 'thumb', //[int] Thumbnailgrösse
-                     'size' => $arrSize, //[array] array mit exif metatags
-                     'exif' => $exif, //[string] javascript-Aufruf
+                     'class' => 'thumb',
+                     //[int] Thumbnailgrösse
+                     'size' => $arrSize,
+                     //[array] array mit exif metatags
+                     'exif' => $exif,
+                     //[string] javascript-Aufruf
                      'thumbMouseover' => $this->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this, " . $this->id . ", " . $objAlbum->id . ", " . $objPics->numRows . ", '" . strtolower($this->moduleType) . "');" : ""
               );
 
@@ -541,6 +581,7 @@ abstract class DisplayGallery extends \Module
               }
               return $arrAlbum;
        }
+
 
        /**
         * Returns the information-array about a picture
@@ -675,48 +716,77 @@ abstract class DisplayGallery extends \Module
 
               $arrPicture = array(
                      //[int] id picture_id
-                     'id' => $objPicture->id, //[int] pid parent Album-Id
+                     'id' => $objPicture->id,
+                     //[int] pid parent Album-Id
                      'pid' => $objPicture->pid,
                      //[int] das Datum, welches fuer das Bild gesetzt werden soll (= in der Regel das Upload-Datum)
-                     'date' => $objPicture->date, //[int] id des Albumbesitzers
-                     'owner' => $objPicture->owner, //Name des Erstellers
-                     'owners_name' => $objOwner->name, //[int] album_id oder pid
-                     'album_id' => $objPicture->pid, //[string] name (basename/filename of the file)
-                     'name' => specialchars($objPicture->name), //[string] filename without extension
-                     'filename' => $arrFile["filename"], //[string] Pfad zur Datei
-                     'path' => $objPicture->path, //[string] basename similar to name
-                     'basename' => $arrFile["basename"], //[string] dirname
-                     'dirname' => $arrFile["dirname"], //[string] file-extension
-                     'extension' => $arrFile["extension"], //[string] alt-attribut
+                     'date' => $objPicture->date,
+                     //[int] id des Albumbesitzers
+                     'owner' => $objPicture->owner,
+                     //Name des Erstellers
+                     'owners_name' => $objOwner->name,
+                     //[int] album_id oder pid
+                     'album_id' => $objPicture->pid,
+                     //[string] name (basename/filename of the file)
+                     'name' => specialchars($objPicture->name),
+                     //[string] filename without extension
+                     'filename' => $arrFile["filename"],
+                     //[string] Pfad zur Datei
+                     'path' => $objPicture->path,
+                     //[string] basename similar to name
+                     'basename' => $arrFile["basename"],
+                     //[string] dirname
+                     'dirname' => $arrFile["dirname"],
+                     //[string] file-extension
+                     'extension' => $arrFile["extension"],
+                     //[string] alt-attribut
                      'alt' => specialchars($objPicture->title ? $objPicture->title : $objPicture->name),
                      //[string] title-attribut
-                     'title' => specialchars($objPicture->title), //[string] Bildkommentar oder Bildbeschreibung
-                     'comment' => specialchars($objPicture->comment), 'caption' => specialchars($objPicture->comment),
+                     'title' => specialchars($objPicture->title),
+                     //[string] Bildkommentar oder Bildbeschreibung
+                     'comment' => specialchars($objPicture->comment),
+                     'caption' => specialchars($objPicture->comment),
                      //[string] path to media (video, picture, sound...)
-                     'href' => $href, //path to the image
-                     'image_src' => $strImageSrc, //path to the other selected media
-                     'media_src' => $strMediaSrc, //[string] path to a media on a social-media-plattform
-                     'socialMediaSRC' => $objPicture->socialMediaSRC, //[string] path to a media stored on the webserver
+                     'href' => $href,
+                     //path to the image
+                     'image_src' => $strImageSrc,
+                     //path to the other selected media
+                     'media_src' => $strMediaSrc,
+                     //[string] path to a media on a social-media-plattform
+                     'socialMediaSRC' => $objPicture->socialMediaSRC,
+                     //[string] path to a media stored on the webserver
                      'localMediaSRC' => $objPicture->localMediaSRC,
                      //[string] Pfad zu einem benutzerdefinierten Thumbnail
-                     'addCustomThumb' => $objPicture->addCustomThumb, //[string] Thumbnailquelle
-                     'thumb_src' => $thumbSrc, //[array] Thumbnail-Ausmasse Array $arrSize[Breite, Hoehe, Methode]
-                     'size' => $arrSize, //[int] thumb-width in px
-                     'thumb_width' => $arrFile["thumb_width"], //[int] thumb-height in px
-                     'thumb_height' => $arrFile["thumb_height"], //[int] image-width in px
-                     'image_width' => $arrFile["image_width"], //[int] image-height in px
+                     'addCustomThumb' => $objPicture->addCustomThumb,
+                     //[string] Thumbnailquelle
+                     'thumb_src' => $thumbSrc,
+                     //[array] Thumbnail-Ausmasse Array $arrSize[Breite, Hoehe, Methode]
+                     'size' => $arrSize,
+                     //[int] thumb-width in px
+                     'thumb_width' => $arrFile["thumb_width"],
+                     //[int] thumb-height in px
+                     'thumb_height' => $arrFile["thumb_height"],
+                     //[int] image-width in px
+                     'image_width' => $arrFile["image_width"],
+                     //[int] image-height in px
                      'image_height' => $arrFile["image_height"],
                      //[int] das rel oder data-lightbox Attribut fuer das Anzeigen der Bilder in der Lightbox
                      'lightbox' => $objPage->outputFormat == 'xhtml' ? 'rel="lightbox[lb' . $objPicture->pid . ']"' : 'data-lightbox="lb' . $objPicture->pid . '"',
                      //[int] Zeitstempel der letzten Aenderung
-                     'tstamp' => $objPicture->tstamp, //[int] Sortierindex
-                     'sorting' => $objPicture->sorting, //[boolean] veroeffentlicht (true/false)
-                     'published' => $objPicture->published, //[array] Array mit exif metatags
-                     'exif' => $exif, //[array] Array mit allen Albuminformation (albumname, owners_name...)
+                     'tstamp' => $objPicture->tstamp,
+                     //[int] Sortierindex
+                     'sorting' => $objPicture->sorting,
+                     //[boolean] veroeffentlicht (true/false)
+                     'published' => $objPicture->published,
+                     //[array] Array mit exif metatags
+                     'exif' => $exif,
+                     //[array] Array mit allen Albuminformation (albumname, owners_name...)
                      'albuminfo' => $arrAlbumInfo,
                      //[array] Array mit Bildinfos aus den meta-Angaben der Datei, gespeichert in tl_files.meta
-                     'metaData' => $this->getMetaContent($objPicture->id), //[string] css-ID des Bildcontainers
-                     'cssID' => $cssID[0] != '' ? $cssID[0] : '', //[string] css-Klasse des Bildcontainers
+                     'metaData' => $this->getMetaContent($objPicture->id),
+                     //[string] css-ID des Bildcontainers
+                     'cssID' => $cssID[0] != '' ? $cssID[0] : '',
+                     //[string] css-Klasse des Bildcontainers
                      'cssClass' => $cssID[1] != '' ? $cssID[1] : '',
                      //[bool] true, wenn es sich um ein Bild handelt, das nicht in files/gallery_creator_albums/albumname gespeichert ist
                      'externalFile' => $objPicture->externalFile,
@@ -734,6 +804,7 @@ abstract class DisplayGallery extends \Module
 
               return $arrPicture;
        }
+
 
        /**
         * gets the meta-text-informations from tl_files.meta
@@ -768,6 +839,7 @@ abstract class DisplayGallery extends \Module
 
               return $arrMeta;
        }
+
 
        /**
         * Sets the template-vars for the selected album
@@ -845,6 +917,7 @@ abstract class DisplayGallery extends \Module
               $this->Template->allPictures = $objPictures->fetchAllAssoc();
        }
 
+
        /**
         * Hilfsmethode
         * generiert den back-Link
@@ -883,6 +956,7 @@ abstract class DisplayGallery extends \Module
               $url .= isset($_SESSION['gallery_creator']['PAGINATION']) ? '?page=' . $_SESSION['gallery_creator']['PAGINATION'] : '';
               return $url;
        }
+
 
        /**
         * initCounter
@@ -929,8 +1003,10 @@ abstract class DisplayGallery extends \Module
                      //build up the array
                      $newVisitor = array(
                             $_SERVER['REMOTE_ADDR'] => array(
-                                   'ip' => $_SERVER['REMOTE_ADDR'], 'pid' => $intAlbumId,
-                                   'user_agent' => $_SERVER['HTTP_USER_AGENT'], 'tstamp' => time(),
+                                   'ip' => $_SERVER['REMOTE_ADDR'],
+                                   'pid' => $intAlbumId,
+                                   'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                                   'tstamp' => time(),
                                    'url' => \Environment::get('request'),
                             )
                      );
@@ -948,7 +1024,10 @@ abstract class DisplayGallery extends \Module
                      }
 
                      // update database
-                     $set = array('visitors' => $intCount, 'visitors_details' => serialize($arrVisitors));
+                     $set = array(
+                            'visitors' => $intCount,
+                            'visitors_details' => serialize($arrVisitors)
+                     );
                      $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)->executeUncached($intAlbumId);
               }
        }

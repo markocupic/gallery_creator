@@ -20,6 +20,7 @@ namespace GalleryCreator;
  */
 class GcHelpers extends \System
 {
+
        /**
         * insert a new entry in tl_gallery_creator_pictures
         * @param integer
@@ -132,6 +133,7 @@ class GcHelpers extends \System
               return false;
        }
 
+
        /**
         * move uploaded file to the album directory
         * @param string
@@ -158,7 +160,8 @@ class GcHelpers extends \System
 
                      //send the response to the jumploader applet
                      $json = array(
-                            'status' => 'error', 'serverResponse' => $errorMsg
+                            'status' => 'error',
+                            'serverResponse' => $errorMsg
                      );
                      die(json_encode($json));
               }
@@ -173,7 +176,8 @@ class GcHelpers extends \System
 
                      //send the response to the jumploader applet
                      $json = array(
-                            'status' => 'error', 'serverResponse' => $errorMsg
+                            'status' => 'error',
+                            'serverResponse' => $errorMsg
                      );
 
                      die(json_encode($json));
@@ -188,7 +192,9 @@ class GcHelpers extends \System
 
                      //send the response to the jumploader applet
                      $json = array(
-                            'status' => 'error', 'serverResponse' => $errorMsg, 'requestId' => $requestId
+                            'status' => 'error',
+                            'serverResponse' => $errorMsg,
+                            'requestId' => $requestId
                      );
                      die(json_encode($json));
               }
@@ -209,7 +215,8 @@ class GcHelpers extends \System
 
                      //send the response to the jumploader applet
                      $json = array(
-                            'status' => 'success', 'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful'],
+                            'status' => 'success',
+                            'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful'],
                             'requestId' => $requestId
                      );
                      echo json_encode($json);
@@ -226,7 +233,8 @@ class GcHelpers extends \System
 
                      //return the array if file was successfully uploaded
                      $return = array(
-                            'strFileSrc' => $strFileSrc, 'strAlbumAlias' => $strAlbumAlias,
+                            'strFileSrc' => $strFileSrc,
+                            'strAlbumAlias' => $strAlbumAlias,
                             'strFilename' => $arrFile['name']
                      );
                      return $return;
@@ -239,11 +247,14 @@ class GcHelpers extends \System
 
                      //send the response to the jumploader applet
                      $json = array(
-                            'status' => 'error', 'serverResponse' => $errorMsg, 'requestId' => $requestId
+                            'status' => 'error',
+                            'serverResponse' => $errorMsg,
+                            'requestId' => $requestId
                      );
                      die(json_encode($json));
               }
        }
+
 
        /**
         * generate a unique filename for a new picture
@@ -298,6 +309,7 @@ class GcHelpers extends \System
               return $strFilename;
        }
 
+
        /**
         * generate the jumploader applet
         * @param integer
@@ -331,10 +343,12 @@ class GcHelpers extends \System
 
               //get the domain
               $search = array(
-                     'http%3A', 'https%3A'
+                     'http%3A',
+                     'https%3A'
               );
               $replace = array(
-                     'http:', 'https:'
+                     'http:',
+                     'https:'
               );
               $url = \System::urlEncode(\Environment::get('base'));
               $domain = str_replace($search, $replace, $url);
@@ -347,8 +361,10 @@ class GcHelpers extends \System
               //jumploader Archive
               $pathToArchive = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
               $arrJumploaderArchive = array(
-                     sprintf('%s/mediautil_z.jar', $pathToArchive), sprintf('%s/sanselan_z.jar', $pathToArchive),
-                     sprintf('%s/jumploader_z.jar', $pathToArchive), sprintf('%s/xfiledialog.jar', $pathToArchive),
+                     sprintf('%s/mediautil_z.jar', $pathToArchive),
+                     sprintf('%s/sanselan_z.jar', $pathToArchive),
+                     sprintf('%s/jumploader_z.jar', $pathToArchive),
+                     sprintf('%s/xfiledialog.jar', $pathToArchive),
               );
               $objTemplate->jumploaderArchive = implode(',', $arrJumploaderArchive);
 
@@ -383,6 +399,7 @@ class GcHelpers extends \System
               return $objTemplate->parse();
        }
 
+
        /**
         * gibt ein Array mit den Unteralben eines Albums zurück
         * @param integer
@@ -401,6 +418,7 @@ class GcHelpers extends \System
               return $arrSubAlbums;
        }
 
+
        /**
         * gibt ein Array mit allen Angaben des Parent-Albums zurueck
         * @param integer
@@ -418,6 +436,7 @@ class GcHelpers extends \System
               $arrParentAlbum = $parentAlb->fetchAllAssoc();
               return $arrParentAlbum[0];
        }
+
 
        /**
         * @param string
@@ -473,6 +492,7 @@ class GcHelpers extends \System
               return true;
        }
 
+
        /**
         * @param integer
         * @param string
@@ -502,7 +522,8 @@ class GcHelpers extends \System
                             if ($objFile->isGdImage)
                             {
                                    $images[$objFile->path] = array(
-                                          'name' => $objFile->basename, 'path' => $objFile->path
+                                          'name' => $objFile->basename,
+                                          'path' => $objFile->path
                                    );
                             }
                      }
@@ -525,7 +546,8 @@ class GcHelpers extends \System
                                    if ($objFile->isGdImage)
                                    {
                                           $images[$objFile->path] = array(
-                                                 'name' => $objFile->basename, 'path' => $objFile->path
+                                                 'name' => $objFile->basename,
+                                                 'path' => $objFile->path
                                           );
                                    }
                             }
@@ -554,6 +576,7 @@ class GcHelpers extends \System
                      }
               }
        }
+
 
        /**
         * reviseTable
