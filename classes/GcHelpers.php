@@ -141,7 +141,7 @@ class GcHelpers extends \System
         * @param array
         * @return array
         */
-       public static function fileupload($intAlbumId, $arrFile, $requestId = '')
+       public static function fileupload($intAlbumId, $arrFile)
        {
 
               $strUploadPath = GALLERY_CREATOR_UPLOAD_PATH;
@@ -193,8 +193,7 @@ class GcHelpers extends \System
                      //send the response to the jumploader applet
                      $json = array(
                             'status' => 'error',
-                            'serverResponse' => $errorMsg,
-                            'requestId' => $requestId
+                            'serverResponse' => $errorMsg
                      );
                      die(json_encode($json));
               }
@@ -216,17 +215,20 @@ class GcHelpers extends \System
                      //send the response to the jumploader applet
                      $json = array(
                             'status' => 'success',
-                            'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful'],
-                            'requestId' => $requestId
+                            'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful']
                      );
-                     echo json_encode($json);
+                     // Do not send any response to the uplaoder if html5_uploader is selected and Javascript is disabled
+                     if (!\Input::post('submit'))
+                     {
+                            echo json_encode($json);
+                     }
 
                      // resize image
-                     if (intval(\Input::post('RESIZE_IMAGE_TO')))
+                     if (intval(\Input::post('img_resolution')))
                      {
-                            if (\Input::post('RESIZE_IMAGE_TO') > 1)
+                            if (\Input::post('img_resolution') > 1)
                             {
-                                   $width = \Input::post('RESIZE_IMAGE_TO');
+                                   $width = \Input::post('img_resolution');
                                    $strFileSrc = \Image::get($strFileSrc, $width, '', 'proportional', $strFileSrc, true);
                             }
                      }
@@ -241,15 +243,14 @@ class GcHelpers extends \System
               }
               else
               {
-                     //Upload-Fehler
+                     // Upload-Error
                      \System::log('Unable to upload Files from tmpdir to the upload-dir.', __METHOD__, TL_ERROR);
                      $errorMsg = 'Error in ' . __METHOD__ . ' on line: ' . __LINE__ . '.<br>' . sprintf($GLOBALS['TL_LANG']['ERR']['uploadError'], $arrFile['name']);
 
-                     //send the response to the jumploader applet
+                     //send the response to the uploader
                      $json = array(
                             'status' => 'error',
-                            'serverResponse' => $errorMsg,
-                            'requestId' => $requestId
+                            'serverResponse' => $errorMsg
                      );
                      die(json_encode($json));
               }

@@ -351,6 +351,9 @@ abstract class DisplayGallery extends \Module
                             return false;
                      }
 
+                     // Init Album Visit Counter
+                     $this->initCounter(\Input::get('albumId'));
+
                      $json = "";
 
                      // sorting direction
@@ -494,7 +497,8 @@ abstract class DisplayGallery extends \Module
               try
               {
                      $exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? @exif_read_data($objPics->path) : array('info' => "The function 'exif_read_data()' is not available on this server.");
-              } catch (Exception $e)
+              }
+              catch (Exception $e)
               {
                      echo $e->getMessage();
                      $exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
@@ -691,7 +695,8 @@ abstract class DisplayGallery extends \Module
               try
               {
                      $exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? @exif_read_data($objPicture->path) : array('info' => "The function 'exif_read_data()' is not available on this server.");
-              } catch (Exception $e)
+              }
+              catch (Exception $e)
               {
                      $exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
               }

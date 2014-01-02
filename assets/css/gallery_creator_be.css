@@ -28,6 +28,10 @@ div.readonly input {
     background-color: #CCCCCC;
 }
 
+.html5_uploader .block{
+    display: block;
+}
+
 .html5_uploader {
     margin: 40px 0 10px 0;
 }

@@ -996,9 +996,10 @@ class tl_gallery_creator_albums extends Backend
               $objAlb = GalleryCreatorAlbumsModel::findById(Input::get('id'));
 
 
-              // multifile uploads
+              // multifile uploads in a single request
               if (is_array($_FILES['file']['name']))
               {
+
                      $intCount = count($_FILES['file']['name']);
                      for ($i = 0; $i < $intCount; $i++)
                      {
@@ -1017,32 +1018,33 @@ class tl_gallery_creator_albums extends Backend
                      }
                      foreach ($arrFiles as $i => $v)
                      {
-                            // Get the request Id
-                            $requestId = $_POST['requestId'] ? $_POST['requestId'] : '';
 
                             // move uploaded file in the album-directory
-                            if ($arrUploadedFile = GalleryCreator\GcHelpers::fileupload($objAlb->id, $v, $requestId))
+                            if ($arrUploadedFile = GalleryCreator\GcHelpers::fileupload($objAlb->id, $v))
                             {
                                    // write the new entry in tl_gallery_creator_pictures
                                    $strFileSrc = $arrUploadedFile['strFileSrc'];
                                    GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
                             }
                      }
-                     exit();
               }
-
-
-              // Get the request Id
-              $requestId = $_POST['requestId'] ? $_POST['requestId'] : '';
-
-              // move uploaded file in the album-directory
-              if ($arrUploadedFile = GalleryCreator\GcHelpers::fileupload($objAlb->id, $_FILES['file'], $requestId))
+              else
               {
-                     // write the new entry in tl_gallery_creator_pictures
-                     $strFileSrc = $arrUploadedFile['strFileSrc'];
-                     GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
+                     // 1 file 1 request
+                     // move uploaded file in the album-directory
+                     if ($arrUploadedFile = GalleryCreator\GcHelpers::fileupload($objAlb->id, $_FILES['file']))
+                     {
+                            // write the new entry in tl_gallery_creator_pictures
+                            $strFileSrc = $arrUploadedFile['strFileSrc'];
+                            GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
+
+                     }
               }
-              exit();
+              // Do not exit script if html5_uploader is selected and Javascript is disabled
+              if (!Input::post('submit'))
+              {
+                     exit;
+              }
        }
 
 

@@ -274,7 +274,7 @@ class ce_gallery_creator extends Backend
 
 
        /**
-        * Return all gallery_creator frontent-templates as array
+        * Return all gallery templates as array
         * @return array
         */
        public function getTemplates()

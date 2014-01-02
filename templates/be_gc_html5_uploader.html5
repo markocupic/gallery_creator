@@ -1,7 +1,15 @@
 <div class="html5_uploader">
-    <div id="uploadDropArea">
-        <div>Drag images here or <br>...browse files.</div>
+    <div class="block">
+        <div id="uploadDropArea" style="display:none">
+            <div>Drag images here or <br>...browse files.</div>
+        </div>
     </div>
+    <noscript>
+        <p>Please enable Javascript in your browser for full function volume.</p>
+        <input type="file" name="file[]" multiple>
+        <input type="hidden" name="BE_USER_AUTH" value="<?php echo $this->beUserAuth; ?>">
+        <input type="submit" name="submit" value="submit">
+    </noscript>
 </div>
 
 <?php $url = sprintf("contao/main.php?do=gallery_creator&id=%s&act=edit&table=tl_gallery_creator_albums&mode=fileupload&rt=%s", $this->Input->get('id'), REQUEST_TOKEN); ?>
@@ -22,7 +30,7 @@
         uploader.setPost("REQUEST_TOKEN", '<?php echo $this->requestToken; ?>');
         uploader.setPost("BE_USER_AUTH", '<?php echo $this->beUserAuth; ?>');
         // serverside image resizing
-        uploader.setPost("RESIZE_IMAGE_TO", document.id('ctrl_img_resolution').value);
+        uploader.setPost("img_resolution", document.id('ctrl_img_resolution').value);
     });
 </script>
 
@@ -75,6 +83,7 @@ Html5Upload = new Class({
             alert('Error: Add a uploadDropArea (<div id="uploadDropArea">...browse files</div>) to the html markup!')
         }
         this.uploadDropArea = document.id('uploadDropArea');
+        this.uploadDropArea.setStyle('display', 'block');
 
         // check for the url option
         if (!this.getOption('url')) {
@@ -122,8 +131,10 @@ Html5Upload = new Class({
         });
         this.uploadList.inject(buttonBox, 'after');
 
+
         // add the Events to the uploadDropArea
-        this.uploadDropArea.addEvent('click', function () {
+        this.uploadDropArea.addEvent('click', function (event) {
+            event.stopPropagation();
             self.resetForm();
             self.fileInput.click();
         });
@@ -149,19 +160,23 @@ Html5Upload = new Class({
         }, false);
 
         // add event to the hidden file input field
-        this.fileInput.addEvent('change', function () {
+        this.fileInput.addEvent('change', function (event) {
             self.addFiles(self.fileInput.files);
             self.listSelectedFiles();
         });
 
         // add event to the reset button
-        document.id('reset_btn').addEvent('click', function () {
+        document.id('reset_btn').addEvent('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
             self.resetForm();
             self.clearList();
         });
 
         // add event to the upload button
-        document.id('upload_btn').addEvent('click', function () {
+        document.id('upload_btn').addEvent('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
             self.initUpload();
         });
     },
@@ -241,7 +256,6 @@ Html5Upload = new Class({
             objForm.append(key, value);
         });
 
-        objForm.append("requestId", index);
         objForm.append("file", objFile);
 
         // prepare the xhr object
@@ -269,6 +283,7 @@ Html5Upload = new Class({
         // onerror event
         xhr.addEventListener("error", function (event) {
             self.currentRequests--;
+            alert('Upload-error! Please check connectivity.');
         }, false);
 
         // onabort event
@@ -288,18 +303,17 @@ Html5Upload = new Class({
         this.currentRequests--;
         // get the server-response
         var json = JSON.decode(xhr.responseText);
-        json.requestId = (!json.requestId) ? '0' : json.requestId;
         // if server returns error
         if (json.status == 'error') {
-            document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
-            document.id('upload_' + json.requestId).addClass('error');
+            document.id('upload_' + xhr.requestId).innerHTML = json['serverResponse'];
+            document.id('upload_' + xhr.requestId).addClass('error');
             document.id('upload_' + xhr.requestId).removeClass('tl_confirm');
             document.id('upload_' + xhr.requestId).removeClass('onprogress');
         }
 
         // if server returns success
         if (json.status == 'success') {
-            document.id('upload_' + json.requestId).innerHTML = json['serverResponse'];
+            document.id('upload_' + xhr.requestId).innerHTML = json['serverResponse'];
             document.id('upload_' + xhr.requestId).removeClass('onprogress');
             document.id('upload_' + xhr.requestId).addClass('loaded');
 
