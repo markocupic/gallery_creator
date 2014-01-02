@@ -372,8 +372,13 @@ Html5Upload = new Class({
         if (typeof objFiles == 'object' && objFiles !== null) {
             var self = this;
             self._files = [];
+            var i=0;
             Object.each(objFiles, function (value, key) {
-                Array.push(self._files, value);
+                if(typeof value == 'object')
+                {
+                    self._files[i] =  value;
+                    i++;
+                }
             })
         }
         this.fileInput.value = null;

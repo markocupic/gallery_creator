@@ -148,6 +148,22 @@ class GcHelpers extends \System
               $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
               $strAlbumAlias = $objAlb->alias;
 
+              // prevent fileupload attack
+              if (!is_uploaded_file($arrFile['tmp_name']))
+              {
+                     //Fehlermeldung anzeigen
+                     $errorMsg = 'Possible filupload attack!';
+                     $_SESSION['TL_ERROR'][] = $errorMsg;
+                     \System::log($errorMsg, __METHOD__, TL_ERROR);
+
+                     //send the response to the jumploader applet
+                     $json = array(
+                            'status' => 'error',
+                            'serverResponse' => $errorMsg
+                     );
+                     die(json_encode($json));
+              }
+
               //unerlaubte Dateitypen abfangen
               $pathinfo = pathinfo($arrFile['name']);
               $uploadTypes = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['uploadTypes']));
