@@ -94,7 +94,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <?php if ($Subalbum['href']): ?>
                                    <a href="<?php echo $Subalbum['href']; ?>" title="<?php echo $Subalbum['title']; ?>">
 <?php endif; ?>
-                                          <img src="<?php echo $Subalbum['thumb_src']; ?>" alt="<?php echo $Subalbum['alt']; ?>" class="<?php echo $Subalbum['class']; ?>" />
+                                          <img src="<?php echo $Subalbum['thumb_src']; ?>" width="<?php echo $Subalbum['size'][0]; ?>" height="<?php echo $Subalbum['size'][1]; ?>" alt="<?php echo $Subalbum['alt']; ?>" class="<?php echo $Subalbum['class']; ?>" />
 <?php if ($Subalbum['href']): ?>
                                    </a>
 <?php endif; ?>

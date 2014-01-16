@@ -375,7 +375,8 @@ abstract class DisplayGallery extends \Module
                             $href = trim($objPicture->localMediaSRC) != "" ? trim($objPicture->localMediaSRC) : $href;
 
                             $json .= specialchars($href) . "###";
-                            $json .= specialchars($objPicture->comment) . " ***";
+                            $json .= specialchars($objPicture->comment) . "###";
+                            $json .= specialchars($objPicture->id) . " ***";
                      }
                      $jsonUrl = array('arrImage' => $json);
                      echo json_encode($jsonUrl);
