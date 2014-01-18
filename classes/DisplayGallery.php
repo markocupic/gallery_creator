@@ -449,7 +449,7 @@ abstract class DisplayGallery extends \Module
                      }
               }
 
-              $objFile = new \File($arrRow['path']);
+              $objFile = new \File($arrRow['path'],true);
               if ($objFile->isGdImage)
               {
                      \System::urlEncode($arrRow['path']);
@@ -634,8 +634,7 @@ abstract class DisplayGallery extends \Module
                      //Thumbnails generieren
 
                      $thumbSrc = \Image::get($strImageSrc, $arrSize[0], $arrSize[1], $arrSize[2]);
-                     // die($thumbSrc);
-                     $objFile = new \File($thumbSrc);
+                     $objFile = new \File(rawurldecode($thumbSrc), true);
                      $arrSize[0] = $objFile->width;
                      $arrSize[1] = $objFile->height;
                      $arrFile["thumb_width"] = $objFile->width;
@@ -643,7 +642,7 @@ abstract class DisplayGallery extends \Module
               }
 
               $strImageSrc = $objPicture->path;
-              //Wenn Datei nicht mehr vorhanden, auf default-thumb zurueckgreifen
+              // Wenn Datei nicht mehr vorhanden, auf default-thumb zurueckgreifen
               if (!is_file(TL_ROOT . '/' . $objPicture->path))
               {
                      $strImageSrc = $this->defaultThumb;
@@ -651,7 +650,7 @@ abstract class DisplayGallery extends \Module
 
               if (is_file(TL_ROOT . '/' . $strImageSrc))
               {
-                     $objFile = new \File($strImageSrc);
+                     $objFile = new \File($strImageSrc, true);
                      if (!$objFile->isGdImage)
                      {
                             return null;
@@ -678,11 +677,11 @@ abstract class DisplayGallery extends \Module
                      {
                             if (is_file(TL_ROOT . '/' . $objFile->path))
                             {
-                                   $objFile = new \File($objFile->path);
+                                   $objFile = new \File($objFile->path, true);
                                    if ($objFile->isGdImage)
                                    {
                                           $thumbSrc = \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
-                                          $objFile = new \File($thumbSrc);
+                                          $objFile = new \File(rawurldecode($thumbSrc),true);
                                           $arrSize[0] = $objFile->width;
                                           $arrSize[1] = $objFile->height;
                                           $arrFile["thumb_width"] = $objFile->width;
@@ -829,7 +828,7 @@ abstract class DisplayGallery extends \Module
                      return null;
               }
 
-              $objFile = new \File($objPicture->path);
+              $objFile = new \File($objPicture->path, true);
               if (!$objFile->isGdImage)
               {
                      return null;
@@ -880,7 +879,6 @@ abstract class DisplayGallery extends \Module
               // store the data of the current album in the session
               $_SESSION['gallery_creator']['CURRENT_ALBUM'] = $this->Template->arrAlbumdata;
 
-              //die FMD/CTE-id
               $this->Template->fmdId = $this->id;
               //der back-Link
               $this->Template->backLink = $this->generateBackLink($strContentType, $intAlbumId);
