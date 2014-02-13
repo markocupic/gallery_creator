@@ -579,11 +579,12 @@ class tl_gallery_creator_pictures extends Backend
                      if ($GLOBALS['TL_CONFIG']['thumbnails'])
                      {
                             $src = Image::get($objFile->path, "100", "", "center_center");
+                            $blnShowThumb = true;
                      }
                      //return html
                      $return = sprintf('<div class="cte_type %s"><strong>%s</strong> - %s [%s x %s px, %s]</div>', $key, $arrRow['headline'], $arrRow['name'], $objFile->width, $objFile->height, $this->getReadableSize($objFile->filesize));
                      $return .= $hasMovie;
-                     $return .= $image ? '<div class="block"><img src="<?php echo $src; ?>" width="100"></div>' : NULL;
+                     $return .= $blnShowThumb ? '<div class="block"><img src="'. $src . '" width="100"></div>' : NULL;
                      $return .= sprintf('<div class="limit_height%s block">%s</div>', ($GLOBALS['TL_CONFIG']['thumbnails'] ? ' h64' : ''), specialchars($arrRow['comment']));
                      return $return;
               }
