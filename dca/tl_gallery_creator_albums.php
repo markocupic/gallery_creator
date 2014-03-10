@@ -1278,7 +1278,7 @@ class tl_gallery_creator_albums extends Backend
                             // remove from list
                             if (count($arrPublAlbums))
                             {
-                                   if (array_search($albumId, $arrPublAlbums))
+                                   if (array_search($albumId, $arrPublAlbums) !== false)
                                    {
                                           unset($arrPublAlbums[array_search($albumId, $arrPublAlbums)]);
                                           $arrPublAlbums = array_values($arrPublAlbums);
