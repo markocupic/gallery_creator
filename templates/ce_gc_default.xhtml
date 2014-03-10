@@ -133,7 +133,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_
 <ul class="album_preview">
 <?php foreach ($this->arrPictures as $Picture): ?>
        <li class="col_<?php echo $col; ?><?php echo ($col == 0 ? ' col_first' : ''); ?><?php echo ($col == $this->colsPerRow - 1 ? ' col_last' : ''); ?>">
-              <div<?php echo (strlen($Picture['cssID']) ? ' id="' . $Picture['cssID'] . '"' : ''); ?> class="image_container<?php echo strlen($Picture['cssClass']) ? ' ' . $Picture['cssClass'] : ''; ?>"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+              <div<?php echo (strlen($Picture['cssID']) ? ' id="' . $Picture['cssID'] . '"' : ''); ?> class="image_container<?php echo strlen($Picture['cssClass']) ? ' ' . $Picture['cssClass'] : ''; ?>"<?php echo $this->imagemargin ? ' style="'.$this->imagemargin.'"' : ''; ?>>
 <?php if ($Picture['href']): ?>
                      <a href="<?php echo $Picture['href']; ?>" <?php echo $Picture['lightbox']; ?> title="<?php echo $Picture['comment'] ? $Picture['comment'] : ($Picture['title'] ? $Picture['title'] : $Picture['filename']); ?>">
 <?php endif; ?>

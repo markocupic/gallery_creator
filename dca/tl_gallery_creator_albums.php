@@ -1072,10 +1072,10 @@ class tl_gallery_creator_albums extends Backend
                      $objDb = $this->Database->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')->execute('gallery_creator');
                      while ($objDb->next())
                      {
-                            $arrPublAlbums = $objDb->gc_publish_albums != "" ? unserialize($objDb->gc_publish_albums) : array();
+                            $arrPublAlbums = $objDb->gc_publish_albums != "" ? deserialize($objDb->gc_publish_albums) : array();
                             if (in_array($albumId, $arrPublAlbums))
                             {
-                                   $arrGcArticles[] = $objDb->id;
+                                   $arrGcContentElements[] = $objDb->id;
                             }
                      }
                      // update tl_gallery_creator_albums.gc_articles
@@ -1258,36 +1258,49 @@ class tl_gallery_creator_albums extends Backend
        {
 
               $albumId = $dc->id;
-              $arrGcArticles = $varValue == "" ? array() : unserialize($varValue);
-              $objDb = $this->Database->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')->execute('gallery_creator');
-              $arrContentElements = array();
-              while ($objDb->next())
-              {
-                     $arrContentElements[] = $objDb->id;
-              }
+              $arrSelectedElements = !$varValue ? array() : deserialize($varValue);
+
+              $objContent = $this->Database->prepare('SELECT * FROM tl_content WHERE type=?')->execute('gallery_creator');
               // update tl_content.gc_publish_albums in each gallery_creator content element
-              foreach ($arrContentElements as $currentCteId)
+              while ($objContent->next())
               {
-                     $objSelect = $this->Database->prepare('SELECT gc_publish_albums FROM tl_content WHERE id=?')->executeUncached($currentCteId);
-                     // !important!!! ->executeUncached
-                     $arrPublAlbums = is_array($objSelect->gc_publish_albums) ? $objSelect->gc_publish_albums : unserialize($objSelect->gc_publish_albums);
+
+                     $arrPublAlbums = is_array($objContent->gc_publish_albums) ? $objContent->gc_publish_albums : deserialize($objContent->gc_publish_albums);
                      $arrPublAlbums = count($arrPublAlbums) > 0 ? $arrPublAlbums : array();
-                     if (in_array($currentCteId, $arrGcArticles))
+                     if (in_array($objContent->id, $arrSelectedElements))
                      {
+                            // add to list
                             $arrPublAlbums[] = $albumId;
                      }
                      else
                      {
+
+                            // remove from list
                             if (count($arrPublAlbums))
                             {
-                                   $arrPublAlbums = array_flip($arrPublAlbums);
-                                   unset($arrPublAlbums[$albumId]);
-                                   $arrPublAlbums = array_flip($arrPublAlbums);
+                                   if (array_search($albumId, $arrPublAlbums))
+                                   {
+                                          unset($arrPublAlbums[array_search($albumId, $arrPublAlbums)]);
+                                          $arrPublAlbums = array_values($arrPublAlbums);
+                                   }
                             }
+
                      }
                      $arrPublAlbums = array_unique($arrPublAlbums);
-                     $objDbUpd = $this->Database->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')->executeUncached(serialize($arrPublAlbums), $currentCteId);
-                     $this->log('A new version of record "tl_content.id=' . $currentCteId . '" has been created', __METHOD__, GENERAL);
+                     if (count($arrPublAlbums))
+                     {
+
+                            // set the new album in a correct order
+                            $query = sprintf('SELECT id FROM tl_gallery_creator_albums WHERE id IN(%s) ORDER BY %s %s', implode(',', $arrPublAlbums), $objContent->gc_sorting, $objContent->gc_sorting_direction);
+                            $objAlbum = $this->Database->execute($query);
+                            if ($objAlbum->numRows)
+                            {
+                                   $arrPublAlbums = $objAlbum->fetchEach('id');
+                            }
+                     }
+
+                     $this->Database->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')->executeUncached(serialize($arrPublAlbums), $objContent->id);
+                     $this->log('A new version of record "tl_content.id=' . $objContent->id . '" has been created', __METHOD__, GENERAL);
               }
               return $varValue;
        }

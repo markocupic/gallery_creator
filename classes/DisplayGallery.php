@@ -370,7 +370,7 @@ abstract class DisplayGallery extends \Module
                      $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)->executeUncached(1, \Input::get('albumId'));
                      while ($objPicture->next())
                      {
-                            $href = $objPicture->path;
+                            $href = TL_FILES_URL . $objPicture->path;
                             $href = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : $href;
                             $href = trim($objPicture->localMediaSRC) != "" ? trim($objPicture->localMediaSRC) : $href;
 
@@ -558,9 +558,9 @@ abstract class DisplayGallery extends \Module
                      //[string] alt Attribut fuer das Vorschaubild
                      'alt' => $arrPreviewThumb['name'],
                      //[string] Pfad zum Originalbild
-                     'src' => $arrPreviewThumb['path'],
+                     'src' => TL_FILES_URL . $arrPreviewThumb['path'],
                      //[string] Pfad zum Thumbnail
-                     'thumb_src' => \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
+                     'thumb_src' => TL_FILES_URL . \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
                      //[int] article id
                      'insert_article_pre' => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
                      //[int] article id
@@ -752,7 +752,7 @@ abstract class DisplayGallery extends \Module
                      'comment' => specialchars($objPicture->comment),
                      'caption' => specialchars($objPicture->comment),
                      //[string] path to media (video, picture, sound...)
-                     'href' => $href,
+                     'href' => TL_FILES_URL . $href,
                      //path to the image
                      'image_src' => $strImageSrc,
                      //path to the other selected media
@@ -764,7 +764,7 @@ abstract class DisplayGallery extends \Module
                      //[string] Pfad zu einem benutzerdefinierten Thumbnail
                      'addCustomThumb' => $objPicture->addCustomThumb,
                      //[string] Thumbnailquelle
-                     'thumb_src' => $thumbSrc,
+                     'thumb_src' => TL_FILES_URL . $thumbSrc,
                      //[array] Thumbnail-Ausmasse Array $arrSize[Breite, Hoehe, Methode]
                      'size' => $arrSize,
                      //[int] thumb-width in px
@@ -874,6 +874,7 @@ abstract class DisplayGallery extends \Module
               }
 
               //store all album-data in the array
+              $objAlbum->reset();
               $this->Template->arrAlbumdata = $objAlbum->fetchAssoc();
 
               // store the data of the current album in the session
