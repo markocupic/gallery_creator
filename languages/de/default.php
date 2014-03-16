@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/default.php 
  * 
- * Contao extension: gallery_creator 4.6.0 rc1 
+ * Contao extension: gallery_creator 4.6.0 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -16,6 +16,7 @@
  */
  
 $GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file'] = "Die Datei \"%s\" wurde nicht auf dem Server gefunden!";
+$GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'] = "Der Datenbankeintrag mit ID %s in \"tl_gallery_creator_pictures\" verweist auf eine nicht vorhandene Datei. <br>Bitte räumen Sie die Datenbank auf oder überprüfen Sie die Existenz der Datei %s im Album mit dem Alias: %s!";
 $GLOBALS['TL_LANG']['ERR']['uploadError'] = "Die Datei \"%s\" konnte nicht hochgeladen werden!";
 $GLOBALS['TL_LANG']['ERR']['fileDontExist'] = "Die Datei \"%s\" existiert nicht!";
 $GLOBALS['TL_LANG']['ERR']['fileNotReadable'] = "Die Datei \"%s\" ist nicht lesbar! Zugriffsrechte m&uuml;ssen &uuml;berpr&uuml;ft werden.";

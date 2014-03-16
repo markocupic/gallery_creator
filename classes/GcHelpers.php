@@ -653,7 +653,7 @@ class GcHelpers extends \System
                                    //show the error-message
                                    $objPicture = \GalleryCreatorPicturesModel::findById($objPicture->id);
                                    $objAlbum = $objPicture->getRelated('pid');
-                                   $_SESSION['TL_ERROR'][] = sprintf('The db-entry with ID %s in "tl_gallery_pictures" links to a not existing file. <br>Please check the settings in album with alias: %s or clean the db!', $objPicture->id, $objAlbum->alias);
+                                   $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPicture->id, $objPicture->path, $objAlbum->alias);
                             }
                      }
               }
