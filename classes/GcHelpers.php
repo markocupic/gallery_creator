@@ -217,16 +217,10 @@ class GcHelpers extends \System
               //dateinamen romanisieren und auf Einmaligkeit testen
               $arrFile['name'] = static::generateUniqueFilename($arrFile['name']);
 
-              //chmod-settings
-              \Files::getInstance()->chmod($strUploadPath . '/' . $strAlbumAlias, 0777);
-
               //move_uploaded_file
               if (\Files::getInstance()->move_uploaded_file($arrFile['tmp_name'], $strUploadPath . '/' . $strAlbumAlias . '/' . $arrFile['name']))
               {
                      $strFileSrc = $strUploadPath . '/' . $strAlbumAlias . '/' . $arrFile['name'];
-
-                     //chmod
-                     \Files::getInstance()->chmod($strFileSrc, 0644);
 
                      //send the response to the jumploader applet
                      $json = array(
@@ -612,9 +606,6 @@ class GcHelpers extends \System
                      //Besitzt das Album ein Verzeichnis
                      new \Folder(GALLERY_CREATOR_UPLOAD_PATH . '/' . $db->alias);
 
-                     //chmod-settings
-                     \Files::getInstance()->chmod(GALLERY_CREATOR_UPLOAD_PATH . '/' . $db->alias, 0777);
-
                      //Albumbesitzer ueberpruefen
                      $db_2 = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($db->owner);
                      $owner = $db_2->name;
@@ -629,6 +620,8 @@ class GcHelpers extends \System
                             $objUpdate->save();
                      }
               }
+
+
               //auf gueltige pid ueberpruefen
               $objAlb = \Database::getInstance()->prepare('SELECT id, pid FROM tl_gallery_creator_albums WHERE pid!=?')->execute('0');
               while ($objAlb->next())
@@ -639,6 +632,7 @@ class GcHelpers extends \System
                             \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $objAlb->id);
                      }
               }
+
               //Datensaetze ohne definierten Bildnamen loeschen
               \Database::getInstance()->prepare('DELETE FROM tl_gallery_creator_pictures WHERE path=?')->execute('');
 

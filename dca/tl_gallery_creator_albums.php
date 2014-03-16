@@ -948,7 +948,6 @@ class tl_gallery_creator_albums extends Backend
                                    $this->Database->prepare('DELETE FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                                    // remove the directory from the filesystem
                                    $folder = new Folder($this->uploadPath . '/' . $objAlb->alias);
-                                   Files::getInstance()->chmod($this->uploadPath . '/' . $objAlb->alias, 0777);
                                    $folder->delete($this->uploadPath . '/' . $objAlb->alias);
                             }
                             else
@@ -973,7 +972,6 @@ class tl_gallery_creator_albums extends Backend
               // create the upload directory if it doesn't already exists
               $folder = new Folder($this->uploadPath);
               Dbafs::addResource($this->uploadPath, false);
-              Files::getInstance()->chmod($this->uploadPath, 0777);
               if (!is_writable(TL_ROOT . '/' . $this->uploadPath))
               {
                      $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['dirNotWriteable'], $this->uploadPath);
@@ -1340,8 +1338,7 @@ class tl_gallery_creator_albums extends Backend
                      // create the new folder and register it in tl_files
                      $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
                      Dbafs::addResource($objFolder->path, true);
-                     // chmod
-                     Files::getInstance()->chmod($objFolder->path, 0777);
+
                      // return the new albumalias
                      return $strAlias;
               }
@@ -1364,7 +1361,6 @@ class tl_gallery_creator_albums extends Backend
                      $strResource = $this->uploadPath . '/' . $objAlbum->alias;
                      $strDestination = $this->uploadPath . '/' . $strAlias;
                      // rename the folder
-                     Files::getInstance()->chmod($strResource, 0777);
                      Files::getInstance()->rename($strResource, $strDestination);
                      Dbafs::moveResource($strResource, $strDestination);
               }
