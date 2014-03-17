@@ -369,17 +369,19 @@ Html5Upload = new Class({
 
     // add files to the _files array
     addFiles: function (objFiles) {
+        var self = this;
         if (typeof objFiles == 'object' && objFiles !== null) {
-            var self = this;
-            self._files = [];
-            var i=0;
-            Object.each(objFiles, function (value, key) {
-                if(typeof value == 'object')
-                {
-                    self._files[i] =  value;
-                    i++;
+            if (objFiles.length > 0) {
+                self._files = [];
+                var i = 0;
+                for (var key in objFiles) {
+
+                    if (typeof objFiles[key] == 'object') {
+                        self._files[i] = objFiles[key];
+                        i++;
+                    }
                 }
-            })
+            }
         }
         this.fileInput.value = null;
     },
