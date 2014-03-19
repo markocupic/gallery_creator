@@ -81,9 +81,6 @@ Html5Upload = new Class({
     // xhr
     xhr: {},
 
-    // oneEvents
-    oneEvents: [],
-
     // bool files selected
     blnFormSubmitted: false,
 
@@ -172,16 +169,6 @@ Html5Upload = new Class({
 
         // add event to the hidden file input field
         this.fileInput.addEvent('change', function (event) {
-            // prevent firing the onchange event twice in IE
-            var lastchange = new Date().getTime();
-            if (!self.oneEvents['changeFileInput']) {
-                self.oneEvents['changeFileInput'] = lastchange;
-            } else {
-                if (self.oneEvents['changeFileInput'] + 1500 > lastchange) {
-                    return;
-                }
-                self.oneEvents['changeFileInput'] = lastchange;
-            }
             self.addFiles(self.fileInput.files);
             self.listSelectedFiles();
         });
@@ -392,14 +379,11 @@ Html5Upload = new Class({
     addFiles: function (objFiles) {
         var self = this;
         if (typeof objFiles == 'object' && objFiles !== null) {
-            if (objFiles.length > 0) {
+            if (objFiles.length) {
                 self._files = [];
-                var i = 0;
                 for (var key in objFiles) {
-
                     if (typeof objFiles[key] == 'object') {
-                        self._files[i] = objFiles[key];
-                        i++;
+                        self._files.push(objFiles[key]);
                     }
                 }
             }
