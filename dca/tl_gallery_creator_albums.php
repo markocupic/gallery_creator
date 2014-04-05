@@ -93,6 +93,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      )
               ),
               'operations' => array(
+
                      'edit' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['edit'],
                             'href' => 'table=tl_gallery_creator_pictures',
@@ -111,6 +112,15 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'button_callback' => array(
                                    'tl_gallery_creator_albums',
                                    'buttonCbDelete'
+                            )
+                     ),
+                     'toggle' => array(
+                            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['toggle'],
+                            'icon' => 'visible.gif',
+                            'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                            'button_callback' => array(
+                                   'tl_gallery_creator_albums',
+                                   'toggleIcon'
                             )
                      ),
                      'upload_images' => array(
@@ -546,6 +556,92 @@ class tl_gallery_creator_albums extends Backend
 
 
        /**
+        * Return the "toggle visibility" button
+        * @param array
+        * @param string
+        * @param string
+        * @param string
+        * @param string
+        * @param string
+        * @return string
+        */
+       public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+       {
+
+              if (strlen(Input::get('tid')))
+              {
+                     $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
+                     $this->redirect($this->getReferer());
+              }
+
+              // Check permissions AFTER checking the tid, so hacking attempts are logged
+              if (!$this->User->isAdmin)
+              {
+                     return '';
+              }
+
+              $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+
+              if (!$row['published'])
+              {
+                     $icon = 'invisible.gif';
+              }
+
+              $objAlbum = $this->Database->prepare("SELECT * FROM tl_gallery_creator_albums WHERE id=?")->limit(1)->execute($row['id']);
+
+              if (!$this->User->isAdmin)
+              {
+                     return Image::getHtml($icon) . ' ';
+              }
+
+              return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+       }
+
+
+       /**
+        * Disable/enable a user group
+        * @param integer
+        * @param boolean
+        */
+       public function toggleVisibility($intId, $blnVisible)
+       {
+
+              // Check permissions to publish
+              if (!$this->User->isAdmin)
+              {
+                     $this->log('Not enough permissions to publish/unpublish tl_gallery_creator_albums ID "' . $intId . '"', __METHOD__, TL_ERROR);
+                     $this->redirect('contao/main.php?act=error');
+              }
+
+              $objVersions = new Versions('tl_gallery_creator_albums', $intId);
+              $objVersions->initialize();
+
+              // Trigger the save_callback
+              if (is_array($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback']))
+              {
+                     foreach ($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback'] as $callback)
+                     {
+                            if (is_array($callback))
+                            {
+                                   $this->import($callback[0]);
+                                   $blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+                            }
+                            elseif (is_callable($callback))
+                            {
+                                   $blnVisible = $callback($blnVisible, $this);
+                            }
+                     }
+              }
+
+              // Update the database
+              $this->Database->prepare("UPDATE tl_gallery_creator_albums SET tstamp=" . time() . ", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+
+              $objVersions->create();
+              $this->log('A new version of record "tl_gallery_creator_albums.id=' . $intId . '" has been created.', __METHOD__, TL_GENERAL);
+       }
+
+
+       /**
         * Return the cut-picture-button
         * @param array
         * @param string
@@ -833,7 +929,8 @@ class tl_gallery_creator_albums extends Backend
               $mysql = $this->Database->prepare('SELECT count(id) as countImg FROM tl_gallery_creator_pictures WHERE pid=?')->execute($row['id']);
               $label = str_replace('#count_pics#', $mysql->countImg, $label);
               $label = str_replace('#datum#', date('Y-m-d', $row['date']), $label);
-              $label = str_replace('#icon#', "system/modules/gallery_creator/assets/images/slides.png", $label);
+              $image = $row['published'] ? 'slides.png' : 'slides_1.png';
+              $label = str_replace('#icon#', "system/modules/gallery_creator/assets/images/" . $image, $label);
               $padding = $this->isNode($row["id"]) ? 3 * $this->getLevel($row["pid"]) : 20 + (3 * $this->getLevel($row["pid"]));
               $label = str_replace('#padding-left#', 'padding-left:' . $padding . 'px;', $label);
               return $label;

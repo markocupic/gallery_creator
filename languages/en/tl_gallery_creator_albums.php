@@ -56,6 +56,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db'] = array('Clean th
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']    = array('new album', 'Create a new album.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit']   = array('edit album', 'Edit album with ID %s.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['delete'] = array('delete album', 'Delete album with ID %s.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['toggle'] = array('Publish/unpublish album','Publish/unpublish album ID %s');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_images'] = array('uplaod images', 'Upload images to album with ID %s.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['import_images'] = array('copy images from directory on the server', 'copy images from directory on the server into the album with ID %s');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['cut'] = array('move album', 'move album with ID %s');

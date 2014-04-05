@@ -178,11 +178,13 @@ class ContentDisplayGallery extends DisplayGallery
                             break;
 
                      case 'detailview' :
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+                            $published = $objAlbum->published ? true : false;
 
                             // for security reasons...
-                            if (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums))
+                            if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
                             {
-                                   die("Gallery with alias " . $this->strAlbumalias . " is not available or you have not enough permission to watch it!!!");
+                                   die("Gallery with alias " . $this->strAlbumalias . " is either not published or not available or you haven't got enough permission to watch it!!!");
                             }
 
                             // pagination settings

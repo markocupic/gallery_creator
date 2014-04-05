@@ -147,6 +147,14 @@ class ModuleDisplayGallery extends DisplayGallery
                             break;
 
                      case 'detailview' :
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
+                            $published = $objAlbum->published ? true : false;
+
+                            // for security reasons...
+                            if (!$published)
+                            {
+                                   die("Gallery with alias " . \Input::get('items') . " is either not published or not available!!!");
+                            }
 
                             // generate the subalbum array
                             if ($this->gc_hierarchicalOutput)
