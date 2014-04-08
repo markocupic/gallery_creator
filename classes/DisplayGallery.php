@@ -370,7 +370,7 @@ abstract class DisplayGallery extends \Module
                      $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)->executeUncached(1, \Input::get('albumId'));
                      while ($objPicture->next())
                      {
-                            $href = TL_FILES_URL . $objPicture->path;
+                            $href = $objPicture->path;
                             $href = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : $href;
                             $href = trim($objPicture->localMediaSRC) != "" ? trim($objPicture->localMediaSRC) : $href;
 
