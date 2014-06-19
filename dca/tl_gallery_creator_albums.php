@@ -12,6 +12,9 @@
 /**
  * Table tl_gallery_creator_albums
  */
+
+$this->import('BackendUser', 'User');
+
 $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Config
        'config' => array(
