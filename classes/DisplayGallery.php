@@ -364,7 +364,7 @@ abstract class DisplayGallery extends \Module
                      }
                      else
                      {
-                            $sorting = 'sorting DESC';
+                            $sorting = 'sorting ASC';
                      }
 
                      $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)->executeUncached(1, \Input::get('albumId'));

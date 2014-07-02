@@ -386,17 +386,14 @@ class GcHelpers extends \System
               //optional jumploader adds a watermark to each uploaded image
               if (strlen($GLOBALS['TL_CONFIG']['gc_watermark_path']))
               {
-                     $objFile = \FilesModel::findById($GLOBALS['TL_CONFIG']['gc_watermark_path']);
-                     if (is_object($objFile) && is_file(TL_ROOT . '/' . $objFile->path))
+                     $fileUuid = base64_decode($GLOBALS['TL_CONFIG']['gc_watermark_path']);
+                     $objFile = \FilesModel::findByUuid($fileUuid);
+                     if ($objFile !== null)
                      {
-                            $objFile = new \File($objFile->path);
-                            if ($objFile->isGdImage)
-                            {
-                                   $objTemplate->watermarkHalign = $GLOBALS['TL_CONFIG']['gc_watermark_halign'];
-                                   $objTemplate->watermarkValign = $GLOBALS['TL_CONFIG']['gc_watermark_valign'];
-                                   $objTemplate->watermarkOpacity = $GLOBALS['TL_CONFIG']['gc_watermark_opacity'];
-                                   $objTemplate->watermarkSource = \Environment::get('base') . $objFile->path;
-                            }
+                            $objTemplate->watermarkHalign = $GLOBALS['TL_CONFIG']['gc_watermark_halign'];
+                            $objTemplate->watermarkValign = $GLOBALS['TL_CONFIG']['gc_watermark_valign'];
+                            $objTemplate->watermarkOpacity = $GLOBALS['TL_CONFIG']['gc_watermark_opacity'];
+                            $objTemplate->watermarkSource = \Environment::get('base') . $objFile->path;
                      }
               }
 

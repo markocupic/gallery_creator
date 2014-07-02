@@ -52,10 +52,16 @@ class ModuleDisplayGallery extends DisplayGallery
                      $this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
               }
 
+              $strExcludedAlbums = '';
+              if(count(unserialize($this->gc_excludedAlbums)))
+              {
+                     $strExcludedAlbums = implode(',', unserialize($this->gc_excludedAlbums));
+              }
+
               // redirect to the detailview if there is only 1 album
               if (!\Input::get('items') && $this->gc_redirectSingleAlb)
               {
-                     $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
+                     $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1');
                      if ($objAlbum->numRows === 1)
                      {
                             \Input::setGet('items', $objAlbum->alias);
@@ -87,11 +93,11 @@ class ModuleDisplayGallery extends DisplayGallery
                             $arrAllowedAlbums = array();
                             if ($this->gc_hierarchicalOutput)
                             {
-                                   $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND pid=?')->execute('1', '0');
+                                   $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND pid=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1', '0');
                             }
                             else
                             {
-                                   $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')->execute('1');
+                                   $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1');
                             }
 
                             while ($objAlbum->next())
@@ -149,6 +155,9 @@ class ModuleDisplayGallery extends DisplayGallery
                      case 'detailview' :
                             $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
                             $published = $objAlbum->published ? true : false;
+                            if($published){
+                                   $published = in_array($this->intAlbumId, explode(',',$strExcludedAlbums)) ? false : true;
+                            }
 
                             // for security reasons...
                             if (!$published)

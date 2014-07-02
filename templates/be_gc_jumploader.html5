@@ -51,6 +51,9 @@
 
 
         <?php if ($this->watermarkSource): ?>
+        <?php
+        echo $this->watermarkSource;
+        ?>
         <!-- Wasserzeichen-->
         <param name="uc_scaledInstanceWaterMarkNames" value="watermark" />
         <param name="watermark" value="halign=<?php echo $this->watermarkHalign; ?>;valign=<?php echo $this->watermarkValign; ?>;opacityPercent=<?php echo $this->watermarkOpacity; ?>;imageUrl=<?php echo $this->watermarkSource; ?>"/>
