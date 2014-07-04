@@ -52,11 +52,8 @@ class ModuleDisplayGallery extends DisplayGallery
                      $this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
               }
 
-              $strExcludedAlbums = '';
-              if(count(unserialize($this->gc_excludedAlbums)))
-              {
-                     $strExcludedAlbums = implode(',', unserialize($this->gc_excludedAlbums));
-              }
+              // check for excluded albums in the module settings
+              $strExcludedAlbums = strlen($this->gc_excludedAlbums) ? implode(',', unserialize($this->gc_excludedAlbums)) : '0';
 
               // redirect to the detailview if there is only 1 album
               if (!\Input::get('items') && $this->gc_redirectSingleAlb)
