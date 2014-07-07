@@ -578,7 +578,7 @@ class tl_gallery_creator_albums extends Backend
               }
 
               // Check permissions AFTER checking the tid, so hacking attempts are logged
-              if (!$this->User->isAdmin)
+              if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
                      return '';
               }
@@ -592,7 +592,7 @@ class tl_gallery_creator_albums extends Backend
 
               $objAlbum = $this->Database->prepare("SELECT * FROM tl_gallery_creator_albums WHERE id=?")->limit(1)->execute($row['id']);
 
-              if (!$this->User->isAdmin)
+              if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
                      return Image::getHtml($icon) . ' ';
               }
@@ -602,15 +602,18 @@ class tl_gallery_creator_albums extends Backend
 
 
        /**
-        * Disable/enable a user group
+        * toggle visibility of a certain album
         * @param integer
         * @param boolean
         */
        public function toggleVisibility($intId, $blnVisible)
        {
 
+
+              $objAlbum = GalleryCreatorAlbumsModel::findByPk($intId);
+
               // Check permissions to publish
-              if (!$this->User->isAdmin)
+              if (!$this->User->isAdmin && $objAlbum->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
                      $this->log('Not enough permissions to publish/unpublish tl_gallery_creator_albums ID "' . $intId . '"', __METHOD__, TL_ERROR);
                      $this->redirect('contao/main.php?act=error');

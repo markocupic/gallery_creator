@@ -132,7 +132,17 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                                    'tl_gallery_creator_pictures',
                                    'buttonCbRotateImage'
                             )
-                     )
+                     ),
+
+                     'toggle' => array(
+                            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['toggle'],
+                            'icon' => 'visible.gif',
+                            'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                            'button_callback' => array(
+                                   'tl_gallery_creator_pictures',
+                                   'toggleIcon'
+                            )
+                     ),
               )
        ),
 
@@ -539,7 +549,7 @@ class tl_gallery_creator_pictures extends Backend
        public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
        {
 
-              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
+              return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
        }
 
 
@@ -801,4 +811,93 @@ class tl_gallery_creator_pictures extends Backend
                      $GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['fields']['owner']['eval']['doNotShow'] = false;
               }
        }
+
+
+       /**
+        * Return the "toggle visibility" button
+        * @param array
+        * @param string
+        * @param string
+        * @param string
+        * @param string
+        * @param string
+        * @return string
+        */
+       public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+       {
+
+              if (strlen(Input::get('tid')))
+              {
+                     $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
+                     $this->redirect($this->getReferer());
+              }
+
+              // Check permissions AFTER checking the tid, so hacking attempts are logged
+              if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+              {
+                     return '';
+              }
+
+              $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+
+              if (!$row['published'])
+              {
+                     $icon = 'invisible.gif';
+              }
+
+              $objAlbum = $this->Database->prepare("SELECT * FROM tl_gallery_creator_pictures WHERE id=?")->limit(1)->execute($row['id']);
+
+              if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+              {
+                     return Image::getHtml($icon) . ' ';
+              }
+
+              return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+       }
+
+
+       /**
+        * toggle visibility of a certain image
+        * @param integer
+        * @param boolean
+        */
+       public function toggleVisibility($intId, $blnVisible)
+       {
+
+              $objPicture = GalleryCreatorPicturesModel::findByPk($intId);
+              // Check permissions to publish
+              if (!$this->User->isAdmin && $objPicture->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+              {
+                     $this->log('Not enough permissions to publish/unpublish tl_gallery_creator_albums ID "' . $intId . '"', __METHOD__, TL_ERROR);
+                     $this->redirect('contao/main.php?act=error');
+              }
+
+              $objVersions = new Versions('tl_gallery_creator_pictures', $intId);
+              $objVersions->initialize();
+
+              // Trigger the save_callback
+              if (is_array($GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['fields']['published']['save_callback']))
+              {
+                     foreach ($GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['fields']['published']['save_callback'] as $callback)
+                     {
+                            if (is_array($callback))
+                            {
+                                   $this->import($callback[0]);
+                                   $blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+                            }
+                            elseif (is_callable($callback))
+                            {
+                                   $blnVisible = $callback($blnVisible, $this);
+                            }
+                     }
+              }
+
+              // Update the database
+              $this->Database->prepare("UPDATE tl_gallery_creator_pictures SET tstamp=" . time() . ", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+
+              $objVersions->create();
+              $this->log('A new version of record "tl_gallery_creator_pictures.id=' . $intId . '" has been created.', __METHOD__, TL_GENERAL);
+       }
+
+
 }
