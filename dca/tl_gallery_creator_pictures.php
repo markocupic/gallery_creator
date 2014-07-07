@@ -112,17 +112,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             )
                      ),
 
-                     'paste' => array(
-                            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['paste'],
-                            'href' => 'act=cut&mode=1',
-                            'icon' => 'pasteafter.gif',
-                            'attributes' => 'class="blink" onclick="Backend.getScrollOffset();"',
-                            'button_callback' => array(
-                                   'tl_gallery_creator_pictures',
-                                   'buttonCbPasteImage'
-                            )
-                     ),
-
                      'imagerotate' => array(
                             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate'],
                             'href' => 'mode=imagerotate',
@@ -291,7 +280,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'filesOnly' => true,
                             'extensions' => 'jpeg,jpg,gif,png,bmp,tiff'
                      ),
-                     'sql' => "int(10) unsigned NOT NULL default '0'"
+                     'sql' => "blob NULL",
               ),
 
               'owner' => array(
@@ -456,7 +445,7 @@ class tl_gallery_creator_pictures extends Backend
        {
 
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
-              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
        }
 
 
@@ -474,7 +463,7 @@ class tl_gallery_creator_pictures extends Backend
        {
 
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
-              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id'], true) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id'], true) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
 
        }
 
@@ -492,47 +481,7 @@ class tl_gallery_creator_pictures extends Backend
        public function buttonCbCutImage($row, $href, $label, $title, $icon, $attributes)
        {
 
-              return '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
-       }
-
-
-       /**
-        * Return the paste-image-button
-        * @param array
-        * @param string
-        * @param string
-        * @param string
-        * @param string
-        * @param string
-        * @return string
-        */
-       public function buttonCbPasteImage($row, $href, $label, $title, $icon, $attributes)
-       {
-
-              //get the CLIPBOARD settings from the current Session
-              $arrClipboard = $this->Session->get('CLIPBOARD');
-              $arrClipboard = $arrClipboard['tl_gallery_creator_pictures'];
-
-              if (!$arrClipboard['mode'] && Input::get('act') != 'paste')
-              {
-                     return null;
-              }
-
-              if ((Input::get('act') == 'paste' && Input::get('mode') == 'cut') || $arrClipboard['mode'])
-              {
-                     if ($row['id'] == Input::get('id'))
-                     {
-                            return null;
-                     }
-                     //generate the icon
-                     $pasteAfterIcon = $this->generateImage($icon, sprintf($label, $row['id']), 'class="blink"');
-
-                     //replace 'cut' with 'cutAll' when moving several images
-                     $href = $arrClipboard['mode'] == 'cutAll' ? str_replace('cut', 'cutAll', $href) : $href;
-
-                     $url = $this->addToUrl(sprintf('%s&id=%d&pid=%d', $href, Input::get('id'), $row['id']));
-                     return sprintf('<a href="%s" title="%s" %s>%s</a> ', $url, specialchars($title), $attributes, $pasteAfterIcon);
-              }
+              return '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
        }
 
 
@@ -549,7 +498,7 @@ class tl_gallery_creator_pictures extends Backend
        public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
        {
 
-              return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ' : $this->generateImage($icon, $label);
+              return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml($icon, $label);
        }
 
 
@@ -563,7 +512,7 @@ class tl_gallery_creator_pictures extends Backend
 
               $time = time();
               $key = ($arrRow['published'] == '1') ? 'published' : 'unpublished';
-              $date = $this->parseDate($GLOBALS['TL_CONFIG']['datimFormat'], $arrRow['date']);
+              $date = Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $arrRow['date']);
               //nächste Zeile nötig, da be_bredcrumb sonst bei "mehrere bearbeiten" hier einen Fehler produziert
               if (!is_file(TL_ROOT . "/" . $arrRow['path']))
               {
@@ -582,7 +531,7 @@ class tl_gallery_creator_pictures extends Backend
                      {
                             $type = trim($arrRow['localMediaSRC']) == "" ? ' embeded local-media: ' : ' embeded social media: ';
                             $iconSrc = 'system/modules/gallery_creator/assets/images/film.png';
-                            $movieIcon = $this->generateImage($iconSrc);
+                            $movieIcon = Image::getHtml($iconSrc);
                             $hasMovie = sprintf('<div class="block">%s%s<a href="%s" data-lightbox="gc_album_%s">%s</a></div>', $movieIcon, $type, $src, Input::get('id'), $src);
                      }
                      //generate icon/thumbnail
@@ -655,7 +604,7 @@ class tl_gallery_creator_pictures extends Backend
                      $output .= '
 					<tr>
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'][0] . ': </strong></td>
-					<td>' . $this->parseDate("Y-m-d", $objImg->date) . '</td>
+					<td>' . Date::parse("Y-m-d", $objImg->date) . '</td>
 					</tr>
 					
 					<tr class="odd">

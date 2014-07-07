@@ -670,9 +670,9 @@ abstract class DisplayGallery extends \Module
 
 
               //check if there is a custom thumbnail selected
-              if ($objPicture->customThumb > 0)
+              if ($objPicture->addCustomThumb && !empty($objPicture->customThumb))
               {
-                     $objFile = \FilesModel::findByPk($objPicture->customThumb);
+                     $objFile = \FilesModel::findByUuid($objPicture->customThumb);
                      if ($objFile !== null)
                      {
                             if (is_file(TL_ROOT . '/' . $objFile->path))
