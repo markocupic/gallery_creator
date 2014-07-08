@@ -47,7 +47,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'] = array('image q
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'] = array('preserve the original filename','Otherwise the filename will be automatically generated.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'] = array('Number of visitors');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'] = array('Visitors details (ip, browser type, etc.)');
-
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'] = array('Order by', 'Please choose the sort order.');
 
 /**
  * Buttons
@@ -68,3 +68,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']  = array('Paste in
  */
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'] = 'CE with id=%s in article "%s" on page "%s"';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = 'Do not scale images during the upload process.';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_asc'] = 'File name (ascending)';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_desc'] = 'File name (descending)';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = 'Date (ascending)';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = 'Date (descending)';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = 'Custom order';

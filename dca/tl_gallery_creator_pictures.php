@@ -508,8 +508,9 @@ class tl_gallery_creator_pictures extends Backend
         */
        public function childRecordCb($arrRow)
        {
+              $key = ($arrRow['published'] == '1') ? 'published' : 'unpublished';
 
-              //nächste Zeile nötig, da be_bredcrumb sonst bei "mehrere bearbeiten" hier einen Fehler produziert
+              //nächste Zeile nötig, da be_breadcrumb sonst bei "mehrere bearbeiten" hier einen Fehler produziert
               if (!is_file(TL_ROOT . "/" . $arrRow['path']))
               {
                      return "";

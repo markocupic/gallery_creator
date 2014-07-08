@@ -156,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Palettes
        'palettes' => array(
               '__selector__' => array('protected'),
-              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,thumb,comment,visitors;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
+              'default' => '{album_info},published,name,alias,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,thumb,comment,visitors;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
               'restricted_user' => '{album_info},link_edit_images,album_info',
               'fileupload' => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader_legend},uploader,fileupload',
               'import_images' => '{upload_settings},preserve_filename,multiSRC',
@@ -497,6 +497,23 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      ),
                      'sql' => "int(10) unsigned NOT NULL default '0'"
               ),
+              'sortBy' => array
+              (
+                     'label'                   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'],
+                     'exclude'                 => true,
+                     'save_callback' => array(
+                            array(
+                                   'tl_gallery_creator_albums',
+                                   'saveCbSortAlbum'
+                            )
+                     ),
+                     'inputType'               => 'select',
+                     'default'                 => 'custom',
+                     'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc'),
+                     'reference'               => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums'],
+                     'eval'                    => array('tl_class'=>'w50'),
+                     'sql'                     => "varchar(32) NOT NULL default ''"
+              )
        )
 );
 
@@ -1351,7 +1368,70 @@ class tl_gallery_creator_albums extends Backend
 
 
        /**
+        * sortBy  - save_callback
+        * @param $varValue
+        * @param DataContainer $dc
+        */
+       public function saveCbSortAlbum($varValue, DataContainer $dc)
+       {
+
+              $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
+              if ($objPictures === null)
+              {
+                     return $varValue;
+              }
+
+              $files = array();
+              $auxDate = array();
+
+              while($objPictures->next())
+              {
+                     $objFile = new \File($objPictures->path, true);
+                     $files[$objPictures->path] =
+                            array(
+                                   'id' => $objPictures->id
+                            );
+                     $auxDate[] = $objFile->mtime;
+
+              }
+
+              switch($varValue){
+                     case 'custom':
+                            break;
+                     case 'name_asc':
+                            uksort($files, 'basename_natcasecmp');
+                            break;
+                     case 'name_desc':
+                            uksort($files, 'basename_natcasercmp');
+                            break;
+                     case 'date_asc':
+                            array_multisort($files, SORT_NUMERIC, $auxDate, SORT_ASC);
+                            break;
+
+                     case 'date_desc':
+                            array_multisort($files, SORT_NUMERIC, $auxDate, SORT_DESC);
+                            break;
+              }
+
+              $sorting = 0;
+              foreach($files as $arrFile)
+              {
+                     $sorting+=10;
+                     $objPicture = GalleryCreatorPicturesModel::findByPk($arrFile['id']);
+                     $objPicture->sorting = $sorting;
+                     $objPicture->save();
+              }
+
+              return $varValue;
+
+       }
+
+
+       /**
         * displ_alb_in_this_ce  - save_callback
+        * @param $varValue
+        * @param DataContainer $dc
+        * @return mixed
         */
        public function saveCbDisplAlbInThisContentElements($varValue, DataContainer $dc)
        {

@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/default.php 
  * 
- * Contao extension: gallery_creator 4.6.0 stable 
+ * Contao extension: gallery_creator 4.7.0 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -19,17 +19,17 @@ $GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file'] = "Die Datei \"%s\" wurd
 $GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'] = "Der Datenbankeintrag mit ID %s in \"tl_gallery_creator_pictures\" verweist auf eine nicht vorhandene Datei. <br>Bitte räumen Sie die Datenbank auf oder überprüfen Sie die Existenz der Datei %s im Album mit dem Alias: %s!";
 $GLOBALS['TL_LANG']['ERR']['uploadError'] = "Die Datei \"%s\" konnte nicht hochgeladen werden!";
 $GLOBALS['TL_LANG']['ERR']['fileDontExist'] = "Die Datei \"%s\" existiert nicht!";
-$GLOBALS['TL_LANG']['ERR']['fileNotReadable'] = "Die Datei \"%s\" ist nicht lesbar! Zugriffsrechte m&uuml;ssen &uuml;berpr&uuml;ft werden.";
-$GLOBALS['TL_LANG']['ERR']['dirNotWriteable'] = "Das Verzeichnis \"%s\" ist nicht beschreibbar! Zugriffsrechte m&uuml;ssen manuell &uuml;berpr&uuml;ft werden.";
+$GLOBALS['TL_LANG']['ERR']['fileNotReadable'] = "Die Datei \"%s\" ist nicht lesbar! Zugriffsrechte müssen überprüft werden.";
+$GLOBALS['TL_LANG']['ERR']['dirNotWriteable'] = "Das Verzeichnis \"%s\" ist nicht beschreibbar! Zugriffsrechte müssen manuell überprüft werden.";
 $GLOBALS['TL_LANG']['ERR']['accept_jpg'] = "Gallery Creator unterstützt nur jpeg/jpg-Dateien.";
 $GLOBALS['TL_LANG']['ERR']['upploadSuccessful'] = "Datei erfolgreich auf den Server geladen.";
-$GLOBALS['TL_LANG']['gallery_creator']['back_to_general_view'] = "zur&uuml;ck zur &Uuml;bersicht";
+$GLOBALS['TL_LANG']['gallery_creator']['back_to_general_view'] = "zurück zur Übersicht";
 $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] = "Unteralben";
 $GLOBALS['TL_LANG']['gallery_creator']['subalbums_of'] = "Unteralben von";
 $GLOBALS['TL_LANG']['gallery_creator']['pictures'] = "Bilder";
-$GLOBALS['TL_LANG']['gallery_creator']['contains'] = "enth&auml;lt";
+$GLOBALS['TL_LANG']['gallery_creator']['contains'] = "enthält";
 $GLOBALS['TL_LANG']['gallery_creator']['visitors'] = "Aufrufe";
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['0'] = "Authentifizierungsfehler";
-$GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['1'] = "Der Zugriff auf dieses Album wurde verweigert. Bitte melden Sie sich als Frontend-User an oder &uuml;berpr&uuml;fen Sie Ihre Benutzerrechte.";
+$GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error']['1'] = "Der Zugriff auf dieses Album wurde verweigert. Bitte melden Sie sich als Frontend-User an oder überprüfen Sie Ihre Benutzerrechte.";
  
 ?>
