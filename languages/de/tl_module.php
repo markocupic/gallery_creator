@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_module.php 
  * 
- * Contao extension: gallery_creator 4.6.0 
+ * Contao extension: gallery_creator 4.6.0 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -17,7 +17,6 @@
  
 $GLOBALS['TL_LANG']['tl_module']['thumb_legend'] = "Thumbnail-Einstellungen";
 $GLOBALS['TL_LANG']['tl_module']['image_legend'] = "Allgemeine Einstellungen";
-$GLOBALS['TL_LANG']['tl_module']['excluded_albums_legend'] = "Ausgeschlossene Alben";
 $GLOBALS['TL_LANG']['tl_module']['gc_rows']['0'] = "Vorschaubilder pro Reihe";
 $GLOBALS['TL_LANG']['tl_module']['gc_rows']['1'] = "W&auml;hlen Sie die Anzahl Vorschaubilder pro Reihe aus. (0=So viele wie m&ouml;glich)";
 $GLOBALS['TL_LANG']['tl_module']['gc_template']['0'] = "Galerietemplate";
@@ -40,7 +39,5 @@ $GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting']['0'] = "Albumauf
 $GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting']['1'] = "Hier können Sie den oberen, rechten, unteren und linken Bildabstand eingeben.";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['0'] = "Großansicht/Neues Fenster";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['1'] = "Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster &ouml;ffnen.";
-$GLOBALS['TL_LANG']['tl_module']['gc_excludedAlbums']['0'] = "Ausgeschlossene Alben";
-$GLOBALS['TL_LANG']['tl_module']['gc_excludedAlbums']['1'] = "Diese Alben von der Veröffentlichung in diesem Modul ausschliessen.";
  
 ?>

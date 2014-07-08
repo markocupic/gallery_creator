@@ -212,6 +212,8 @@ class mod_gallery_creator extends Backend
               return $this->getTemplateGroup('ce_gc_');
        }
 
+
+
        public function listAlbums()
        {
               $objAlbum = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_albums ORDER BY sorting');

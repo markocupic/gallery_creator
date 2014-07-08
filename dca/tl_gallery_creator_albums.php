@@ -58,7 +58,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'keys' => array(
                             'id' => 'primary',
                             'pid' => 'index',
-                            'alias' => 'index',
                             'alias' => 'unique'
                      )
               )
@@ -192,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'mandatory' => true,
                             'maxlength' => 10,
                             'datepicker' => true,
-                            'submitOnChange' => true,
                             'rgxp' => 'date',
                             'tl_class' => 'w50 wizard',
                             'submitOnChange' => false
@@ -590,7 +588,7 @@ class tl_gallery_creator_albums extends Backend
                      $icon = 'invisible.gif';
               }
 
-              $objAlbum = $this->Database->prepare("SELECT * FROM tl_gallery_creator_albums WHERE id=?")->limit(1)->execute($row['id']);
+              $this->Database->prepare("SELECT * FROM tl_gallery_creator_albums WHERE id=?")->limit(1)->execute($row['id']);
 
               if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
@@ -718,14 +716,13 @@ class tl_gallery_creator_albums extends Backend
               return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a>';
        }
 
-
        /**
         * Return the paste-picture-button
-        * @param object
-        * @param array
-        * @param string
-        * @param boolean
-        * @param array
+        * @param DataContainer $dc
+        * @param $row
+        * @param $table
+        * @param $cr
+        * @param bool $arrClipboard
         * @return string
         */
        public function buttonCbPastePicture(DataContainer $dc, $row, $table, $cr, $arrClipboard = false)
@@ -789,7 +786,7 @@ class tl_gallery_creator_albums extends Backend
               while ($hasParent)
               {
                      $level++;
-                     $mysql = $this->Database->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->executeUncached($pid);
+                     $mysql = $this->Database->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->execute($pid);
                      if ($mysql->pid < 1)
                      {
                             $hasParent = false;
@@ -915,11 +912,12 @@ class tl_gallery_creator_albums extends Backend
        private function isNode($id)
        {
 
-              $mysql = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE pid=?')->executeUncached($id);
+              $mysql = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE pid=?')->execute($id);
               if ($mysql->numRows > 0)
               {
                      return true;
               }
+              return false;
        }
 
 
@@ -1056,8 +1054,8 @@ class tl_gallery_creator_albums extends Backend
                             else
                             {
                                    // do not delete childalbums, which the user do not owns
-                                   $objFolder = FilesModel::findByPath('files/gallery_creator_albums');
-                                   $objAlbUpd = $this->Database->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $idDelAlbum);
+                                   FilesModel::findByPath('files/gallery_creator_albums');
+                                   $this->Database->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $idDelAlbum);
                             }
                      }
               }
@@ -1073,7 +1071,7 @@ class tl_gallery_creator_albums extends Backend
        {
 
               // create the upload directory if it doesn't already exists
-              $folder = new Folder($this->uploadPath);
+              new Folder($this->uploadPath);
               Dbafs::addResource($this->uploadPath, false);
               if (!is_writable(TL_ROOT . '/' . $this->uploadPath))
               {
@@ -1117,7 +1115,7 @@ class tl_gallery_creator_albums extends Backend
                                    'size' => $_FILES['file']['size'][$i],
                             );
                      }
-                     foreach ($arrFiles as $i => $v)
+                     foreach ($arrFiles as $v)
                      {
 
                             // move uploaded file in the album-directory
@@ -1169,7 +1167,7 @@ class tl_gallery_creator_albums extends Backend
               }
               foreach ($arrAlbumIds as $albumId)
               {
-                     $arrGcArticles = array();
+                     $arrGcContentElements = array();
                      $objDb = $this->Database->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')->execute('gallery_creator');
                      while ($objDb->next())
                      {
@@ -1180,8 +1178,8 @@ class tl_gallery_creator_albums extends Backend
                             }
                      }
                      // update tl_gallery_creator_albums.gc_articles
-                     $arrGcArticles = count($arrGcArticles) > 0 ? serialize($arrGcArticles) : '';
-                     $objDbUpdate = $this->Database->prepare('UPDATE tl_gallery_creator_albums SET displ_alb_in_this_ce=? WHERE id=?')->execute($arrGcArticles, $albumId);
+                     $arrGcContentElements = count($arrGcContentElements) > 0 ? serialize($arrGcContentElements) : '';
+                     $this->Database->prepare('UPDATE tl_gallery_creator_albums SET displ_alb_in_this_ce=? WHERE id=?')->execute($arrGcContentElements, $albumId);
               }
        }
 
@@ -1400,19 +1398,18 @@ class tl_gallery_creator_albums extends Backend
                             }
                      }
 
-                     $this->Database->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')->executeUncached(serialize($arrPublAlbums), $objContent->id);
+                     $this->Database->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')->execute(serialize($arrPublAlbums), $objContent->id);
                      $this->log('A new version of record "tl_content.id=' . $objContent->id . '" has been created', __METHOD__, GENERAL);
               }
               return $varValue;
        }
 
-
        /**
         * generate an albumalias based on the albumname and create a directory of the same name
         * and register the directory in tl files
-        * @param mixed
-        * @param object
-        * @return string
+        * @param $strAlias
+        * @param DataContainer $dc
+        * @return mixed|string
         */
        public function saveCbGenerateAlias($strAlias, DataContainer $dc)
        {
@@ -1434,7 +1431,7 @@ class tl_gallery_creator_albums extends Backend
                      $strAlias = 'id-' . $dc->activeRecord->id . '-' . $strAlias;
               }
               // get current row
-              $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->executeUncached($dc->activeRecord->id);
+              $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($dc->activeRecord->id);
               // if a new album was created
               if (!strlen($objAlbum->alias))
               {
@@ -1470,36 +1467,33 @@ class tl_gallery_creator_albums extends Backend
               return $strAlias;
        }
 
-
        /**
         * save_callback for the uploader
-        * @return string
+        * @param $value
         */
        public function saveCbSaveUploader($value)
        {
 
-              $db = $this->Database->prepare('UPDATE tl_user SET gc_be_uploader_template=? WHERE id=?')->execute($value, $this->User->id);
+              $this->Database->prepare('UPDATE tl_user SET gc_be_uploader_template=? WHERE id=?')->execute($value, $this->User->id);
        }
-
 
        /**
         * save_callback for the image quality above the jumploader applet
-        * @return string
+        * @param $value
         */
        public function saveCbSaveImageQuality($value)
        {
 
-              $db = $this->Database->prepare('UPDATE tl_user SET gc_img_quality=? WHERE id=?')->execute($value, $this->User->id);
+              $this->Database->prepare('UPDATE tl_user SET gc_img_quality=? WHERE id=?')->execute($value, $this->User->id);
        }
-
 
        /**
         * save_callback for the image resolution above the jumploader applet
-        * @return string
+        * @param $value
         */
        public function saveCbSaveImageResolution($value)
        {
 
-              $db = $this->Database->prepare('UPDATE tl_user SET gc_img_resolution=? WHERE id=?')->execute($value, $this->User->id);
+              $this->Database->prepare('UPDATE tl_user SET gc_img_resolution=? WHERE id=?')->execute($value, $this->User->id);
        }
 }

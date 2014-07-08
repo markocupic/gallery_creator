@@ -251,7 +251,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'mandatory' => true,
                             'maxlength' => 10,
                             'datepicker' => true,
-                            'submitOnChange' => false,
                             'rgxp' => 'date',
                             'tl_class' => 'm12 w50 wizard ',
                             'submitOnChange' => false
@@ -510,9 +509,6 @@ class tl_gallery_creator_pictures extends Backend
        public function childRecordCb($arrRow)
        {
 
-              $time = time();
-              $key = ($arrRow['published'] == '1') ? 'published' : 'unpublished';
-              $date = Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $arrRow['date']);
               //nächste Zeile nötig, da be_bredcrumb sonst bei "mehrere bearbeiten" hier einen Fehler produziert
               if (!is_file(TL_ROOT . "/" . $arrRow['path']))
               {
@@ -534,6 +530,7 @@ class tl_gallery_creator_pictures extends Backend
                             $movieIcon = Image::getHtml($iconSrc);
                             $hasMovie = sprintf('<div class="block">%s%s<a href="%s" data-lightbox="gc_album_%s">%s</a></div>', $movieIcon, $type, $src, Input::get('id'), $src);
                      }
+                     $blnShowThumb = false;
                      //generate icon/thumbnail
                      if ($GLOBALS['TL_CONFIG']['thumbnails'])
                      {
@@ -547,6 +544,7 @@ class tl_gallery_creator_pictures extends Backend
                      $return .= sprintf('<div class="limit_height%s block">%s</div>', ($GLOBALS['TL_CONFIG']['thumbnails'] ? ' h64' : ''), specialchars($arrRow['comment']));
                      return $return;
               }
+              return '';
        }
 
 
@@ -569,10 +567,10 @@ class tl_gallery_creator_pictures extends Backend
 		';
        }
 
-
        /**
         * input-field-callback generate image information
         * Returns the html-table-tag containing some picture informations
+        * @param DataContainer $dc
         * @return string
         */
        public function inputFieldCbGenerateImageInformation(DataContainer $dc)
@@ -687,7 +685,7 @@ class tl_gallery_creator_pictures extends Backend
               if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
                      //Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
-                     $objDeleteItem = $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
+                     $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
                      $objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE path=? AND name=?')->execute($objImg->path, $objImg->name);
 
                      if (strstr($objImg->path, $this->uploadPath) && $objImgNumRows->numRows < 1)
@@ -794,7 +792,6 @@ class tl_gallery_creator_pictures extends Backend
                      $icon = 'invisible.gif';
               }
 
-              $objAlbum = $this->Database->prepare("SELECT * FROM tl_gallery_creator_pictures WHERE id=?")->limit(1)->execute($row['id']);
 
               if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {

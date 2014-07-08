@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_template'] = array(
        'inputType' => 'select',
        'options_callback' => array(
               'ce_gallery_creator',
-              'getTemplates'
+              'getGalleryCreatorTemplates'
        ),
        'eval' => array('tl_class' => 'clr'),
        'sql' => "varchar(64) NOT NULL default ''"
@@ -267,9 +267,7 @@ class ce_gallery_creator extends Backend
 
        public function __construct()
        {
-
               parent::__construct();
-
        }
 
 
@@ -277,10 +275,10 @@ class ce_gallery_creator extends Backend
         * Return all gallery templates as array
         * @return array
         */
-       public function getTemplates()
+       public function getGalleryCreatorTemplates()
        {
 
-              return $this->getTemplateGroup('ce_gc_');
+              return $this->getTemplateGroup('ce_gc');
        }
 
 
