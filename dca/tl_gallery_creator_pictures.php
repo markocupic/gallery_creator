@@ -33,6 +33,12 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                             'ondeleteCb'
                      )
               ),
+              'oncut_callback' => array(
+                     array(
+                            'tl_gallery_creator_pictures',
+                            'oncutCb'
+                     )
+              ),
               'sql' => array(
                      'keys' => array(
                             'id' => 'primary',
@@ -427,6 +433,17 @@ class tl_gallery_creator_pictures extends Backend
                      default :
                             break;
               } //end switch
+
+
+              // get the source album when cuting pictures from one album to an other
+              if(Input::get('act') == 'paste' && Input::get('mode') == 'cut'){
+                     $objPicture = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
+                     if($objPicture !== null)
+                     {
+                            $_SESSION['gallery_creator']['SOURCE_ALBUM'] = $objPicture->pid;
+                     }
+              }
+
        }
 
 
@@ -546,6 +563,62 @@ class tl_gallery_creator_pictures extends Backend
                      return $return;
               }
               return '';
+       }
+
+       
+       /**
+        * move images in the filesystem, when cutting/pasting images from one album into another
+        * @param DC_Table $dc
+        */
+       public function onCutCb(DC_Table $dc)
+       {
+
+              $targetPid = Input::get('pid');
+              if (Input::get('mode') == '1')
+              {
+                     $objPicture = GalleryCreatorPicturesModel::findByPk(Input::get('pid'));
+                     $targetPid = $objPicture->getRelated('pid')->id;
+              }
+
+              $objSourceAlbumId =  $_SESSION['gallery_creator']['SOURCE_ALBUM'];
+              if ($objSourceAlbumId < 1 || $objSourceAlbumId == $targetPid)
+              {
+                     unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
+                     return;
+              }
+
+              $objSourceAlbum = GalleryCreatorAlbumsModel::findByPk($objSourceAlbumId, array('uncached' => true));
+              if($objSourceAlbum === null)
+              {
+                     unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
+                     return;
+              }
+
+              $objTargetAlbum = GalleryCreatorAlbumsModel::findByPk($targetPid, array('uncached' => true));
+              $objPicture = GalleryCreatorPicturesModel::findByPk($dc->id, array('uncached' => true));
+
+              if($objPicture === null)
+              {
+                     unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
+                     return;
+              }
+
+              if($objTargetAlbum !== null)
+              {
+                    $strDestination = str_replace($objSourceAlbum->alias, $objTargetAlbum->alias, $objPicture->path);
+                    if($strDestination != $objPicture->path)
+                    {
+                           if(Files::getInstance()->copy($objPicture->path, $strDestination))
+                           {
+                                  Files::getInstance()->delete($objPicture->path);
+                                  Dbafs::deleteResource($objPicture->path);
+                                  Dbafs::addResource($strDestination);
+                                  $objPicture->path = $strDestination;
+                                  $objPicture->save();
+                           }
+                    }
+              }
+              unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
        }
 
 
