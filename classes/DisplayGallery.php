@@ -69,7 +69,7 @@ abstract class DisplayGallery extends \Module
                      $objTemplate = new \BackendTemplate('be_wildcard');
 
                      $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG'][strtoupper($this->moduleType)]['gallery_creator'][0]) . ' ###';
-                     $objTemplate->title = $this->moduleType == 'cte' ? $this->headline : $this->name;
+                     $objTemplate->title = $this->headline;
 
                      // for module use only
                      $objTemplate->id = $this->id;
