@@ -64,6 +64,22 @@ abstract class DisplayGallery extends \Module
        public function generate()
        {
 
+              if (TL_MODE == 'BE')
+              {
+                     $objTemplate = new \BackendTemplate('be_wildcard');
+
+                     $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG'][strtoupper($this->moduleType)]['gallery_creator'][0]) . ' ###';
+                     $objTemplate->title = $this->moduleType == 'cte' ? $this->headline : $this->name;
+
+                     // for module use only
+                     $objTemplate->id = $this->id;
+                     $objTemplate->link = $this->name;
+                     $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+                     return $objTemplate->parse();
+              }
+
+
+
               // unset the Session
               unset($_SESSION['gallery_creator']['CURRENT_ALBUM']);
 
@@ -80,6 +96,7 @@ abstract class DisplayGallery extends \Module
 
               //assigning the frontend template
               $this->strTemplate = $this->gc_template != "" ? $this->gc_template : $this->strTemplate;
+              $this->Template = new \FrontendTemplate($this->strTemplate);
 
               //do some default-settings for the thumb-size if no settings are done in the module-/content-settings
               $this->checkThumbSizeSettings();
