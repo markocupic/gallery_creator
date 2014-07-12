@@ -17,9 +17,9 @@
         "source":"https://github.com/markocupic/gallery_creator",
         "forum":"https://community.contao.org/de/showthread.php?22634-gallery_creator"
     },
-    "require":{ 
+    "require":{
         "php":">=5.3",
-        "contao/core":">=3.1,<4",
+        "contao/core":">=3.2,<4",
         "contao-community-alliance/composer-plugin": "*",
         "contao-legacy/ajax":"~1.1.6"
     },
