@@ -612,9 +612,9 @@ abstract class DisplayGallery extends \Module
         * @param string
         * @return array
         */
-       protected function getPictureInformationArray($intPictureId, $strSize = NULL, $strContentType)
+       protected function getPictureInformationArray($intPictureId=null, $strSize = NULL, $strContentType)
        {
-
+              if($intPictureId<1)return;
               global $objPage;
 
               if ($strContentType != 'fmd' && $strContentType != 'cte')

@@ -127,10 +127,13 @@ class ContentDisplayGallery extends DisplayGallery
 
               $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
               $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
+              $switch = strlen(\Input::get('picId')) ? 'single_image' : $switch;
+
 
               switch ($switch)
               {
                      case 'albumlisting' :
+
                             // abort if no album is selected
                             if (count($arrAllowedAlbums) < 1)
                             {
@@ -178,6 +181,7 @@ class ContentDisplayGallery extends DisplayGallery
                             break;
 
                      case 'detailview' :
+
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                             $published = $objAlbum->published ? true : false;
 
@@ -229,6 +233,84 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->initCounter($this->intAlbumId);
 
                             break;
+
+                     case 'single_image' :
+                            $objPic = \GalleryCreatorPicturesModel::findById(\Input::get('picId'));
+                            $objAlbum = $objPic->getRelated('pid', \Input::get('picId'));
+
+                            $published = $objPic->published ? true : false;
+                            $published = $objAlbum->published ? $published : false;
+
+
+                            // for security reasons...
+                            if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
+                            {
+                                   die("Picture with id " . \Input::get('picId') . " is either not published or not available or you haven't got enough permission to watch it!!!");
+                            }
+
+
+                            // picture sorting
+                            $str_sorting = $this->gc_picture_sorting == '' || $this->gc_picture_sorting_direction == '' ? 'sorting ASC' : $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
+                            $objPictures = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $str_sorting);
+                            $objPictures = $objPictures->execute('1', $this->intAlbumId);
+
+                            // build up $arrPictures
+                            $arrIDS = array();
+                            $i = 0;
+                            $currentIndex = null;
+                            while ($objPictures->next())
+                            {
+                                   if (\Input::get('picId') == $objPictures->id)
+                                   {
+                                          $currentIndex = $i;
+                                   }
+                                   $arrIDS[] = $objPictures->id;
+                                   $i++;
+                            }
+
+                            $arrPictures = array();
+
+                            if (count($arrIDS))
+                            {
+                                   // store $arrPictures in the template variable
+                                   $arrPictures['prev'] = $this->getPictureInformationArray($arrIDS[$currentIndex-1], $this->gc_size_detailview, 'cte');
+                                   $arrPictures['current'] = $this->getPictureInformationArray($arrIDS[$currentIndex], $this->gc_size_detailview, 'cte');
+                                   $arrPictures['next'] = $this->getPictureInformationArray($arrIDS[$currentIndex+1], $this->gc_size_detailview, 'cte');
+
+                                   // add navigation href's to the template
+                                   $replace = sprintf('picId=%s', $arrPictures['prev']['id']);
+                                   $this->Template->prevHref = preg_replace('/picId(.+)/', $replace, \Environment::get('request'));
+                                   $replace = sprintf('picId=%s', $arrPictures['next']['id']);
+                                   $this->Template->nextHref = preg_replace('/picId(.+)/', $replace, \Environment::get('request'));
+
+                                   if($currentIndex == 0){
+                                          $arrPictures['prev'] = null;
+                                          $this->Template->prevHref = null;
+                                   }
+
+                                   if($currentIndex == count($arrIDS)-1){
+                                          $arrPictures['next'] = null;
+                                          $this->Template->nextHref = null;
+                                   }
+
+                                   if(count($arrIDS) == 1){
+                                          $arrPictures['next'] = null;
+                                          $arrPictures['prev'] = null;
+                                          $this->Template->nextHref = null;
+                                          $this->Template->prevItem = null;
+                                   }
+                            }
+                            $this->Template->returnHref = preg_replace('/\?picId(.+)/', '', \Environment::get('request'));
+                            $this->Template->arrPictures = $arrPictures;
+
+                            // generate other template variables
+                            $this->getAlbumTemplateVars($this->intAlbumId, 'cte');
+
+                            // init the counter
+                            $this->initCounter($this->intAlbumId);
+
+                            break;
+
 
                      case 'jw_imagerotator' :
                             header("content-type:text/xml;charset=utf-8");
