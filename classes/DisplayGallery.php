@@ -770,9 +770,11 @@ abstract class DisplayGallery extends \Module
                      'caption' => specialchars($objPicture->comment),
                      //[string] path to media (video, picture, sound...)
                      'href' => TL_FILES_URL . $href,
-                     //path to the image
+                     // single image url
+                     'single_image_url' => $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/picId/' . $objPicture->id, $objPage->language),
+                     //[string] path to the image,
                      'image_src' => $strImageSrc,
-                     //path to the other selected media
+                     //[string] path to the other selected media
                      'media_src' => $strMediaSrc,
                      //[string] path to a media on a social-media-plattform
                      'socialMediaSRC' => $objPicture->socialMediaSRC,

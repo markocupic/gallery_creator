@@ -62,6 +62,8 @@ class ContentDisplayGallery extends DisplayGallery
        protected function compile()
        {
 
+              global $objPage;
+
               // process request variables
               $this->evalRequestVars();
 
@@ -231,7 +233,6 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
-
                             break;
 
                      case 'single_image' :
@@ -278,10 +279,8 @@ class ContentDisplayGallery extends DisplayGallery
                                    $arrPictures['next'] = $this->getPictureInformationArray($arrIDS[$currentIndex+1], $this->gc_size_detailview, 'cte');
 
                                    // add navigation href's to the template
-                                   $replace = sprintf('picId=%s', $arrPictures['prev']['id']);
-                                   $this->Template->prevHref = preg_replace('/picId(.+)/', $replace, \Environment::get('request'));
-                                   $replace = sprintf('picId=%s', $arrPictures['next']['id']);
-                                   $this->Template->nextHref = preg_replace('/picId(.+)/', $replace, \Environment::get('request'));
+                                   $this->Template->prevHref = $arrPictures['prev']['single_image_url'];
+                                   $this->Template->nextHref = $arrPictures['next']['single_image_url'];
 
                                    if($currentIndex == 0){
                                           $arrPictures['prev'] = null;
@@ -300,7 +299,7 @@ class ContentDisplayGallery extends DisplayGallery
                                           $this->Template->prevItem = null;
                                    }
                             }
-                            $this->Template->returnHref = preg_replace('/\?picId(.+)/', '', \Environment::get('request'));
+                            $this->Template->returnHref = $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items'), $objPage->language);
                             $this->Template->arrPictures = $arrPictures;
 
                             // generate other template variables
@@ -308,7 +307,6 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
-
                             break;
 
 
