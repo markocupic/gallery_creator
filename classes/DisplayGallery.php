@@ -673,10 +673,11 @@ abstract class DisplayGallery extends \Module
                             return null;
                      }
 
-                     $arrFile["filename"] = $objFile->filename;
                      $arrFile["basename"] = $objFile->basename;
-                     $arrFile["dirname"] = $objFile->dirname;
+                     // filename without extension
+                     $arrFile["filename"] = $objFile->filename;
                      $arrFile["extension"] = $objFile->extension;
+                     $arrFile["dirname"] = $objFile->dirname;
                      $arrFile["image_width"] = $objFile->width;
                      $arrFile["image_height"] = $objFile->height;
               }
@@ -771,7 +772,7 @@ abstract class DisplayGallery extends \Module
                      //[string] path to media (video, picture, sound...)
                      'href' => TL_FILES_URL . $href,
                      // single image url
-                     'single_image_url' => $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/picId/' . $objPicture->id, $objPage->language),
+                     'single_image_url' => $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/img/' . $arrFile["filename"], $objPage->language),
                      //[string] path to the image,
                      'image_src' => $strImageSrc,
                      //[string] path to the other selected media

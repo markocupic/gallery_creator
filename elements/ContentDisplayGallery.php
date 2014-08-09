@@ -55,7 +55,6 @@ class ContentDisplayGallery extends DisplayGallery
               return parent::generate();
        }
 
-
        /**
         * Generate module
         */
@@ -129,7 +128,7 @@ class ContentDisplayGallery extends DisplayGallery
 
               $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
               $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
-              $switch = strlen(\Input::get('picId')) ? 'single_image' : $switch;
+              $switch = strlen(\Input::get('img')) ? 'single_image' : $switch;
 
 
               switch ($switch)
@@ -236,17 +235,26 @@ class ContentDisplayGallery extends DisplayGallery
                             break;
 
                      case 'single_image' :
-                            $objPic = \GalleryCreatorPicturesModel::findById(\Input::get('picId'));
-                            $objAlbum = $objPic->getRelated('pid', \Input::get('picId'));
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
+                            if ($objAlbum === null)
+                            {
+                                   die('Invalid album alias: ' . \Input::get('items'));
+                            }
 
+                            $objPic = \Database::getInstance()->prepare("SELECT * FROM tl_gallery_creator_pictures WHERE pid=? AND name LIKE '" . \Input::get('img') . ".%'")->execute($objAlbum->id);
+                            if (!$objPic->numRows)
+                            {
+                                   die(sprintf('File with filename "%s" does not exist in album with alias "%s".', \Input::get('img'), \Input::get('items')));
+                            }
+
+                            $picId = $objPic->id;
                             $published = $objPic->published ? true : false;
                             $published = $objAlbum->published ? $published : false;
-
 
                             // for security reasons...
                             if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
                             {
-                                   die("Picture with id " . \Input::get('picId') . " is either not published or not available or you haven't got enough permission to watch it!!!");
+                                   die("Picture with id " . $picId . " is either not published or not available or you haven't got enough permission to watch it!!!");
                             }
 
 
@@ -261,7 +269,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $currentIndex = null;
                             while ($objPictures->next())
                             {
-                                   if (\Input::get('picId') == $objPictures->id)
+                                   if ($picId == $objPictures->id)
                                    {
                                           $currentIndex = $i;
                                    }
@@ -274,25 +282,28 @@ class ContentDisplayGallery extends DisplayGallery
                             if (count($arrIDS))
                             {
                                    // store $arrPictures in the template variable
-                                   $arrPictures['prev'] = $this->getPictureInformationArray($arrIDS[$currentIndex-1], $this->gc_size_detailview, 'cte');
+                                   $arrPictures['prev'] = $this->getPictureInformationArray($arrIDS[$currentIndex - 1], $this->gc_size_detailview, 'cte');
                                    $arrPictures['current'] = $this->getPictureInformationArray($arrIDS[$currentIndex], $this->gc_size_detailview, 'cte');
-                                   $arrPictures['next'] = $this->getPictureInformationArray($arrIDS[$currentIndex+1], $this->gc_size_detailview, 'cte');
+                                   $arrPictures['next'] = $this->getPictureInformationArray($arrIDS[$currentIndex + 1], $this->gc_size_detailview, 'cte');
 
                                    // add navigation href's to the template
                                    $this->Template->prevHref = $arrPictures['prev']['single_image_url'];
                                    $this->Template->nextHref = $arrPictures['next']['single_image_url'];
 
-                                   if($currentIndex == 0){
+                                   if ($currentIndex == 0)
+                                   {
                                           $arrPictures['prev'] = null;
                                           $this->Template->prevHref = null;
                                    }
 
-                                   if($currentIndex == count($arrIDS)-1){
+                                   if ($currentIndex == count($arrIDS) - 1)
+                                   {
                                           $arrPictures['next'] = null;
                                           $this->Template->nextHref = null;
                                    }
 
-                                   if(count($arrIDS) == 1){
+                                   if (count($arrIDS) == 1)
+                                   {
                                           $arrPictures['next'] = null;
                                           $arrPictures['prev'] = null;
                                           $this->Template->nextHref = null;
@@ -318,7 +329,6 @@ class ContentDisplayGallery extends DisplayGallery
               }
               // end switch
        }
-
 
        /**
         * return a sorted array with all albums selected in the content element settings
