@@ -1375,6 +1375,10 @@ class tl_gallery_creator_albums extends Backend
        public function saveCbSortAlbum($varValue, DataContainer $dc)
        {
 
+              if ($varValue == 'custom'){
+                     return $varValue;
+              }
+              
               $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
               if ($objPictures === null)
               {
