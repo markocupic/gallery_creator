@@ -1378,7 +1378,7 @@ class tl_gallery_creator_albums extends Backend
               if ($varValue == 'custom'){
                      return $varValue;
               }
-              
+
               $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
               if ($objPictures === null)
               {

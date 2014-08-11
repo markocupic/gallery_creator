@@ -64,6 +64,12 @@ abstract class DisplayGallery extends \Module
        public function generate()
        {
 
+              // Ajax Requests
+              if(TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest')){
+                     $this->generateAjax();
+                     exit;
+              }
+
               if (TL_MODE == 'BE')
               {
                      $objTemplate = new \BackendTemplate('be_wildcard');
@@ -357,7 +363,7 @@ abstract class DisplayGallery extends \Module
                      exit;
               }
 
-              //Detailansicht nur mit Lightbox, für ce_gc_lightbox.tpl Template
+              //Detailansicht nur mit Lightbox, für ce_gc_mediabox template
               if (\Input::get('isAjax') && \Input::get('LightboxSlideshow') && \Input::get('albumId'))
               {
                      //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
@@ -589,7 +595,7 @@ abstract class DisplayGallery extends \Module
                      //[array] array mit exif metatags
                      'exif' => $exif,
                      //[string] javascript-Aufruf
-                     'thumbMouseover' => $this->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this, " . $this->id . ", " . $objAlbum->id . ", " . $objPics->numRows . ", '" . strtolower($this->moduleType) . "');" : ""
+                     'thumbMouseover' => $this->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this,"  . $objAlbum->id . "," . $objPics->numRows  . ");" : ""
               );
 
               //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde

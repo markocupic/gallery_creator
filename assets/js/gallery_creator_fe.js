@@ -20,20 +20,15 @@
             this.thumbOpacity = 1;
         },
 
-        initThumbSlide: function (el, fmdId, albumId, countPictures, moduleType) {
+        initThumbSlide: function (el, albumId, countPictures) {
             var self = this;
-            if (this.eventId) {
-                this.initThumbSlide(el, fmdId, albumId, moduleType);
-                return;
-            }
+           
             //set some class-vars
             this.currentDiv = document.id(el);
             this.thumb = document.id(el).getElement('img.thumb');
-            this.fmdId = fmdId;
             this.albumId = albumId;
             this.countPictures = countPictures;
             this.currentPic = 0;
-            this.moduleType = moduleType;
             this.defaultThumbSrc = this.thumb.getProperty('src');
             var currentTime = new Date();
             this.eventId = currentTime.getTime();
@@ -60,7 +55,7 @@
         startThumbSlide: function (eventId) {
             var self = this;
             var myRequest = new Request.JSON({
-                url: 'ajax.php',
+                url: document.URL,
                 method: 'get',
 
                 onSuccess: function (responseText) {
@@ -69,7 +64,7 @@
                     if (responseText.eventId == null || self.eventId == null) return;
                     if (responseText.thumbPath != "" && responseText.thumbPath != self.thumb.getProperty('src')) {
                         var currentTime = new Date();
-                        if (currentTime.getTime() - self.lastSlide < 2000) {
+                        if (currentTime.getTime() - self.lastSlide < 1200) {
                             self.startThumbSlide(eventId);
                             return;
                         }
@@ -89,7 +84,7 @@
             }
             //next pic
             self.currentPic++;
-            myRequest.send('isAjax=1&action=' + self.moduleType + '&id=' + self.fmdId + '&thumbSlider=1&AlbumId=' + self.albumId + '&limit=' + self.currentPic + '&eventId=' + eventId);
+            myRequest.send('isAjax=1&thumbSlider=1&AlbumId=' + self.albumId + '&limit=' + self.currentPic + '&eventId=' + eventId);
         }
     });
 })(document.id);
