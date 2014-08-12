@@ -20,8 +20,7 @@
     "require":{
         "php":">=5.3",
         "contao/core":">=3.2,<4",
-        "contao-community-alliance/composer-plugin": "*",
-        "contao-legacy/ajax":"~1.1.6"
+        "contao-community-alliance/composer-plugin": "*"  
     },
     "replace": {
         "contao-legacy/gallery_creator":"*"
