@@ -552,6 +552,7 @@ class tl_gallery_creator_albums extends Backend
               {
                      $this->redirect('contao/main.php?do=gallery_creator&clipboard=1');
               }
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be.js';
        }
 
 
@@ -1382,7 +1383,7 @@ class tl_gallery_creator_albums extends Backend
               $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
               if ($objPictures === null)
               {
-                     return $varValue;
+                     return 'custom';
               }
 
               $files = array();
@@ -1425,8 +1426,8 @@ class tl_gallery_creator_albums extends Backend
                      $objPicture->sorting = $sorting;
                      $objPicture->save();
               }
-
-              return $varValue;
+              // return default value
+              return 'custom';
 
        }
 
