@@ -174,14 +174,14 @@ class ContentDisplayGallery extends DisplayGallery
                                    {
                                           continue;
                                    }
-                                   $arrAlbums[$objAlbum->id] = $this->getAlbumInformationArray($objAlbum->id, $this->gc_size_albumlisting, 'cte');
+                                   $arrAlbums[$objAlbum->id] = \GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
                             $this->getAlbumTemplateVars($objAlbum->id, 'cte');
                             break;
 
-                     case 'detailview' :
+                     case 'detailview':
 
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                             $published = $objAlbum->published ? true : false;
@@ -221,7 +221,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $arrPictures = array();
                             while ($objPictures->next())
                             {
-                                   $arrPictures[$objPictures->id] = $this->getPictureInformationArray($objPictures->id, $this->gc_size_detailview, 'cte');
+                                   $arrPictures[$objPictures->id] = \GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
 
                             // store $arrPictures in the template variable
@@ -233,7 +233,6 @@ class ContentDisplayGallery extends DisplayGallery
                             // init the counter
                             $this->initCounter($this->intAlbumId);
                             break;
-
                      case 'single_image' :
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
                             if ($objAlbum === null)
@@ -282,9 +281,9 @@ class ContentDisplayGallery extends DisplayGallery
                             if (count($arrIDS))
                             {
                                    // store $arrPictures in the template variable
-                                   $arrPictures['prev'] = $this->getPictureInformationArray($arrIDS[$currentIndex - 1], $this->gc_size_detailview, 'cte');
-                                   $arrPictures['current'] = $this->getPictureInformationArray($arrIDS[$currentIndex], $this->gc_size_detailview, 'cte');
-                                   $arrPictures['next'] = $this->getPictureInformationArray($arrIDS[$currentIndex + 1], $this->gc_size_detailview, 'cte');
+                                   $arrPictures['prev'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex - 1], $this);
+                                   $arrPictures['current'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex], $this);
+                                   $arrPictures['next'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex + 1], $this);
 
                                    // add navigation href's to the template
                                    $this->Template->prevHref = $arrPictures['prev']['single_image_url'];

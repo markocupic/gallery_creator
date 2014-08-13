@@ -143,7 +143,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             $arrAlbums = array();
                             while ($objAlbum->next())
                             {
-                                   $arrAlbums[$objAlbum->id] = $this->getAlbumInformationArray($objAlbum->id, $this->gc_size_albumlisting, 'fmd');
+                                   $arrAlbums[$objAlbum->id] = \GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
@@ -166,14 +166,8 @@ class ModuleDisplayGallery extends DisplayGallery
                             // generate the subalbum array
                             if ($this->gc_hierarchicalOutput)
                             {
-                                   $objSubAlbums = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY sorting ASC')->execute($this->intAlbumId, '1');
-                                   $arrSubalbums = array();
-                                   while ($objSubAlbums->next())
-                                   {
-                                          $arrSubalbum = $this->getAlbumInformationArray($objSubAlbums->id, $this->gc_size_albumlisting, 'fmd');
-                                          array_push($arrSubalbums, $arrSubalbum);
-                                   }
-                                   $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : NULL;
+                                $arrSubalbums = \GcHelpers::getSubalbumsInformationArray($this->intAlbumId, $this);
+                                $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : NULL;
                             }
 
                             // pagination settings
@@ -204,7 +198,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             while ($objPictures->next())
                             {
                                    // picture array
-                                   $arrPictures[$objPictures->id] = $this->getPictureInformationArray($objPictures->id, $this->gc_size_detailview, 'fmd');
+                                   $arrPictures[$objPictures->id] = \GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
 
                             // add picture array to the template
