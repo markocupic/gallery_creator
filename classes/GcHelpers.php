@@ -665,10 +665,14 @@ class GcHelpers extends \System
        /**
         * @param $parentId
         * @param string $strSorting
+        * @param null $iterationDepth
         * @return array
         */
-       public static function getAllSubalbums($parentId, $strSorting = '')
+       public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
        {
+              // get the iteration depth
+              $iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
+
               $arrSubAlbums = array();
               if ($strSorting == '')
               {
@@ -679,10 +683,17 @@ class GcHelpers extends \System
                      $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY ' . $strSorting;
               }
               $objAlb = \Database::getInstance()->prepare($strSql)->execute($parentId);
+              $depth = $iterationDepth !== null ? $iterationDepth - 1 : null;
+
+
               while ($objAlb->next())
               {
+                     if ($depth < 0 && $iterationDepth !== null)
+                     {
+                            return $arrSubAlbums;
+                     }
                      $arrSubAlbums[] = $objAlb->id;
-                     $arrSubAlbums = array_merge($arrSubAlbums, self::getAllSubalbums($objAlb->id));
+                     $arrSubAlbums = array_merge($arrSubAlbums, self::getAllSubalbums($objAlb->id, $strSorting, $depth));
               }
               return $arrSubAlbums;
        }
