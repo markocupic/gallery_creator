@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contao Open Source CMS
  *
@@ -290,7 +289,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
               'owner' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'],
-                     'default' => $this->User->id,
+                     'default' => \BackendUser::getInstance()->id,
                      'foreignKey' => 'tl_user.name',
                      'inputType' => 'select',
                      'filter' => true,

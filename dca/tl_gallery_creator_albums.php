@@ -199,7 +199,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
               ),
               'owner' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner'],
-                     'default' => $this->User->id,
+                     'default' => \BackendUser::getInstance()->id,
                      'foreignKey' => 'tl_user.name',
                      'inputType' => 'select',
                      'eval' => array(
@@ -217,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
               ),
               'owners_name' => array(
                      'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'],
-                     'default' => $this->User->name,
+                     'default' => \BackendUser::getInstance()->name,
                      'eval' => array(
                             'doNotShow' => true,
                             'tl_class' => 'w50 readonly'
