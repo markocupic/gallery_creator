@@ -547,8 +547,9 @@ abstract class DisplayGallery extends \Module
               // Overwrite the page description
               if (TL_MODE == 'FE')
               {
-                     $objPage->description = $objPage->description . ': ' . $objAlbum->alias;
-              }
+				  $objPage->description .= (($objPage->description != '') ? ', ' : '') . str_replace(',,',',',implode(', ',array(specialchars($objAlbum->name),specialchars($objAlbum->event_location))));
+				  $GLOBALS['TL_KEYWORDS'] .= (($GLOBALS['TL_KEYWORDS'] != '') ? ', ' : '') . str_replace(',,',',',implode(', ',array(specialchars($objAlbum->name),specialchars($objAlbum->event_location))));
+			  }
 
               //store all album-data in the array
               $objAlbum->reset();

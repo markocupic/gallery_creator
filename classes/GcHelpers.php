@@ -151,7 +151,7 @@ class GcHelpers extends \System
               if (!is_uploaded_file($arrFile['tmp_name']))
               {
                      //Fehlermeldung anzeigen
-                     $errorMsg = 'Possible filupload attack!';
+                     $errorMsg = 'Possible fileupload attack!';
                      $_SESSION['TL_ERROR'][] = $errorMsg;
                      \System::log($errorMsg, __METHOD__, TL_ERROR);
 
