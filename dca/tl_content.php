@@ -18,7 +18,7 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array(
        'onloadCbSetUpPalettes'
 );
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = 'name,type,headline;{miscellaneous_legend},gc_publish_all_albums,gc_publish_albums,gc_AlbumsPerPage,gc_ThumbsPerPage,gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb;{sorting_legend},gc_sorting,gc_sorting_direction;{picture_sorting_legend},gc_picture_sorting,gc_picture_sorting_direction;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = 'name,type,headline;{pagination_legend},gc_publish_all_albums,gc_publish_albums,gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;{miscellaneous_legend},gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb;{sorting_legend},gc_sorting,gc_sorting_direction;{picture_sorting_legend},gc_picture_sorting,gc_picture_sorting_direction;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
 
 /**
  * Add fields to tl_content
@@ -135,6 +135,17 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_AlbumsPerPage'] = array(
               'tl_class' => 'clr'
        ),
        'sql' => "smallint(5) unsigned NOT NULL default '0'"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['gc_PaginationNumberOfLinks'] = array(
+       'label' => &$GLOBALS['TL_LANG']['tl_content']['gc_PaginationNumberOfLinks'],
+       'exclude' => true,
+       'inputType' => 'text',
+       'eval' => array(
+              'rgxp' => 'digit',
+              'tl_class' => 'clr'
+       ),
+       'sql' => "smallint(5) unsigned NOT NULL default '7'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_detailview'] = array(

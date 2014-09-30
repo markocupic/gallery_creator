@@ -14,8 +14,9 @@
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_module']['thumb_legend']  	 = 'Thumbnail settings';
-$GLOBALS['TL_LANG']['tl_module']['image_legend']     = 'Miscellaneous settings';
+$GLOBALS['TL_LANG']['tl_module']['pagination_legend']  	       = 'Pagination settings';
+$GLOBALS['TL_LANG']['tl_module']['thumb_legend']  	       = 'Thumbnail settings';
+$GLOBALS['TL_LANG']['tl_module']['image_legend']               = 'Miscellaneous settings';
 $GLOBALS['TL_LANG']['tl_module']['excluded_albums_legend']     = 'Excluded albums';
 
 
@@ -27,6 +28,7 @@ $GLOBALS['TL_LANG']['tl_module']['gc_template'] = array('Gallery template', 'Sel
 $GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider'] = array('Activate Ajax-Thumb-Slider', 'Activate Ajax-Thumb-Slider on mouseover in the album listing?');
 $GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage'] = array('Items per page in the albumlisting', 'The number of items per page in the albumlisting. Set to 0 to disable pagination.');
 $GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage'] = array('Thumbs per page in the detailview', 'The number of thumbnails per page in the detailview. Set to 0 to disable pagination.');
+$GLOBALS['TL_LANG']['tl_module']['gc_PaginationNumberOfLinks'] = array('Number of links in the pagination navigation', 'Set the number of links in the pagination navigation. Default to 7.');
 $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput'] = array('Hierarchically Frontend-Album-Output', 'Hierarchically Frontend-Album-Output (Albums and Subalbums)');
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview'] = array('Detailview: Thumbnail width and height', 'Here you can set the image dimensions and the resize mode.');
 $GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview'] = array('Image margin detailview', 'Here you can enter the top, right, bottom and left margin.');

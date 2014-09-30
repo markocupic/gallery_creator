@@ -15,6 +15,7 @@
  * permanent text corrections which are update-safe. 
  */
  
+$GLOBALS['TL_LANG']['tl_content']['pagination_legend'] = "Pagination Einstellungen";
 $GLOBALS['TL_LANG']['tl_content']['miscellaneous_legend'] = "Allgemeine Einstellungen";
 $GLOBALS['TL_LANG']['tl_content']['sorting_legend'] = "Alben-Auflistung-Sortieroptionen";
 $GLOBALS['TL_LANG']['tl_content']['picture_sorting_legend'] = "Bild-Auflistung-Sortieroptionen";
@@ -34,6 +35,8 @@ $GLOBALS['TL_LANG']['tl_content']['gc_AlbumsPerPage']['0'] = "Anzahl Alben pro S
 $GLOBALS['TL_LANG']['tl_content']['gc_AlbumsPerPage']['1'] = "Die Anzahl an Alben pro Seite in der Albenübersicht. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.";
 $GLOBALS['TL_LANG']['tl_content']['gc_ThumbsPerPage']['0'] = "Anzahl Bilder pro Seite in der Detailansicht";
 $GLOBALS['TL_LANG']['tl_content']['gc_ThumbsPerPage']['1'] = "Anzahl Bilder pro Seite in der Detailansicht. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.";
+$GLOBALS['TL_LANG']['tl_content']['gc_PaginationNumberOfLinks']['0'] = "Anzahl Links in der Pagination Navigation";
+$GLOBALS['TL_LANG']['tl_content']['gc_PaginationNumberOfLinks']['1'] = "Legen Sie die Anzahl Links in der Pagination Navigation fest. Standardwert ist 7.";
 $GLOBALS['TL_LANG']['tl_content']['gc_sorting']['0'] = "Sortierung der Alben";
 $GLOBALS['TL_LANG']['tl_content']['gc_sorting']['1'] = "Nach welchem Feld sollen die Alben im Frontend sortiert werden?";
 $GLOBALS['TL_LANG']['tl_content']['gc_sorting_direction']['0'] = "Sortierrichtung";

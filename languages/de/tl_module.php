@@ -15,6 +15,7 @@
  * permanent text corrections which are update-safe. 
  */
  
+$GLOBALS['TL_LANG']['tl_module']['pagination_legend'] = "Pagination Einstellungen";
 $GLOBALS['TL_LANG']['tl_module']['thumb_legend'] = "Thumbnail-Einstellungen";
 $GLOBALS['TL_LANG']['tl_module']['image_legend'] = "Allgemeine Einstellungen";
 $GLOBALS['TL_LANG']['tl_module']['excluded_albums_legend'] = "Ausgenommene Alben";
@@ -28,6 +29,8 @@ $GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage']['0'] = "Anzahl Alben pro Se
 $GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage']['1'] = "Die Anzahl an Alben pro Seite in der Albenübersicht. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.";
 $GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage']['0'] = "Anzahl Bilder pro Seite in der Detailansicht";
 $GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage']['1'] = "Anzahl Bilder pro Seite in der Detailansicht. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.";
+$GLOBALS['TL_LANG']['tl_module']['gc_PaginationNumberOfLinks']['0'] = "Anzahl Links in der Pagination Navigation";
+$GLOBALS['TL_LANG']['tl_module']['gc_PaginationNumberOfLinks']['1'] = "Legen Sie die Anzahl Links in der Pagination Navigation fest. Standardwert ist 7.";
 $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['0'] = "Alben im Frontend hierarchisch ausgeben";
 $GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['1'] = "Sollen die Alben im Frontend hierarchisch anhand der Albumstruktur ausgegeben werden (Alben und Unteralben)?";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview']['0'] = "Detailansicht: Thumbnailbreite und Thumbnailhöhe";

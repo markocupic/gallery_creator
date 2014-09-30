@@ -13,7 +13,7 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,headline;{excluded_albums_legend:hide},gc_excludedAlbums;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{image_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,headline;{excluded_albums_legend:hide},gc_excludedAlbums;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{pagination_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;{image_legend},gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
 
 /**
  * Add fields to tl_module
@@ -177,6 +177,17 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_ThumbsPerPage'] = array(
               'tl_class' => ''
        ),
        'sql' => "smallint(5) unsigned NOT NULL default '0'"
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['gc_PaginationNumberOfLinks'] = array(
+       'label' => &$GLOBALS['TL_LANG']['tl_module']['gc_PaginationNumberOfLinks'],
+       'exclude' => true,
+       'inputType' => 'text',
+       'eval' => array(
+              'rgxp' => 'digit',
+              'tl_class' => 'clr'
+       ),
+       'sql' => "smallint(5) unsigned NOT NULL default '7'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_excludedAlbums'] = array(

@@ -16,6 +16,7 @@
  */
 
 //Legends
+$GLOBALS['TL_LANG']['tl_content']['pagination_legend'] = 'Pagination settings';
 $GLOBALS['TL_LANG']['tl_content']['miscellaneous_legend'] = 'Miscellaneous settings';
 $GLOBALS['TL_LANG']['tl_content']['sorting_legend'] = 'Album listing sorting options';
 $GLOBALS['TL_LANG']['tl_content']['picture_sorting_legend'] = 'Picture sorting options';
@@ -32,6 +33,7 @@ $GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider'] = array('Activate Aj
 $GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'] = array('Redirection in case of a single album', 'Should be automatically redirected to the detail-view, in case of single-album-choice?');
 $GLOBALS['TL_LANG']['tl_content']['gc_AlbumsPerPage'] = array('Items per page in the albumlisting', 'The number of items per page in the albumlisting. Set to 0 to disable pagination.');
 $GLOBALS['TL_LANG']['tl_content']['gc_ThumbsPerPage'] = array('Thumbs per page in the detailview', 'The number of thumbnails per page in the detailview. Set to 0 to disable pagination.');
+$GLOBALS['TL_LANG']['tl_content']['gc_PaginationNumberOfLinks'] = array('Number of links in the pagination navigation', 'Set the number of links in the pagination navigation. Default to 7.');
 $GLOBALS['TL_LANG']['tl_content']['gc_sorting'] = array('Album sorting', 'According to which field the albums should be sorted?');
 $GLOBALS['TL_LANG']['tl_content']['gc_sorting_direction'] = array('Sort sequence', 'DESC: descending, ASC: ascending');
 $GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting'] = array('Picture sorting', 'According to which field the pictures in a single album should be sorted?');

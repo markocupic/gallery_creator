@@ -127,7 +127,8 @@ class ModuleDisplayGallery extends DisplayGallery
                                    $itemsTotal = count($arrAllowedAlbums);
 
                                    // add pagination menu
-                                   $objPagination = new \Pagination($itemsTotal, $limit);
+                                   $numberOfLinks = $this->gc_PaginationNumberOfLinks<1 ? 7 : $this->gc_PaginationNumberOfLinks;
+                                   $objPagination = new \Pagination($itemsTotal, $limit,  $numberOfLinks);
                                    $this->Template->pagination = $objPagination->generate("\n ");
                             }
 
@@ -182,7 +183,8 @@ class ModuleDisplayGallery extends DisplayGallery
                                    $itemsTotal = $objTotal->itemsTotal;
 
                                    // add pagination menu
-                                   $objPagination = new \Pagination($itemsTotal, $limit);
+                                   $numberOfLinks = $this->gc_PaginationNumberOfLinks<1 ? 7 : $this->gc_PaginationNumberOfLinks;
+                                   $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
                                    $this->Template->pagination = $objPagination->generate("\n ");
                             }
 
