@@ -189,7 +189,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'default' => time(),
                      'eval' => array(
                             'mandatory' => true,
-                            'maxlength' => 10,
                             'datepicker' => true,
                             'rgxp' => 'date',
                             'tl_class' => 'w50 wizard',

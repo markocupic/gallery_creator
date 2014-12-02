@@ -254,7 +254,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
                      'search' => true,
                      'eval' => array(
                             'mandatory' => true,
-                            'maxlength' => 10,
                             'datepicker' => true,
                             'rgxp' => 'date',
                             'tl_class' => 'm12 w50 wizard ',
