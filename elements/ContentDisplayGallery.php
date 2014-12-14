@@ -181,7 +181,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->Template->arrAlbums = $arrAlbums;
                             $this->getAlbumTemplateVars($objAlbum->id, 'cte');
                             break;
- 
+
                      case 'detailview':
 
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);

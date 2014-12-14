@@ -208,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                             'nospace' => true,
                             'tl_class' => 'w50'
                      ),
-                     'sql' => "int(10) NOT NULL default '0'",
+                     'sql' => "int(10) unsigned NOT NULL default '0'",
                      'relation' => array(
                             'type' => 'hasOne',
                             'load' => 'eager'
@@ -540,6 +540,8 @@ class tl_gallery_creator_albums extends Backend
 
               parent::__construct();
               $this->import('BackendUser', 'User');
+              $this->import('Files');
+
               // path to the gallery_creator upload-directory
               $this->uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
               // register the parseBackendTemplate Hook
@@ -1531,22 +1533,41 @@ class tl_gallery_creator_albums extends Backend
               {
                      if (is_dir(TL_ROOT . '/' . $this->uploadPath . '/' . $objAlbum->alias))
                      {
-                            $objPic = $this->Database->prepare('SELECT id, name FROM tl_gallery_creator_pictures WHERE pid=? AND externalFile=?')->execute($dc->activeRecord->id, "");
-                            while ($objPic->next())
-                            {
-                                   // update the paths in tl_gallery_creator_pictures
-                                   $strDestination = $this->uploadPath . '/' . $strAlias . '/' . $objPic->name;
-                                   $this->Database->prepare('UPDATE tl_gallery_creator_pictures SET path=? WHERE id=?')->execute($strDestination, $objPic->id);
-                                   // update the path of each file in tl_files
-                                   $strResource = $this->uploadPath . '/' . $objAlbum->alias . '/' . $objPic->name;
-                                   Dbafs::moveResource($strResource, $strDestination);
-                            }
+                         $newF = $this->uploadPath . '/' . $strAlias;
+                         $oldF = $this->uploadPath . '/' . $objAlbum->alias;
+
+                         // create the folder
+                         new Folder($newF);
+                         Dbafs::addResource($newF);
+                         $this->Files->chmod($newF, 0755);
+                         $this->Files->chmod($oldF, 0755);
+
+                         $objPic = $this->Database->prepare('SELECT id, name FROM tl_gallery_creator_pictures WHERE pid=? AND externalFile=?')->execute($dc->activeRecord->id, "");
+                         while ($objPic->next()) {
+
+                             // new/old filename
+                             $strOld = $this->uploadPath . '/' . $objAlbum->alias . '/' . $objPic->name;
+                             $strNew = $this->uploadPath . '/' . $strAlias . '/' . $objPic->name;
+
+                             // update the paths in tl_gallery_creator_pictures
+                             $this->Database->prepare('UPDATE tl_gallery_creator_pictures SET path=? WHERE id=?')->execute($strNew,
+                                    $objPic->id);
+
+                             // update the path in the db_assisted filesystem
+                             $file = new File($strOld);
+                             $file->copyTo($strNew);
+                             Dbafs::moveResource($strOld, $strNew);
+                             $this->Files->delete($strOld);
+                         }
+
+                         $folder = new Folder($oldF);
+                         $this->Files->chmod($oldF, 0755);
+                         $folder->purge();
+                         $folder->delete();
+
+                         Dbafs::deleteResource($oldF);
                      }
-                     $strResource = $this->uploadPath . '/' . $objAlbum->alias;
-                     $strDestination = $this->uploadPath . '/' . $strAlias;
-                     // rename the folder
-                     Files::getInstance()->rename($strResource, $strDestination);
-                     Dbafs::moveResource($strResource, $strDestination);
+
               }
               return $strAlias;
        }

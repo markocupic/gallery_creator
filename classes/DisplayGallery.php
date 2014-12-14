@@ -591,13 +591,6 @@ abstract class DisplayGallery extends \Module
                      }
               }
 
-              //Macht alle Albumangaben im Array $this->Template->allAlbums verfuegbar
-              $objAlbums = $this->Database->execute('SELECT * FROM tl_gallery_creator_albums ORDER BY sorting');
-              $this->Template->allAlbums = $objAlbums->fetchAllAssoc();
-
-              //Macht alle Bilder im Array $this->Template->allPictures verfuegbar
-              $objPictures = $this->Database->execute('SELECT * FROM tl_gallery_creator_pictures ORDER BY pid, sorting');
-              $this->Template->allPictures = $objPictures->fetchAllAssoc();
               $this->Template->objElement = $this;
        }
 
