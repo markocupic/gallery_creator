@@ -744,29 +744,29 @@ class tl_gallery_creator_pictures extends Backend
     public function ondeleteCb(DC_Table $dc)
     {
 
-        $objImg = \GalleryCreator\GalleryCreatorPicturesModel::findByPk($dc->id);
-
+        $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
         if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
             //Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
-            $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE id=?')->execute($objImg->id);
 
+            // Prüfen, ob das Bild noch mit einem anderen Datensatz verknüpft ist
             $objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE uuid=?')->execute($objImg->uuid);
-
-
-            if ($objImgNumRows->numRows < 1) {
+            if ($objImgNumRows->numRows < 2) {
                 $oFile = FilesModel::findByUuid($objImg->uuid);
 
                 $objAlbum = GalleryCreatorAlbumsModel::findByPk($objImg->pid);
                 $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
 
+                // Bild nur löschen, wenn es im Verzeichnis liegt, das dem Album zugewiesen ist
                 if ($oFile !== null && strstr($oFile->path, $oFolder->path)) {
-                    //Datei vom Server loeschen
-                    $this->Files->delete($oFile->path);
-                    //Datensatz aus tl_files loeschen
-                    Dbafs::deleteResource($oFile->path, true);
+                    // delete file from filesystem
+
+                    $file = new File($oFile->path, true);
+                    $file->delete();
                 }
             }
+            $objImg->delete();
         }
+
         if (!$this->User->isAdmin && $objImg->owner != $this->User->id) {
             $this->log('Datensatz mit ID ' . $dc->id . ' wurde vom  Benutzer mit ID ' . $this->User->id . ' versucht aus tl_gallery_creator_pictures zu loeschen.',
                    __METHOD__, TL_ERROR);

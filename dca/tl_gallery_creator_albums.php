@@ -1056,33 +1056,20 @@ class tl_gallery_creator_albums extends Backend
             foreach ($arrDeletedAlbums as $idDelAlbum) {
                 $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                 if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
-                    // remove the deleted directory from tl_files
                     // remove all pictures from tl_gallery_creator_pictures
                     $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE pid=?')->execute($idDelAlbum);
                     // remove the albums from tl_gallery_creator_albums
                     $this->Database->prepare('DELETE FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                     // remove the directory from the filesystem
                     $oFolder = FilesModel::findByUuid($objAlb->assignedDir);
-                    if($oFolder!== null){
-                        // delete all Files
-                        $oFile = FilesModel::findByPid($oFolder->uuid);
-                        if($oFile !== null){
-                            $file =  new File($oFile->path);
-                            $file->delete();
-                            Dbafs::deleteResource($oFile->path);
-                        }
-                        $folder = new Folder($oFolder->path);
-                        if (!$folder->isEmpty())
-                        {
-                            $folder->purge();
-                        }
+                    if ($oFolder !== null) {
+                        $folder = new Folder($oFolder->path, true);
                         $folder->delete();
-                        Dbafs::deleteResource($oFolder->path);
                     }
-
                 } else {
-                    // do not delete childalbums, which the user do not owns
-                    $this->Database->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $idDelAlbum);
+                    // do not delete childalbums, which the user does not owns
+                    $this->Database->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0',
+                           $idDelAlbum);
                 }
             }
         }
@@ -1434,6 +1421,7 @@ class tl_gallery_creator_albums extends Backend
         return 'custom';
     }
 
+
     /**
      * generate an albumalias based on the albumname and create a directory of the same name
      * and register the directory in tl files
@@ -1446,8 +1434,7 @@ class tl_gallery_creator_albums extends Backend
 
         $strAlias = standardize($strAlias);
         // if there isn't an existing albumalias generate one from the albumname
-        if (!strlen($strAlias))
-        {
+        if (!strlen($strAlias)) {
             $strAlias = standardize($dc->activeRecord->name);
         }
         // limit alias to 50 characters
@@ -1455,9 +1442,9 @@ class tl_gallery_creator_albums extends Backend
         // remove invalid characters
         $strAlias = preg_replace("/[^a-z0-9\_\-]/", "", $strAlias);
         // if alias already exists add the album-id to the alias
-        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id!=? AND alias=?')->execute($dc->activeRecord->id, $strAlias);
-        if ($objAlbum->numRows)
-        {
+        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id!=? AND alias=?')->execute($dc->activeRecord->id,
+               $strAlias);
+        if ($objAlbum->numRows) {
             $strAlias = 'id-' . $dc->activeRecord->id . '-' . $strAlias;
         }
 
@@ -1468,14 +1455,13 @@ class tl_gallery_creator_albums extends Backend
         // if a new album was created
         $createDir = true;
         $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
-        if($oFolder!== null){
-            if(is_dir(TL_ROOT . '/' . $oFolder->path)){
+        if ($oFolder !== null) {
+            if (is_dir(TL_ROOT . '/' . $oFolder->path)) {
                 $createDir = false;
             }
         }
 
-        if ($createDir === true)
-        {
+        if ($createDir === true) {
             // create the new folder and register it in tl_files
             $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
             Dbafs::addResource($objFolder->path, true);
@@ -1484,7 +1470,6 @@ class tl_gallery_creator_albums extends Backend
         }
 
         return $strAlias;
-
     }
 
 
