@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/it/tl_module.php 
  * 
- * Contao extension: gallery_creator 4.0.1 stable 
+ * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -21,3 +21,5 @@ $GLOBALS['TL_LANG']['tl_module']['gc_rows']['0'] = "Miniature per riga";
 $GLOBALS['TL_LANG']['tl_module']['gc_rows']['1'] = "Seleziona il numero di miniature per riga.(0=Quante più possibili)";
 $GLOBALS['TL_LANG']['tl_module']['gc_template']['0'] = "Template gallery";
 $GLOBALS['TL_LANG']['tl_module']['gc_template']['1'] = "Seleziona un template gallery personalizzato";
+ 
+?>

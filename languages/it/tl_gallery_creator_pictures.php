@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/it/tl_gallery_creator_pictures.php 
  * 
- * Contao extension: gallery_creator 4.0.1 stable 
+ * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -41,3 +41,5 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['0'] = "Ruota 
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['1'] = "Ruota l'immagine di 90°";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['0'] = "Carica immagini";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['1'] = "Carica immagini";
+ 
+?>

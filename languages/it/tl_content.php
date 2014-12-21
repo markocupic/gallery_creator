@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/it/tl_content.php 
  * 
- * Contao extension: gallery_creator 4.0.1 stable 
+ * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -46,3 +46,5 @@ $GLOBALS['TL_LANG']['tl_content']['gc_size_detailview']['1'] = "Qui puoi imposta
 $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting']['1'] = "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['0'] = "Visione a dimensione intera / in una nuova finestra";
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize']['1'] = "Apri l'immagine a dimensione intera in una lightbox oppure il link in una nuova finestra del browser";
+ 
+?>

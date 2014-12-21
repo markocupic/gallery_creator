@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/it/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 4.0.1 stable 
+ * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -18,7 +18,6 @@
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_info'] = "Informazioni sull'album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protection'] = "Proteggi album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = "Impostazioni immagine";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader'] = "Uploader Java";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['id']['0'] = "ID album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['0'] = "Alias album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['1'] = "L'alias album definisce anche il nome della cartella dell'album.";
@@ -53,3 +52,5 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['0'] = "Copia dop
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Copia dopo l'album con ID %s";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Copia dentro";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Copia dentro l'album con ID %s";
+ 
+?>

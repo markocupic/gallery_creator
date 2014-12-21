@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 4.7.0 
+ * Contao extension: gallery_creator 4.8.0-alpha1 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -53,6 +53,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors']['0'] = "Anzahl Albu
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details']['0'] = "Besucher-Details (IP, Browserdetails, Zugriffszeit, etc.)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['0'] = "Sortieren nach";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['1'] = "Bitte wählen Sie eine Sortierreihenfolge aus.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['0'] = "Zugewiesenes Upload Verzeichnis";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['1'] = "Neue Bilder werden vom Uploader in das gewählte Verzeichnis hochgeladen.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['0'] = "Neues Album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['1'] = "Ein neues Album anlegen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit']['0'] = "Album bearbeiten";
