@@ -579,14 +579,13 @@ class GcHelpers extends \System
 							   ->execute($intPictureId);
 
 		//Alle Informationen zum Album in ein array packen
-		$objAlbum = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-							 ->execute($objPicture->pid);
+		$objAlbum = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($objPicture->pid);
 		$arrAlbumInfo = $objAlbum->fetchAssoc();
 
 		//Bild-Besitzer
-		$objOwner = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')
-							 ->execute($objPicture->owner);
+		$objOwner = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objPicture->owner);
 		$strImageSrc = '';
+		$arrMeta = array();
 		$oFile = \FilesModel::findByUuid($objPicture->uuid);
 		if($oFile == NULL)
 		{
@@ -599,7 +598,16 @@ class GcHelpers extends \System
 			{
 				$strImageSrc = $objThis->defaultThumb;
 			}
+
+			//meta
+			$arrMeta = $objThis->getMetaData($oFile->meta, $objPage->language);
+			// Use the file name as title if none is given
+			if($arrMeta['title'] == '')
+			{
+				$arrMeta['title'] = specialchars(str_replace('_', ' ', preg_replace('/^[0-9]+_/', '', $oFile->name)));
+			}
 		}
+
 
 		// get thumb dimensions
 		$arrSize = unserialize($objThis->gc_size_detailview);
@@ -638,34 +646,40 @@ class GcHelpers extends \System
 		//check if there is a custom thumbnail selected
 		if($objPicture->addCustomThumb && !empty($objPicture->customThumb))
 		{
-			$objFile = \FilesModel::findByUuid($objPicture->customThumb);
-			if($objFile !== NULL)
+			$customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
+			if($customThumbModel !== NULL)
 			{
-				if(is_file(TL_ROOT . '/' . $objFile->path))
+				if(is_file(TL_ROOT . '/' . $customThumbModel->path))
 				{
-					$objFile = new \File($objFile->path, true);
-					if($objFile->isGdImage)
+					$oFile = new \File($customThumbModel->path, true);
+					if($oFile->isGdImage)
 					{
 						$arrSize = unserialize($objThis->gc_size_detailview);
-						$thumbSrc = \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
-						$objFile = new \File(rawurldecode($thumbSrc), true);
-						$arrSize[0] = $objFile->width;
-						$arrSize[1] = $objFile->height;
-						$arrFile["thumb_width"] = $objFile->width;
-						$arrFile["thumb_height"] = $objFile->height;
+						$thumbSrc = \Image::get($oFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
+						$oThumb = new \File(rawurldecode($thumbSrc), true);
+						$arrSize[0] = $oThumb->width;
+						$arrSize[1] = $oThumb->height;
+						$arrFile["thumb_width"] = $oThumb->width;
+						$arrFile["thumb_height"] = $oThumb->height;
 					}
 				}
 			}
 		}
 
 		//exif
-		if ($GLOBALS['TL_CONFIG']['gc_read_exif']) {
-			try {
+		if($GLOBALS['TL_CONFIG']['gc_read_exif'])
+		{
+			try
+			{
 				$exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? exif_read_data($objFile->path) : array('info' => "The function 'exif_read_data()' is not available on this server.");
-			} catch (Exception $e) {
+			}
+			catch(Exception $e)
+			{
 				$exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
 			}
-		}else{
+		}
+		else
+		{
 			$exif = array('info' => "The function 'exif_read_data()' has not been activated in the Contao backend settings.");
 		}
 
@@ -715,12 +729,12 @@ class GcHelpers extends \System
 			//[string] file-extension
 			'extension'        => $arrFile["extension"],
 			//[string] alt-attribut
-			'alt'              => specialchars($objPicture->title ? $objPicture->title : $arrFile["basename"]),
+			'alt'              => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
 			//[string] title-attribut
-			'title'            => specialchars($objPicture->title),
+			'title'            => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
 			//[string] Bildkommentar oder Bildbeschreibung
-			'comment'          => specialchars($objPicture->comment),
-			'caption'          => specialchars($objPicture->comment),
+			'comment'          => $objPicture->comment != '' ? specialchars($objPicture->comment) : specialchars($arrMeta['caption']),
+			'caption'          => $objPicture->comment != '' ? specialchars($objPicture->comment) : specialchars($arrMeta['caption']),
 			//[string] path to media (video, picture, sound...)
 			'href'             => TL_FILES_URL . $href,
 			// single image url
@@ -760,7 +774,7 @@ class GcHelpers extends \System
 			//[array] Array mit allen Albuminformation (albumname, owners_name...)
 			'albuminfo'        => $arrAlbumInfo,
 			//[array] Array mit Bildinfos aus den meta-Angaben der Datei, gespeichert in tl_files.meta
-			'metaData'         => $objThis->getMetaContent($objPicture->id),
+			'metaData'         => $arrMeta,
 			//[string] css-ID des Bildcontainers
 			'cssID'            => $cssID[0] != '' ? $cssID[0] : '',
 			//[string] css-Klasse des Bildcontainers
@@ -1005,6 +1019,7 @@ class GcHelpers extends \System
 
 	/**
 	 * reviseTable
+	 *
 	 * @param bool
 	 */
 	public static function reviseTable($blnCleanDb = false)
@@ -1041,78 +1056,71 @@ class GcHelpers extends \System
 									 ->execute($objAlb->pid);
 			if($objParentAlb->numRows < 1)
 			{
-				\Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')->execute('0', $objAlb->id);
+				$objUpd = \FilesModel::findByPk($objAlb->id);
+				$objUpd->pid = NULL;
+				$objUpd->save();
 			}
-		}
-		if($blnCleanDb !== false)
-		{
-			//Datensaetze ohne definierten Bildnamen loeschen
-			\Database::getInstance()->prepare('DELETE FROM tl_gallery_creator_pictures WHERE uuid=?')->execute('');
-			\Database::getInstance()->prepare('DELETE FROM tl_gallery_creator_pictures WHERE uuid IS NULL')->execute();
 		}
 
 
-		//Checks if there belongs a file to each Insert in tl_gallery_creator_pictures
-		$objPicture = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures ORDER BY pid');
-		while($objPicture->next())
+		if(\Database::getInstance()->fieldExists('path', 'tl_gallery_creator_pictures'))
 		{
-			$oFile = \FilesModel::findByUuid($objPicture->uuid);
-			if($oFile === NULL)
+
+			//Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
+			$objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
+			while($objPictures->next())
 			{
-				//remove db-insert without a valid picture-file
-				$objPic = \GalleryCreatorPicturesModel::findById($objPicture->id);
-				if($blnCleanDb !== false)
+				$objFile = \FilesModel::findByUuid($objPictures->uuid);
+				if($objFile === NULL)
 				{
-					$objPic->delete();
-				}
-				else
-				{
-					//show the error-message
-					$objAlbum = $objPic->getRelated('pid');
-					//echo $objPic->path . '<br>';
-					$_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPic->id, 'no path', $objAlbum->alias);
-				}
-			}
-			else
-			{
-				if(!is_file(TL_ROOT . '/' . $oFile->path))
-				{
-					//remove db-insert without a valid picture-file
-					$objPic = \GalleryCreatorPicturesModel::findByPk($objPicture->id);
+					if($objPictures->path != '')
+					{
+						if(is_file(TL_ROOT . '/' . $objPictures->path))
+						{
+							$objModel = \Dbafs::addResource($objPictures->path);
+							if(\Validator::isUuid($objModel->uuid))
+							{
+								$objUpd = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
+								$objUpd->uuid = $objModel->uuid;
+								$objUpd->save();
+								continue;
+							}
+						}
+					}
 					if($blnCleanDb !== false)
 					{
-						$objPic->delete();
+						$objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
+						$objDel->delete();
 					}
 					else
 					{
 						//show the error-message
-						$objAlbum = $objPic->getRelated('pid');
-						$_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPicture->id, $oFile->path, $objAlbum->alias);
+						$objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
+						$objAlbum = $objDel->getRelated('pid');
+						$path = $objPictures->path != '' ? $objPictures->path : 'unknown path';
+						$_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objDel->id, $path, $objAlbum->alias);
 					}
 				}
 				else
 				{
-					if(\Database::getInstance()->fieldExists('path', 'tl_gallery_creator_pictures'))
+					// Pfadangaben mit tl_files.path abgleichen (Redundanz)
+					if($objPictures->path != $objFile->path)
 					{
-						// Redundanz
-						if($objPicture->path != $oFile->path)
-						{
-							$objUpd = \GalleryCreatorPicturesModel::findByPk($objPicture->id);
-							$objUpd->path = $oFile->path;
-							$objUpd->save();
-						}
+						$objUpd = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
+						$objUpd->path = $objFile->path;
+						$objUpd->save();
 					}
 				}
 			}
 		}
+
 
 		/**
 		 * Sorgt dafuer, dass in tl_content im Feld gc_publish_albums keine verwaisten AlbumId's vorhanden sind
 		 * Prueft, ob die im Inhaltselement definiertern Alben auch noch existieren.
 		 * Wenn nein, werden diese aus dem Array entfernt.
 		 */
-		$objCont = \Database::getInstance()->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')
-							->execute('gallery_creator');
+		$objCont = \Database::getInstance()->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')->execute('gallery_creator');
 		while($objCont->next())
 		{
 			$newArr = array();
@@ -1121,8 +1129,7 @@ class GcHelpers extends \System
 			{
 				foreach($arrAlbums as $AlbumID)
 				{
-					$objAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')
-									   ->limit('1')->execute($AlbumID);
+					$objAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')->limit('1')->execute($AlbumID);
 					if($objAlb->next())
 					{
 						$newArr[] = $AlbumID;

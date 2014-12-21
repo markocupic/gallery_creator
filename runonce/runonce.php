@@ -12,7 +12,7 @@
 
 
 /**
- * Class RunonceJob
+ * Class GalleryCreatorRunonce
  *
  * Provide methods regarding gallery_creator albums.
  *
@@ -20,29 +20,22 @@
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
-class RunonceJob extends System
+class GalleryCreatorRunonce
 {
-
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import('Files');
-		$this->import('Database');
-	}
-
 
 	/**
 	 * add uuids to tl_gallery_creator_pictures version added in 4.8.0
 	 */
-	public function addUuids()
+	public static function addUuids()
 	{
+
 		// add field
-		if(!$this->Database->fieldExists('uuid', 'tl_gallery_creator_pictures'))
+		if(!\Database::getInstance()->fieldExists('uuid', 'tl_gallery_creator_pictures'))
 		{
-			$this->Database->query("ALTER TABLE `tl_gallery_creator_pictures` ADD `uuid` BINARY(16) NULL");
+			\Database::getInstance()->query("ALTER TABLE `tl_gallery_creator_pictures` ADD `uuid` BINARY(16) NULL");
 		}
 
-		$objDB = $this->Database->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
+		$objDB = \Database::getInstance()->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
 		while($objDB->next())
 		{
 			if($objDB->path == '')
@@ -54,22 +47,22 @@ class RunonceJob extends System
 			{
 				\Dbafs::addResource($objDB->path);
 			}
-
-			$objFile = \FilesModel::findByPath($objDB->path);
-			if($objFile === NULL)
+			else
 			{
-				\Dbafs::addResource($objDB->path);
-				$objFile = \FilesModel::findByPath($objDB->path);
+				continue;
 			}
-			if($objFile !== NULL)
+
+			$oFile = new \File($objDB->path);
+			$oFile->close();
+			$fileModel = $oFile->getModel();
+			if(\Validator::isUuid($fileModel->uuid))
 			{
-				$this->Database->prepare('UPDATE tl_gallery_creator_pictures SET uuid=? WHERE id=?')
-							   ->execute($objFile->uuid, $objDB->id);
+				\Database::getInstance()->prepare("UPDATE tl_gallery_creator_pictures SET uuid=? WHERE id=?")->execute($fileModel->uuid, $objDB->id);
 				$_SESSION["TL_CONFIRM"][] = "Added a valid file-uuid into tl_gallery_creator_pictures.uuid ID " . $objDB->id . ". Please check if all the galleries are running properly.";
 			}
 		}
 	}
 }
 
-$objRunonceJob = new RunonceJob();
-$objRunonceJob->addUuids();
+
+\GalleryCreatorRunonce::addUuids();

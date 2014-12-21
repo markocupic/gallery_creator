@@ -514,42 +514,6 @@ abstract class DisplayGallery extends \Module
 
 
 	/**
-	 * gets the meta-text-informations from tl_files.meta
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function getMetaContent($intPictureId)
-	{
-
-		global $objPage;
-
-		$objPicture = \GalleryCreatorPicturesModel::findById($intPictureId);
-		$objFile = \FilesModel::findByUuid($objPicture->uuid);
-		if($objFile === NULL)
-		{
-			return NULL;
-		}
-
-		$oFile = new \File($objFile->path, true);
-		if(!$oFile->isGdImage)
-		{
-			return NULL;
-		}
-
-		$arrMeta = $this->getMetaData($oFile->meta, $objPage->language);
-
-		// Use the file name as title if none is given
-		if($arrMeta['title'] == '')
-		{
-			$arrMeta['title'] = specialchars(str_replace('_', ' ', preg_replace('/^[0-9]+_/', '', $oFile->filename)));
-		}
-
-		return $arrMeta;
-	}
-
-
-	/**
 	 * Sets the template-vars for the selected album
 	 *
 	 * @param integer
