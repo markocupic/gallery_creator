@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
 		),
 		'label'             => array(
 			'fields'         => array('name'),
-			'format'         => '<span style="#padding-left#"><img src="#icon#" /></span> #datum# <span style="color:#b3b3b3; padding-left:3px;">[%s] [#count_pics# images]</span>',
+			'format'         => '<span style="#padding-left#"><a href="#href#" title="#title#"><img src="#icon#"></span> #datum# <span style="color:#b3b3b3; padding-left:3px;">[%s] [#count_pics# images]</span></a>',
 			'label_callback' => array(
 				'tl_gallery_creator_albums',
 				'labelCb'
@@ -97,9 +97,9 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
 		'operations'        => array(
 
 			'edit'          => array(
-				'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit'],
+				'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures'],
 				'href'            => 'table=tl_gallery_creator_pictures',
-				'icon'            => 'edit.gif',
+				'icon'            => 'system/modules/gallery_creator/assets/images/text_list_bullets.png',
 				'attributes'      => 'class="contextmenu"',
 				'button_callback' => array(
 					'tl_gallery_creator_albums',
@@ -127,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
 			),
 			'upload_images' => array(
 				'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_images'],
-				'icon'            => 'system/modules/gallery_creator/assets/images/photo.png',
+				'icon'            => 'system/modules/gallery_creator/assets/images/image_add.png',
 				'button_callback' => array(
 					'tl_gallery_creator_albums',
 					'buttonCbAddImages'
@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
 			),
 			'import_images' => array(
 				'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['import_images'],
-				'icon'            => 'system/modules/gallery_creator/assets/images/photo_album.png',
+				'icon'            => 'system/modules/gallery_creator/assets/images/folder_picture.png',
 				'button_callback' => array(
 					'tl_gallery_creator_albums',
 					'buttonCbImportImages'
@@ -838,8 +838,11 @@ class tl_gallery_creator_albums extends Backend
 								->execute($row['id']);
 		$label = str_replace('#count_pics#', $mysql->countImg, $label);
 		$label = str_replace('#datum#', date('Y-m-d', $row['date']), $label);
-		$image = $row['published'] ? 'slides.png' : 'slides_1.png';
+		$image = $row['published'] ? 'picture_edit.png' : 'picture_edit_1.png';
 		$label = str_replace('#icon#', "system/modules/gallery_creator/assets/images/" . $image, $label);
+		$href = sprintf("contao/main.php?do=gallery_creator&table=tl_gallery_creator_albums&id=%s&act=edit&rt=%s&ref=%s", $row['id'], REQUEST_TOKEN, TL_REFERER_ID);
+		$label = str_replace('#href#', $href, $label);
+		$label = str_replace('#title#', sprintf($GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album'][1], $row['id']), $label);
 		$padding = $this->isNode($row["id"]) ? 3 * $this->getLevel($row["pid"]) : 20 + (3 * $this->getLevel($row["pid"]));
 		$label = str_replace('#padding-left#', 'padding-left:' . $padding . 'px;', $label);
 		return $label;

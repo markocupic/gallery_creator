@@ -38,6 +38,7 @@ class GcHelpers extends \System
 
 		//get the file-object
 		$objFile = new \File($strFilepath);
+		$objFile->close();
 		if(!$objFile->isGdImage)
 		{
 			return false;
@@ -47,16 +48,16 @@ class GcHelpers extends \System
 		$objAlbum = \GalleryCreatorAlbumsModel::findById($intAlbumId);
 
 		// get the assigned album directory
-		$oFolder = \FilesModel::findByUuid($objAlbum->assignedDir);
-		$assignedDir = NULL;
-		if($oFolder !== NULL)
+		$objFolder = \FilesModel::findByUuid($objAlbum->assignedDir);
+		$assignedDir = null;
+		if($objFolder !== null)
 		{
-			if(is_dir(TL_ROOT . '/' . $oFolder->path))
+			if(is_dir(TL_ROOT . '/' . $objFolder->path))
 			{
-				$assignedDir = $oFolder->path;
+				$assignedDir = $objFolder->path;
 			}
 		}
-		if($assignedDir == NULL)
+		if($assignedDir == null)
 		{
 			die('Aborted Script, because there is no upload directory assigned to the Album with ID ' . $intAlbumId);
 		}
@@ -99,6 +100,8 @@ class GcHelpers extends \System
 					$objClass->$callback[1]($insertId);
 				}
 			}
+
+
 			if(is_file(TL_ROOT . '/' . $objFile->path))
 			{
 				//get the userId
@@ -116,7 +119,7 @@ class GcHelpers extends \System
 
 				//finally save the new image in tl_gallery_creator_pictures
 				$objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
-				$objPicture->uuid = \FilesModel::findByPath($objFile->path)->uuid;
+				$objPicture->uuid = $objFile->getModel()->uuid;
 				$objPicture->owner = $userId;
 				$objPicture->date = $objAlbum->date;
 				$objPicture->sorting = $sorting;
@@ -125,7 +128,7 @@ class GcHelpers extends \System
 				\System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
 				//check for a valid preview-thumb for the album
 				$objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
-				if($objAlbum !== NULL)
+				if($objAlbum !== null)
 				{
 					if($objAlbum->thumb == "")
 					{
@@ -164,14 +167,14 @@ class GcHelpers extends \System
 	{
 		$error = false;
 		$objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
-		$oFolder = \FilesModel::findByUuid($objAlb->assignedDir);
-		if($oFolder === NULL)
+		$objFolderModel = \FilesModel::findByUuid($objAlb->assignedDir);
+		if($objFolderModel === null)
 		{
 			$error = true;
 		}
 		else
 		{
-			if(!is_dir(TL_ROOT . '/' . $oFolder->path))
+			if(!is_dir(TL_ROOT . '/' . $objFolderModel->path))
 			{
 				$error = true;
 			}
@@ -185,7 +188,7 @@ class GcHelpers extends \System
 			die(json_encode($json));
 		}
 
-		$objFolder = new \Folder($oFolder->path);
+		$objFolder = new \Folder($objFolderModel->path);
 		$assignedDir = $objFolder->path;
 
 
@@ -250,7 +253,7 @@ class GcHelpers extends \System
 		if(\Files::getInstance()->move_uploaded_file($arrFile['tmp_name'], $arrFile['path']))
 		{
 			// register in filesystem
-			$oFile = new \File($arrFile['path']);
+			$objFile = new \File($arrFile['path']);
 
 			//send the response to the jumploader applet
 			$json = array('status' => 'success', 'serverResponse' => $GLOBALS['TL_LANG']['ERR']['upploadSuccessful']);
@@ -265,15 +268,15 @@ class GcHelpers extends \System
 			{
 				if(\Input::post('img_resolution') > 1)
 				{
-					$src = $oFile->path;
+					$src = $objFile->path;
 					$width = \Input::post('img_resolution');
 					$strFileSrc = \Image::get($src, $width, '', 'proportional', $src, true);
-					$oFile = new \File($src);
+					$objFile = new \File($src);
 				}
 			}
 
 			// register in tl_files
-			$oFile->close();
+			$objFile->close();
 
 
 			//return the array if file was successfully uploaded
@@ -413,13 +416,13 @@ class GcHelpers extends \System
 		if(strlen($GLOBALS['TL_CONFIG']['gc_watermark_path']))
 		{
 			$fileUuid = base64_decode($GLOBALS['TL_CONFIG']['gc_watermark_path']);
-			$objFile = \FilesModel::findByUuid($fileUuid);
-			if($objFile !== NULL)
+			$objFileModel = \FilesModel::findByUuid($fileUuid);
+			if($objFileModel !== null)
 			{
 				$objTemplate->watermarkHalign = $GLOBALS['TL_CONFIG']['gc_watermark_halign'];
 				$objTemplate->watermarkValign = $GLOBALS['TL_CONFIG']['gc_watermark_valign'];
 				$objTemplate->watermarkOpacity = $GLOBALS['TL_CONFIG']['gc_watermark_opacity'];
-				$objTemplate->watermarkSource = \Environment::get('base') . $objFile->path;
+				$objTemplate->watermarkSource = \Environment::get('base') . $objFileModel->path;
 			}
 		}
 
@@ -467,7 +470,7 @@ class GcHelpers extends \System
 		$arrSize = unserialize($objThis->gc_size_albumlisting);
 
 
-		$href = NULL;
+		$href = null;
 		if(TL_MODE == 'FE')
 		{
 			//generate the url as a formated string
@@ -505,12 +508,12 @@ class GcHelpers extends \System
 			//[string] Albumalias (=Verzeichnisname)
 			'alias'               => $objAlbum->alias,
 			//[string] Albumkommentar
-			'comment'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
-			'caption'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : NULL,
+			'comment'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : null,
+			'caption'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : null,
 			//[int] Albumbesucher (Anzahl Klicks)
 			'visitors'            => $objAlbum->visitors,
 			//[string] Link zur Detailansicht
-			'href'                => TL_MODE == 'FE' ? sprintf($href, $objAlbum->alias) : NULL,
+			'href'                => TL_MODE == 'FE' ? sprintf($href, $objAlbum->alias) : null,
 			//[string] Inhalt fuer das title Attribut
 			'title'               => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objThis->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
 			//[int] Anzahl Bilder im Album
@@ -524,9 +527,9 @@ class GcHelpers extends \System
 			//[string] Pfad zum Thumbnail
 			'thumb_src'           => TL_FILES_URL . \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
 			//[int] article id
-			'insert_article_pre'  => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : NULL,
+			'insert_article_pre'  => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
 			//[int] article id
-			'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : NULL,
+			'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : null,
 			//[string] css-Classname
 			'class'               => 'thumb',
 			//[int] Thumbnailgrösse
@@ -556,7 +559,7 @@ class GcHelpers extends \System
 	 * @param $objThis
 	 * @return array|null
 	 */
-	public static function getPictureInformationArray($intPictureId = NULL, $objThis)
+	public static function getPictureInformationArray($intPictureId = null, $objThis)
 	{
 		if($intPictureId < 1)
 		{
@@ -586,25 +589,25 @@ class GcHelpers extends \System
 		$objOwner = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objPicture->owner);
 		$strImageSrc = '';
 		$arrMeta = array();
-		$oFile = \FilesModel::findByUuid($objPicture->uuid);
-		if($oFile == NULL)
+		$objFileModel = \FilesModel::findByUuid($objPicture->uuid);
+		if($objFileModel == null)
 		{
 			$strImageSrc = $objThis->defaultThumb;
 		}
 		else
 		{
-			$strImageSrc = $oFile->path;
+			$strImageSrc = $objFileModel->path;
 			if(!is_file(TL_ROOT . '/' . $strImageSrc))
 			{
 				$strImageSrc = $objThis->defaultThumb;
 			}
 
 			//meta
-			$arrMeta = $objThis->getMetaData($oFile->meta, $objPage->language);
+			$arrMeta = $objThis->getMetaData($objFileModel->meta, $objPage->language);
 			// Use the file name as title if none is given
 			if($arrMeta['title'] == '')
 			{
-				$arrMeta['title'] = specialchars(str_replace('_', ' ', preg_replace('/^[0-9]+_/', '', $oFile->name)));
+				$arrMeta['title'] = specialchars(str_replace('_', ' ', preg_replace('/^[0-9]+_/', '', $objFileModel->name)));
 			}
 		}
 
@@ -614,32 +617,34 @@ class GcHelpers extends \System
 
 		//Thumbnails generieren
 		$thumbSrc = \Image::get($strImageSrc, $arrSize[0], $arrSize[1], $arrSize[2]);
-		$objFile = new \File(rawurldecode($thumbSrc), true);
-		$arrSize[0] = $objFile->width;
-		$arrSize[1] = $objFile->height;
-		$arrFile["thumb_width"] = $objFile->width;
-		$arrFile["thumb_height"] = $objFile->height;
+		$objFileThumb = new \File(rawurldecode($thumbSrc));
+		$arrSize[0] = $objFileThumb->width;
+		$arrSize[1] = $objFileThumb->height;
+		$arrFile["thumb_width"] = $objFileThumb->width;
+		$arrFile["thumb_height"] = $objFileThumb->height;
+		$objFileThumb->close();
 
+		// get some image params
 		if(is_file(TL_ROOT . '/' . $strImageSrc))
 		{
-			$objFile = new \File($strImageSrc);
-			if(!$objFile->isGdImage)
+			$objFileImage = new \File($strImageSrc);
+			if(!$objFileImage->isGdImage)
 			{
-				return NULL;
+				return null;
 			}
-			$arrFile["path"] = $objFile->path;
-			$arrFile["basename"] = $objFile->basename;
+			$arrFile["path"] = $objFileImage->path;
+			$arrFile["basename"] = $objFileImage->basename;
 			// filename without extension
-			$arrFile["filename"] = $objFile->filename;
-			$arrFile["extension"] = $objFile->extension;
-			$arrFile["dirname"] = $objFile->dirname;
-			$arrFile["image_width"] = $objFile->width;
-			$arrFile["image_height"] = $objFile->height;
-			$objFile->close();
+			$arrFile["filename"] = $objFileImage->filename;
+			$arrFile["extension"] = $objFileImage->extension;
+			$arrFile["dirname"] = $objFileImage->dirname;
+			$arrFile["image_width"] = $objFileImage->width;
+			$arrFile["image_height"] = $objFileImage->height;
+			$objFileImage->close();
 		}
 		else
 		{
-			return NULL;
+			return null;
 		}
 
 
@@ -647,20 +652,21 @@ class GcHelpers extends \System
 		if($objPicture->addCustomThumb && !empty($objPicture->customThumb))
 		{
 			$customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
-			if($customThumbModel !== NULL)
+			if($customThumbModel !== null)
 			{
 				if(is_file(TL_ROOT . '/' . $customThumbModel->path))
 				{
-					$oFile = new \File($customThumbModel->path, true);
-					if($oFile->isGdImage)
+					$objFileCustomThumb = new \File($customThumbModel->path, true);
+					if($objFileCustomThumb->isGdImage)
 					{
 						$arrSize = unserialize($objThis->gc_size_detailview);
-						$thumbSrc = \Image::get($oFile->path, $arrSize[0], $arrSize[1], $arrSize[2]);
-						$oThumb = new \File(rawurldecode($thumbSrc), true);
-						$arrSize[0] = $oThumb->width;
-						$arrSize[1] = $oThumb->height;
-						$arrFile["thumb_width"] = $oThumb->width;
-						$arrFile["thumb_height"] = $oThumb->height;
+						$thumbSrc = \Image::get($objFileCustomThumb->path, $arrSize[0], $arrSize[1], $arrSize[2]);
+						$objFileCustomThumb = new \File(rawurldecode($thumbSrc));
+						$arrSize[0] = $objFileCustomThumb->width;
+						$arrSize[1] = $objFileCustomThumb->height;
+						$arrFile["thumb_width"] = $objFileCustomThumb->width;
+						$arrFile["thumb_height"] = $objFileCustomThumb->height;
+						$objFileCustomThumb->close();
 					}
 				}
 			}
@@ -671,7 +677,7 @@ class GcHelpers extends \System
 		{
 			try
 			{
-				$exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? exif_read_data($objFile->path) : array('info' => "The function 'exif_read_data()' is not available on this server.");
+				$exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? exif_read_data($strImageSrc) : array('info' => "The function 'exif_read_data()' is not available on this server.");
 			}
 			catch(Exception $e)
 			{
@@ -685,15 +691,13 @@ class GcHelpers extends \System
 
 		//video-integration
 		$strMediaSrc = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : "";
-
 		if(\Validator::isUuid($objPicture->localMediaSRC))
 		{
 			//get path of a local Media
 			$objMovieFile = \FilesModel::findById($objPicture->localMediaSRC);
-			$strMediaSrc = $objMovieFile !== NULL ? $objMovieFile->path : $strMediaSrc;
+			$strMediaSrc = $objMovieFile !== null ? $objMovieFile->path : $strMediaSrc;
 		}
-
-		$href = NULL;
+		$href = null;
 		if(TL_MODE == 'FE' && $objThis->gc_fullsize)
 		{
 			$href = $strMediaSrc != "" ? $strMediaSrc : \System::urlEncode($strImageSrc);
@@ -702,6 +706,7 @@ class GcHelpers extends \System
 		//cssID
 		$cssID = deserialize($objPicture->cssID, true);
 
+		// build the array
 		$arrPicture = array(
 			'id'               => $objPicture->id,
 			//[int] pid parent Album-Id
@@ -826,10 +831,10 @@ class GcHelpers extends \System
 	 * @param null $iterationDepth
 	 * @return array
 	 */
-	public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = NULL)
+	public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
 	{
 		// get the iteration depth
-		$iterationDepth = $iterationDepth === '' ? NULL : $iterationDepth;
+		$iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
 
 		$arrSubAlbums = array();
 		if($strSorting == '')
@@ -841,12 +846,12 @@ class GcHelpers extends \System
 			$strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY ' . $strSorting;
 		}
 		$objAlb = \Database::getInstance()->prepare($strSql)->execute($parentId);
-		$depth = $iterationDepth !== NULL ? $iterationDepth - 1 : NULL;
+		$depth = $iterationDepth !== null ? $iterationDepth - 1 : null;
 
 
 		while($objAlb->next())
 		{
-			if($depth < 0 && $iterationDepth !== NULL)
+			if($depth < 0 && $iterationDepth !== null)
 			{
 				return $arrSubAlbums;
 			}
@@ -872,7 +877,7 @@ class GcHelpers extends \System
 							  ->execute($objAlbPid->pid);
 		if($parentAlb->numRows == 0)
 		{
-			return NULL;
+			return null;
 		}
 		$arrParentAlbum = $parentAlb->fetchAllAssoc();
 		return $arrParentAlbum[0];
@@ -943,48 +948,51 @@ class GcHelpers extends \System
 	{
 
 		$images = array();
-		$objFiles = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
-		if($objFiles === NULL)
+		$objFilesModel = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
+		if($objFilesModel === null)
 		{
 			return;
 		}
-		while($objFiles->next())
+		while($objFilesModel->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if(isset($images[$objFiles->path]) || !file_exists(TL_ROOT . '/' . $objFiles->path))
+			if(isset($images[$objFilesModel->path]) || !file_exists(TL_ROOT . '/' . $objFilesModel->path))
 			{
 				continue;
 			}
 
 			// If item is a file, then store it in the array
-			if($objFiles->type == 'file')
+			if($objFilesModel->type == 'file')
 			{
-				$objFile = new \File($objFiles->path);
+				$objFile = new \File($objFilesModel->path);
 				if($objFile->isGdImage)
 				{
 					$images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
 				}
+				$objFile->close();
 			}
 			else
 			{
 				// if it is a directory, then store its files in the array
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid);
-				if($objSubfiles === NULL)
+				$objSubfilesModel = \FilesModel::findByPid($objFilesModel->uuid);
+				if($objSubfilesModel === null)
 				{
 					continue;
 				}
-				while($objSubfiles->next())
+				while($objSubfilesModel->next())
 				{
 					// Skip subfolders
-					if($objSubfiles->type == 'folder')
+					if($objSubfilesModel->type == 'folder' || !is_file(TL_ROOT . '/' . $objSubfilesModel->path))
 					{
 						continue;
 					}
-					$objFile = new \File($objSubfiles->path, true);
+
+					$objFile = new \File($objSubfilesModel->path);
 					if($objFile->isGdImage)
 					{
 						$images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
 					}
+					$objFile->close();
 				}
 			}
 		}
@@ -1003,8 +1011,9 @@ class GcHelpers extends \System
 					if(is_file(TL_ROOT . '/' . $strSource))
 					{
 						//copy Image to the upload folder
-						$oFile = new \File($strSource);
-						$oFile->copyTo($strDestination);
+						$objFile = new \File($strSource);
+						$objFile->copyTo($strDestination);
+						$objFile->close();
 					}
 					self::createNewImage($objAlb->id, $strDestination);
 				}
@@ -1057,7 +1066,7 @@ class GcHelpers extends \System
 			if($objParentAlb->numRows < 1)
 			{
 				$objUpd = \FilesModel::findByPk($objAlb->id);
-				$objUpd->pid = NULL;
+				$objUpd->pid = null;
 				$objUpd->save();
 			}
 		}
@@ -1071,7 +1080,7 @@ class GcHelpers extends \System
 			while($objPictures->next())
 			{
 				$objFile = \FilesModel::findByUuid($objPictures->uuid);
-				if($objFile === NULL)
+				if($objFile === null)
 				{
 					if($objPictures->path != '')
 					{

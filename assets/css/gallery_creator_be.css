@@ -37,11 +37,11 @@ div.readonly input {
 }
 
 .html5_uploader .onprogress {
-    background: #EAEDF2 url("../images/up.gif") no-repeat left center !important;
+    background: #EAEDF2 url("../images/server_go.png") no-repeat left center !important;
 }
 
 .html5_uploader .loaded {
-    background: #EAEDF2 url("../images/ok.gif") no-repeat left center !important;
+    background: #EAEDF2 url("../images/accept.png") no-repeat left center !important;
 }
 
 .html5_uploader .uploadlist {

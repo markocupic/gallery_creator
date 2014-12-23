@@ -92,7 +92,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'imagerotate' => array(
 				'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate'],
 				'href'            => 'mode=imagerotate',
-				'icon'            => 'system/modules/gallery_creator/assets/images/rotate.png',
+				'icon'            => 'system/modules/gallery_creator/assets/images/arrow_rotate_clockwise.png',
 				'attributes'      => 'onclick="Backend.getScrollOffset();"',
 				'button_callback' => array('tl_gallery_creator_pictures', 'buttonCbRotateImage')
 			),
@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 	// Palettes
 	'palettes'    => array(
 		'__selector__'    => array('addCustomThumb'),
-		'default'         => 'published,owner,date,image_info,addCustomThumb,title,comment,picture;{media_integration:hide},socialMediaSRC,localMediaSRC;{id/class:hide},cssID',
+		'default'         => 'published,picture,owner,date,image_info,addCustomThumb,title,comment;{media_integration:hide},socialMediaSRC,localMediaSRC;{id/class:hide},cssID',
 		'restricted_user' => 'image_info,picture'
 	),
 	// Subpalettes
@@ -158,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'search'    => true,
 			'cols'      => 20,
 			'rows'      => 6,
-			'eval'      => array('decodeEntities' => true, 'tl_class' => 'w50 ', 'style' => 'margin-right:-15px; width:90%; height:150px;'),
+			'eval'      => array('decodeEntities' => true, 'tl_class' => 'clr'),
 			'sql'       => "text NULL"
 		),
 		'picture'        => array(
@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'default'   => time(),
 			'filter'    => true,
 			'search'    => true,
-			'eval'      => array('mandatory' => true, 'datepicker' => true, 'rgxp' => 'date', 'tl_class' => 'm12 w50 wizard ', 'submitOnChange' => false),
+			'eval'      => array('mandatory' => true, 'datepicker' => true, 'rgxp' => 'date', 'tl_class' => 'clr wizard ', 'submitOnChange' => false),
 			'sql'       => "int(10) unsigned NOT NULL default '0'"
 		),
 		'addCustomThumb' => array(
@@ -198,7 +198,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'inputType'  => 'select',
 			'filter'     => true,
 			'search'     => true,
-			'eval'       => array('includeBlankOption' => true, 'blankOptionLabel' => 'noName', 'doNotShow' => true, 'nospace' => true, 'tl_class' => 'clr m12 w50'),
+			'eval'       => array('includeBlankOption' => true, 'blankOptionLabel' => 'noName', 'doNotShow' => true, 'nospace' => true, 'tl_class' => 'clr w50'),
 			'sql'        => "int(10) NOT NULL default '0'",
 			'relation'   => array('type' => 'hasOne', 'load' => 'eager')
 		),
@@ -287,7 +287,7 @@ class tl_gallery_creator_pictures extends Backend
 
 				$objPic = \GalleryCreator\GalleryCreatorPicturesModel::findById(Input::get('imgId'));
 				$objFile = FilesModel::findByUuid($objPic->uuid);
-				if($objFile !== NULL)
+				if($objFile !== null)
 				{
 					// Rotate image anticlockwise
 					$angle = 270;
@@ -324,7 +324,7 @@ class tl_gallery_creator_pictures extends Backend
 		if(Input::get('act') == 'paste' && Input::get('mode') == 'cut')
 		{
 			$objPicture = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
-			if($objPicture !== NULL)
+			if($objPicture !== null)
 			{
 				$_SESSION['gallery_creator']['SOURCE_ALBUM'] = $objPicture->pid;
 			}
@@ -428,11 +428,21 @@ class tl_gallery_creator_pictures extends Backend
 		if($objFile->isGdImage)
 		{
 			//if dataset contains a link to movie file...
-			$hasMovie = NULL;
+			$hasMovie = null;
 			$src = $objFile->path;
 			$src = trim($arrRow['socialMediaSRC']) != "" ? trim($arrRow['socialMediaSRC']) : $src;
-			$src = trim($arrRow['localMediaSRC']) != "" ? trim($arrRow['localMediaSRC']) : $src;
-			if(trim($arrRow['socialMediaSRC']) != "" or trim($arrRow['localMediaSRC']) != "")
+
+			// local media (movies, etc.)
+			if(Validator::isUuid($arrRow['localMediaSRC']))
+			{
+				$lmSRC = FilesModel::findByUuid($arrRow['localMediaSRC']);
+				if($lmSRC !== null)
+				{
+					$src = $lmSRC->path;
+				}
+			}
+
+			if(trim($arrRow['socialMediaSRC']) != "" or $lmSRC !== null)
 			{
 				$type = trim($arrRow['localMediaSRC']) == "" ? ' embeded local-media: ' : ' embeded social media: ';
 				$iconSrc = 'system/modules/gallery_creator/assets/images/film.png';
@@ -442,7 +452,7 @@ class tl_gallery_creator_pictures extends Backend
 			$blnShowThumb = false;
 			$src = '';
 			//generate icon/thumbnail
-			if($GLOBALS['TL_CONFIG']['thumbnails'] && $oFile !== NULL)
+			if($GLOBALS['TL_CONFIG']['thumbnails'] && $oFile !== null)
 			{
 				$src = Image::get($oFile->path, "100", "", "center_center");
 				$blnShowThumb = true;
@@ -450,7 +460,7 @@ class tl_gallery_creator_pictures extends Backend
 			//return html
 			$return = sprintf('<div class="cte_type %s"><strong>%s</strong> - %s [%s x %s px, %s]</div>', $key, $arrRow['headline'], basename($oFile->path), $objFile->width, $objFile->height, $this->getReadableSize($objFile->filesize));
 			$return .= $hasMovie;
-			$return .= $blnShowThumb ? '<div class="block"><img src="' . $src . '" width="100"></div>' : NULL;
+			$return .= $blnShowThumb ? '<div class="block"><img src="' . $src . '" width="100"></div>' : null;
 			$return .= sprintf('<div class="limit_height%s block">%s</div>',
 				($GLOBALS['TL_CONFIG']['thumbnails'] ? ' h64' : ''), specialchars($arrRow['comment']));
 			return $return;
@@ -482,7 +492,7 @@ class tl_gallery_creator_pictures extends Backend
 		}
 
 		$objSourceAlbum = GalleryCreatorAlbumsModel::findByPk($objSourceAlbumId, array('uncached' => true));
-		if($objSourceAlbum === NULL)
+		if($objSourceAlbum === null)
 		{
 			unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
 			return;
@@ -491,16 +501,16 @@ class tl_gallery_creator_pictures extends Backend
 		$objTargetAlbum = GalleryCreatorAlbumsModel::findByPk($targetPid, array('uncached' => true));
 		$objPicture = GalleryCreatorPicturesModel::findByPk($dc->id, array('uncached' => true));
 
-		if($objPicture === NULL)
+		if($objPicture === null)
 		{
 			unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
 			return;
 		}
 
-		if($objTargetAlbum !== NULL)
+		if($objTargetAlbum !== null)
 		{
 			$oFile = FilesModel::findByUuid($objPicture->uuid);
-			if($oFile !== NULL)
+			if($oFile !== null)
 			{
 				$strDestination = str_replace($objSourceAlbum->alias, $objTargetAlbum->alias, $oFile->path);
 				if($strDestination != $oFile->path)
@@ -527,20 +537,20 @@ class tl_gallery_creator_pictures extends Backend
 	public function inputFieldCbGenerateImage()
 	{
 
-		$objImg = GalleryCreator\GalleryCreatorPicturesModel::findByPk(Input::get('id'));
+		$objImg = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
 		$oFile = FilesModel::findByUuid($objImg->uuid);
 		$src = '';
 		$basename = '';
-		if($oFile !== NULL)
+		if($oFile !== null)
 		{
 			$src = $oFile->path;
 			$basename = basename($oFile->path);
 		}
 
 		return '
-<div class="w50 easyExclude easyExcludeFN_picture" style="height:200px;">
+<div class="w50 easyExclude easyExcludeFN_picture" style="height:auto;">
 	<h3><label for="ctrl_picture">' . $basename . '</label></h3>
-	<a href="' . $src . '" data-lightbox="gc_image_' . Input::get('id') . '"><img src="' . Image::get($src, '180', '180', 'crop') . '" width="100"></a>
+	<img src="' . Image::get($src, '180', '180', 'crop') . '" width="100">
 </div>
 		';
 	}
@@ -678,7 +688,7 @@ class tl_gallery_creator_pictures extends Backend
 				$oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
 
 				// Bild nur löschen, wenn es im Verzeichnis liegt, das dem Album zugewiesen ist
-				if($oFile !== NULL && strstr($oFile->path, $oFolder->path))
+				if($oFile !== null && strstr($oFile->path, $oFolder->path))
 				{
 					// delete file from filesystem
 

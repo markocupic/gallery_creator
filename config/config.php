@@ -37,7 +37,7 @@ if (TL_MODE == 'BE')
        }
 
        $GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
-              'icon' => 'system/modules/gallery_creator/assets/images/photo.png',
+              'icon' => 'system/modules/gallery_creator/assets/images/picture.png',
               'tables' => array(
                      'tl_gallery_creator_albums',
                      'tl_gallery_creator_pictures'
