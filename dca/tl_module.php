@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin_albumlisting'] = array
 	'label'     => &$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_albumlisting'],
 	'exclude'   => true,
 	'inputType' => 'trbl',
-	'options'   => array('px', '%', 'em', 'ex', 'pt', 'pc', 'in', 'cm', 'mm'),
+       'options'   => $GLOBALS['TL_CSS_UNITS'],
 	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'clr'),
 	'sql'       => "varchar(128) NOT NULL default ''"
 );
@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin_detailview'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_module']['gc_imagemargin_detailview'],
 	'exclude'   => true,
 	'inputType' => 'trbl',
-	'options'   => array('px', '%', 'em', 'ex', 'pt', 'pc', 'in', 'cm', 'mm'),
+       'options'   => $GLOBALS['TL_CSS_UNITS'],
 	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'clr'),
 	'sql'       => "varchar(128) NOT NULL default ''"
 );
@@ -95,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_imagemargin'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
 	'exclude'   => true,
 	'inputType' => 'trbl',
-	'options'   => explode(',', 'px,%,em,pt,pc,in,cm,mm'),
+       'options'   => $GLOBALS['TL_CSS_UNITS'],
 	'eval'      => array('includeBlankOption' => true, 'tl_class' => ''),
 	'sql'       => "varchar(128) NOT NULL default ''"
 );
