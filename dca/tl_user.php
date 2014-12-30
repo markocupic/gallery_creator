@@ -19,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['gc_img_resolution'] = array(
 );
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['gc_img_quality'] = array(
-       'sql' => "smallint(5) unsigned NOT NULL default '1000'"
+       'sql' => "smallint(3) unsigned NOT NULL default '100'"
 );
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['gc_be_uploader_template'] = array(
