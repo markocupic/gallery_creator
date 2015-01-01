@@ -212,7 +212,8 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // picture sorting
                             $str_sorting = $this->gc_picture_sorting == '' || $this->gc_picture_sorting_direction == '' ? 'sorting ASC' : $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
-                            $str_sorting = str_replace('name', 'path', $str_sorting);
+                            // sort by name is done below
+                            $str_sorting = str_replace('name', 'id', $str_sorting);
                             $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $str_sorting);
                             if ($limit > 0)
                             {
@@ -222,10 +223,33 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // build up $arrPictures
                             $arrPictures = array();
+                            $auxBasename = array();
                             while ($objPictures->next())
                             {
-                                   $arrPictures[$objPictures->id] = \GcHelpers::getPictureInformationArray($objPictures->id, $this);
+                                $objFilesModel = \FilesModel::findByUuid($objPictures->uuid);
+                                $basename = 'undefined';
+                                if($objFilesModel !== null)
+                                {
+                                    $basename = $objFilesModel->name;
+                                }
+                                $auxBasename[] = $basename;
+                                $arrPictures[$objPictures->id] = \GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
+
+                            // sort by basename
+                            if($this->gc_picture_sorting == 'name')
+                            {
+                                if($this->gc_picture_sorting_direction == 'ASC')
+                                {
+                                    array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_ASC);
+                                }
+                                else
+                                {
+                                    array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_DESC);
+                                }
+                            }
+
+                            $arrPictures = array_values($arrPictures);
 
                             // store $arrPictures in the template variable
                             $this->Template->arrPictures = $arrPictures;
