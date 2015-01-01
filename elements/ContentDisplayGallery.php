@@ -212,6 +212,7 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // picture sorting
                             $str_sorting = $this->gc_picture_sorting == '' || $this->gc_picture_sorting_direction == '' ? 'sorting ASC' : $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
+                            $str_sorting = str_replace('name', 'path', $str_sorting);
                             $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $str_sorting);
                             if ($limit > 0)
                             {

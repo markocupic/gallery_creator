@@ -39,6 +39,8 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/' . $GLOBALS['TL_ASSETS']['DROPZO
     });
 
 </script>
+<noscript>Javascript ist in Ihrem Browser deaktiviert.</noscript>
+
 
 
 
