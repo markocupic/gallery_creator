@@ -20,7 +20,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protection'] = 'protect album'
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = 'image settings';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = 'insert articles before or after the album';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = 'uploader';
-
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = 'Revise tables';
 
 /**
  * Fields
@@ -75,3 +75,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_desc'] = 'File name (desc
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = 'Date (ascending)';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = 'Date (descending)';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = 'Custom order';
+
+/**
+ * Messages
+ */
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = 'Revise tables: Clean the database from damaged/invalid/orphaned entries';

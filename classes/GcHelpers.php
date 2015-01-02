@@ -1044,6 +1044,9 @@ class GcHelpers extends \System
             $objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
             while ($objPictures->next())
             {
+                // get parent album
+                $objAlbum = \GalleryCreatorPicturesModel::findByPk($objPictures->id)->getRelated('pid');
+
                 $objFile = \FilesModel::findByUuid($objPictures->uuid);
                 if ($objFile === null)
                 {
@@ -1070,9 +1073,21 @@ class GcHelpers extends \System
                     {
                         //show the error-message
                         $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-                        $objAlbum = $objDel->getRelated('pid');
                         $path = $objPictures->path != '' ? $objPictures->path : 'unknown path';
                         $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objDel->id, $path, $objAlbum->alias);
+                    }
+                }
+                elseif (!is_file(TL_ROOT . '/' . $objFile->path))
+                {
+                    // If file has an entry in Dbafs, but doesn't exist on the server anymore
+                    if ($blnCleanDb !== false)
+                    {
+                        $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
+                        $objDel->delete();
+                    }
+                    else
+                    {
+                        $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPictures->id, $objFile->path, $objAlbum->alias);
                     }
                 }
                 else

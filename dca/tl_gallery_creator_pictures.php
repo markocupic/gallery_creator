@@ -55,10 +55,10 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 			'child_record_callback' => array('tl_gallery_creator_pictures', 'childRecordCb'),
 		),
 		'global_operations' => array(
-			'jumpLoader' => array(
-				'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader'],
+			'fileupload' => array(
+				'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileupload'],
 				'href'       => 'act=edit&table=tl_gallery_creator_albums&mode=fileupload',
-				'class'      => 'led_new',
+				'class'      => 'icon_image_add',
 				'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
 			),
 			'all'        => array(

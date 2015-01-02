@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_pictures.php 
  * 
- * Contao extension: gallery_creator 4.8.0-alpha1 
+ * Contao extension: gallery_creator 4.8.0 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -47,7 +47,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['paste']['0'] = "Unterhalb ei
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['paste']['1'] = "Unterhalb Bild mit ID %s einfügen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['0'] = "Bild um 90° drehen.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['imagerotate']['1'] = "Bild um 90° drehen.";
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['0'] = "Bilder uploaden";
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['jumpLoader']['1'] = "Bilder uploaden";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileupload']['0'] = "Bilder uploaden";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileupload']['1'] = "Bilder uploaden";
  
 ?>

@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
             'clean_db' => array(
                 'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db'],
                 'href'       => 'href is set in $this->setUpPalettes',
-                'class'      => 'led_clean_db',
+                'class'      => 'icon_clean_db',
                 'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             )
         ),
@@ -662,9 +662,9 @@ class tl_gallery_creator_albums extends Backend
 
         $output = '
 <div class="clean_db">
-<br /><br />
+<br><br>
        	<input type="checkbox" name="clean_db">
-		<label for="clean_db">Clean the database from damaged/invalid/orphaned entries</label>
+		<label for="clean_db">' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] . '</label>
 </div>
 			';
         return $output;

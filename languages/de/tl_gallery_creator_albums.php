@@ -2,7 +2,7 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 4.8.0-alpha1 
+ * Contao extension: gallery_creator 4.8.0 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2011 Marko Cupic 
@@ -20,6 +20,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protection'] = "Album vor Fron
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = "Bildeinstellungen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = "Artikel vor oder nach dem Album einfügen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = "Uploader";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = "Datenbank-Tabellen bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['id']['0'] = "Album-ID";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['0'] = "Albumalias";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['1'] = "Der Albumalias ist zugleich auch Verzeichnisnamen der Bilder eines Albums";
@@ -58,7 +59,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['1'] = "Neue Bil
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['0'] = "Neues Album";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']['1'] = "Ein neues Album anlegen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures']['0'] = "Albuminhalt auflisten";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures']['1'] = "Album mit ID %s auflisten.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures']['1'] = "Bilder des Albums mit ID %s auflisten.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album']['0'] = "Album bearbeiten";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album']['1'] = "Album mit ID %s bearbeiten.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['delete']['0'] = "Album löschen";
@@ -82,7 +83,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_desc'] = "Dateiname (abst
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = "Datum (aufsteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = "Datum (absteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = "Individuelle Reihenfolge";
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['0'] = "Datenbank aufräumen";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = "Datenbank bereinigen: Beschädigte/ungültige/verwaiste Datenbankeinträge entfernen ";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['clean_db']['1'] = "Alte/fehlerhafte Datenbankeinträge löschen";
  
 ?>
