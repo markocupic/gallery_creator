@@ -18,7 +18,15 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array(
 	'onloadCbSetUpPalettes'
 );
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = 'name,type,headline;{pagination_legend},gc_publish_all_albums,gc_publish_albums,gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;{miscellaneous_legend},gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb;{sorting_legend},gc_sorting,gc_sorting_direction;{picture_sorting_legend},gc_picture_sorting,gc_picture_sorting_direction;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = 'name,type,headline;
+{miscellaneous_legend},gc_publish_all_albums,gc_redirectSingleAlb;
+{pagination_legend},gc_publish_albums,gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
+{album_listing_legend},gc_activateThumbSlider,gc_sorting,gc_sorting_direction,gc_size_albumlisting,gc_imagemargin_albumlisting;
+{picture_listing_legend},gc_rows,gc_fullsize,gc_picture_sorting,gc_picture_sorting_direction,gc_size_detailview,gc_imagemargin_detailview;
+{template_legend:hide},gc_template;
+{protected_legend:hide},protected;
+{expert_legend:hide},align,space,cssID';
+
 
 /**
  * Add fields to tl_content
@@ -58,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting'] = array(
 	'options'   => explode(',', 'date,sorting,id,tstamp,name,alias,comment,visitors'),
 	'default'   => 'date',
 	'inputType' => 'select',
-	'eval'      => array('tl_class' => 'clr', 'submitOnChange' => true),
+	'eval'      => array('tl_class' => 'w50', 'submitOnChange' => true),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -68,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting_direction'] = array(
 	'options'   => explode(',', 'DESC,ASC'),
 	'default'   => 'DESC',
 	'inputType' => 'select',
-	'eval'      => array('tl_class' => 'clr', 'submitOnChange' => true),
+	'eval'      => array('tl_class' => 'w50', 'submitOnChange' => true),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -78,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting'] = array(
 	'options'   => explode(',', 'sorting,id,tstamp,name,owner,comment,title'),
 	'default'   => 'date',
 	'inputType' => 'select',
-	'eval'      => array('tl_class' => 'clr', 'submitOnChange' => false),
+	'eval'      => array('tl_class' => 'w50', 'submitOnChange' => false),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -88,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting_direction'] = arr
 	'options'   => explode(',', 'DESC,ASC'),
 	'default'   => 'DESC',
 	'inputType' => 'select',
-	'eval'      => array('tl_class' => 'clr', 'submitOnChange' => false),
+	'eval'      => array('tl_class' => 'w50', 'submitOnChange' => false),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -130,7 +138,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_detailview'] = array(
 	'inputType' => 'imageSize',
 	'options'   => $GLOBALS['TL_CROP'],
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'      => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
+	'eval'      => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -139,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_imagemargin_detailview'] = array(
 	'exclude'   => true,
 	'inputType' => 'trbl',
 	'options'   => $GLOBALS['TL_CSS_UNITS'],
-	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'clr'),
+	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'w50'),
 	'sql'       => "varchar(128) NOT NULL default ''"
 );
 
@@ -149,7 +157,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_size_albumlisting'] = array(
 	'inputType' => 'imageSize',
 	'options'   => $GLOBALS['TL_CROP'],
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'      => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
+	'eval'      => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
 	'sql'       => "varchar(64) NOT NULL default ''"
 );
 
@@ -158,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_imagemargin_albumlisting'] = arra
 	'exclude'   => true,
 	'inputType' => 'trbl',
 	'options'   => $GLOBALS['TL_CSS_UNITS'],
-	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'clr'),
+	'eval'      => array('includeBlankOption' => true, 'tl_class' => 'w50'),
 	'sql'       => "varchar(128) NOT NULL default ''"
 );
 

@@ -18,10 +18,8 @@
 //Legends
 $GLOBALS['TL_LANG']['tl_content']['pagination_legend'] = 'Pagination settings';
 $GLOBALS['TL_LANG']['tl_content']['miscellaneous_legend'] = 'Miscellaneous settings';
-$GLOBALS['TL_LANG']['tl_content']['sorting_legend'] = 'Album listing sorting options';
-$GLOBALS['TL_LANG']['tl_content']['picture_sorting_legend'] = 'Picture sorting options';
-$GLOBALS['TL_LANG']['tl_content']['thumb_legend'] = 'Thumbnail settings';
-
+$GLOBALS['TL_LANG']['tl_content']['album_listing_legend'] = 'Album listing legend';
+$GLOBALS['TL_LANG']['tl_content']['picture_listing_legend'] = 'Picture listing legend';
 
 
 //Fields
