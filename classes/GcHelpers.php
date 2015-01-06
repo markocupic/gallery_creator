@@ -473,8 +473,8 @@ class GcHelpers extends \System
             //[string] Albumalias (=Verzeichnisname)
             'alias'               => $objAlbum->alias,
             //[string] Albumkommentar
-            'comment'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : null,
-            'caption'             => strlen($objAlbum->comment) ? specialchars($objAlbum->comment) : null,
+            'comment'             => $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment),
+            'caption'             => $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment),
             //[int] Albumbesucher (Anzahl Klicks)
             'visitors'            => $objAlbum->visitors,
             //[string] Link zur Detailansicht
@@ -703,8 +703,8 @@ class GcHelpers extends \System
             //[string] title-attribut
             'title'            => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
             //[string] Bildkommentar oder Bildbeschreibung
-            'comment'          => $objPicture->comment != '' ? specialchars($objPicture->comment) : specialchars($arrMeta['caption']),
-            'caption'          => $objPicture->comment != '' ? specialchars($objPicture->comment) : specialchars($arrMeta['caption']),
+            'comment'          => $objPicture->comment != '' ?  ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'caption'          => $objPicture->comment != '' ?  ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
             //[string] path to media (video, picture, sound...)
             'href'             => TL_FILES_URL . $href,
             // single image url
