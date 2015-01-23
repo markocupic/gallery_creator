@@ -310,7 +310,8 @@ class tl_gallery_creator_pictures extends Backend
 			case 'select' :
 				if(!$this->User->isAdmin)
 				{
-					$GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['list']['sorting']['filter'] = array(array('owner=?', $this->User->id));
+					// only list pictures where user is owner
+                                   $GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['list']['sorting']['filter'] = array(array('owner=?', $this->User->id));
 				}
 
 				break;
@@ -653,15 +654,19 @@ class tl_gallery_creator_pictures extends Backend
 
 		if(Input::get('table') == 'tl_gallery_creator_pictures' && Input::get('act') == 'select')
 		{
-			//saveNcreate button-entfernen
+			// saveNcreate button-entfernen
 			$strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
-			//saveNclose button-entfernen
-			//$strContent=preg_replace('/<input type=\"submit\" name=\"saveNclose\"((\r|\n|.)+?)>/','',$strContent);
-			//copy button-entfernen
-			$strContent = preg_replace('/<input(.*?)copy(.*?)submit(.*?)>/', '', $strContent);
-			//saveNback button-entfernen
-			//$strContent=preg_replace('/<input type=\"submit\" name=\"saveNback\"((\r|\n|.)+?)>/','',$strContent);
-		}
+
+                     // saveNback button-entfernen
+                     //$strContent=preg_replace('/<input type=\"submit\" name=\"saveNback\"((\r|\n|.)+?)>/','',$strContent);
+
+                     // remove cut button
+                     // $strContent = preg_replace('/<input type="submit" name="cut"(.*?)>/', '', $strContent);
+
+                     // remove copy button
+                     $strContent = preg_replace('/<input type="submit" name="copy"(.*?)>/', '', $strContent);
+
+              }
 		return $strContent;
 	}
 
@@ -680,7 +685,7 @@ class tl_gallery_creator_pictures extends Backend
 
 			// Prüfen, ob das Bild noch mit einem anderen Datensatz verknüpft ist
 			$objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE uuid=?')->execute($objImg->uuid);
-			if($objImgNumRows->numRows < 2)
+			if($objImgNumRows->numRows)
 			{
 				$oFile = FilesModel::findByUuid($objImg->uuid);
 
@@ -691,7 +696,6 @@ class tl_gallery_creator_pictures extends Backend
 				if($oFile !== null && strstr($oFile->path, $oFolder->path))
 				{
 					// delete file from filesystem
-
 					$file = new File($oFile->path, true);
 					$file->delete();
 				}
@@ -699,10 +703,11 @@ class tl_gallery_creator_pictures extends Backend
 			$objImg->delete();
 		}
 
-		if(!$this->User->isAdmin && $objImg->owner != $this->User->id)
+		elseif(!$this->User->isAdmin && $objImg->owner != $this->User->id)
 		{
 			$this->log('Datensatz mit ID ' . $dc->id . ' wurde vom  Benutzer mit ID ' . $this->User->id . ' versucht aus tl_gallery_creator_pictures zu loeschen.', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?do=error');
+                     Message::addError('No permission to delete picture with ID ' . $dc->id . '.');
+                     $this->redirect('contao/main.php?do=error');
 		}
 	}
 
