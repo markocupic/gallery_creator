@@ -327,7 +327,7 @@ class tl_gallery_creator_pictures extends Backend
 			$objPicture = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
 			if($objPicture !== null)
 			{
-				$_SESSION['gallery_creator']['SOURCE_ALBUM'] = $objPicture->pid;
+				$_SESSION['gallery_creator']['SOURCE_ALBUM_ID'] = $objPicture->pid;
 			}
 		}
 	}
@@ -478,54 +478,70 @@ class tl_gallery_creator_pictures extends Backend
 	public function onCutCb(DC_Table $dc)
 	{
 
-		$targetPid = Input::get('pid');
+		if(!isset($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']))
+              {
+                     return;
+              }
+
+              // Get sourceAlbumObject
+              $objSourceAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']);
+              unset($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']);
+
+              // Get pictureToMoveObject
+              $objPictureToMove = GalleryCreator\GalleryCreatorPicturesModel::findByPk(Input::get('id'));
+              if($objSourceAlbum === null || $objPictureToMove ===null)
+              {
+                     return;
+              }
+
 		if(Input::get('mode') == '1')
 		{
-			$objPicture = GalleryCreatorPicturesModel::findByPk(Input::get('pid'));
-			$targetPid = $objPicture->getRelated('pid')->id;
-		}
+			// Paste after existing file
+                     $objTargetAlbum = GalleryCreator\GalleryCreatorPicturesModel::findByPk(Input::get('pid'))->getRelated('pid');
+		} 
+              elseif(Input::get('mode') == '2') 
+              {
+                     // Paste on top
+                     $objTargetAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('pid'));
+              }
 
-		$objSourceAlbumId = $_SESSION['gallery_creator']['SOURCE_ALBUM'];
-		if($objSourceAlbumId < 1 || $objSourceAlbumId == $targetPid)
+              if ($objTargetAlbum === null)
+              {
+                     return;
+              }
+
+		if($objSourceAlbum->id == $objTargetAlbum->id)
 		{
-			unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
 			return;
 		}
 
-		$objSourceAlbum = GalleryCreatorAlbumsModel::findByPk($objSourceAlbumId, array('uncached' => true));
-		if($objSourceAlbum === null)
-		{
-			unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
-			return;
-		}
+              $objFile = FilesModel::findByUuid($objPictureToMove->uuid);
+              $objTargetFolder = FilesModel::findByUuid($objTargetAlbum->assignedDir);
+              $objSourceFolder = FilesModel::findByUuid($objSourceAlbum->assignedDir);
 
-		$objTargetAlbum = GalleryCreatorAlbumsModel::findByPk($targetPid, array('uncached' => true));
-		$objPicture = GalleryCreatorPicturesModel::findByPk($dc->id, array('uncached' => true));
+              if($objFile === null || $objTargetFolder === null || $objSourceFolder === null)
+              {
+                     return;
+              }
 
-		if($objPicture === null)
-		{
-			unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
-			return;
-		}
+              // Return if it is an external file
+              if(false === strpos($objFile->path, $objSourceFolder->path))
+              {
+                     return;
+              }
 
-		if($objTargetAlbum !== null)
-		{
-			$oFile = FilesModel::findByUuid($objPicture->uuid);
-			if($oFile !== null)
-			{
-				$strDestination = str_replace($objSourceAlbum->alias, $objTargetAlbum->alias, $oFile->path);
-				if($strDestination != $oFile->path)
-				{
-					if(Files::getInstance()->copy($oFile->path, $strDestination))
-					{
-						Files::getInstance()->delete($oFile->path);
-						Dbafs::deleteResource($oFile->path);
-						Dbafs::addResource($strDestination);
-					}
-				}
-			}
-		}
-		unset($_SESSION['gallery_creator']['SOURCE_ALBUM']);
+
+              $strDestination = $objTargetFolder->path . '/' . basename($objFile->path);
+              if($strDestination != $objFile->path)
+              {
+                     $oFile = new File($objFile->path);
+                     // Move file to the target folder
+                     if($oFile->renameTo($strDestination))
+                     {
+                            $objPictureToMove->path = $strDestination;
+                            $objPictureToMove->save();
+                     }
+              }
 	}
 
 
