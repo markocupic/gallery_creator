@@ -1176,12 +1176,20 @@ class tl_gallery_creator_albums extends Backend
 
               $objAlbum = \GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
 
+              // Save input
               if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums')
               {
-                     $objAlbum->thumb = Input::post('thumb');
-                     $objAlbum->save();
+                     if (Input::post('thumb') == intval(Input::post('thumb')))
+                     {
+                            $objAlbum->thumb = Input::post('thumb');
+                            $objAlbum->save();
+                     }
               }
-              $html = '<div class="preview_thumb"><ul>';
+
+              // Generate picture list
+              $html = '<div class="preview_thumb">';
+              $html .= '<h3><label for="ctrl_thumb">' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb']['0'] . '</label></h3>';
+              $html .= '<ul>';
 
               $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=? ORDER BY id')->execute(Input::get('id'));
               while ($objPicture->next())
@@ -1225,6 +1233,8 @@ class tl_gallery_creator_albums extends Backend
                             }
                      }
               }
+
+              // Add javascript
               $script = '
 <script>
        window.addEvent("domready", function() {
@@ -1239,6 +1249,8 @@ class tl_gallery_creator_albums extends Backend
               $html . '</ul>';
               $html .= '<div style="clear:both"></div>';
               $html .= '</div>';
+
+              // Return html
               return $html . $script;
        }
 

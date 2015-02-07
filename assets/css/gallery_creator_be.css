@@ -21,22 +21,19 @@ div.readonly input {
     background-color: #CCCCCC;
 }
 #tl_gallery_creator_albums .preview_thumb li {
-    width: 100;
-    height: 100;
+    height: 80px;
+    width: auto;
     margin: 0 20px 20px 0;
     overflow: hidden;
     float: left;
     background-color: #ccc;
-
 }
-
 #tl_gallery_creator_albums .preview_thumb input {
     position: relative;
     top: -32px;
     margin-right: 5px;
     display: inline-block;
 }
-
 #tl_gallery_creator_albums .preview_thumb li img {
     width: 80px;
     height: 80px;
