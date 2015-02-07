@@ -796,7 +796,7 @@ class GcHelpers extends \System
      * @param null $iterationDepth
      * @return array
      */
-    public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
+    public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null) 
     {
         // get the iteration depth
         $iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
