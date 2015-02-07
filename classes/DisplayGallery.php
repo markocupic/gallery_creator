@@ -293,11 +293,11 @@ abstract class DisplayGallery extends \Module
 		// Get the Album Id
 		if(\Input::get('items'))
 		{
-			// Die AlbumId des anzuzeigenden Albums aus der db extrahieren
-			$objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')
-									   ->execute($this->strAlbumalias);
-			$this->intAlbumId = $objAlbum->id;
-			$this->DETAIL_VIEW = true;
+                     $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+                     if ($objAlbum !== null){
+                            $this->intAlbumId = $objAlbum->id;
+                            $this->DETAIL_VIEW = true;
+                     }
 		}
 	}
 
@@ -313,22 +313,25 @@ abstract class DisplayGallery extends \Module
 
 		if(TL_MODE == 'FE')
 		{
-			$objAlb = $this->Database->prepare('SELECT protected AS protected_album,groups FROM tl_gallery_creator_albums WHERE alias=?')
-									 ->execute($strAlbumalias);
-			if(!$objAlb->protected_album)
-			{
-				return true;
-			}
+			$objAlb = \GalleryCreatorAlbumsModel::findByAlias($strAlbumalias);
+                     if($objAlb !== null)
+                     {
 
-			$this->import('FrontendUser', 'User');
-			$groups = deserialize($objAlb->groups);
+                            if(!$objAlb->protected)
+                            {
+                                   return true;
+                            }
 
-			if(!FE_USER_LOGGED_IN || !is_array($groups) || count($groups) < 1 || !array_intersect($groups, $this->User->groups))
-			{
-				// abort script and display authentification error
-				$strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
-				die($strContent);
-			}
+                            $this->import('FrontendUser', 'User');
+                            $groups = deserialize($objAlb->groups);
+
+                            if(!FE_USER_LOGGED_IN || !is_array($groups) || count($groups) < 1 || !array_intersect($groups, $this->User->groups))
+                            {
+                                   // abort script and display authentification error
+                                   $strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
+                                   die($strContent);
+                            }
+                     }
 		}
 		return true;
 	}
@@ -477,39 +480,43 @@ abstract class DisplayGallery extends \Module
 	}
 
 
-	/**
-	 * Returns the path to the preview-thumbnail of an album
-	 *
-	 * @param integer
-	 * @return string
-	 */
+       /**
+        * Returns the path to the preview-thumbnail of an album
+        * @param $intAlbumId
+        * @return array
+        */
 	public function getAlbumPreviewThumb($intAlbumId)
 	{
 
-		$objAlb = $this->Database->prepare('SELECT thumb FROM tl_gallery_creator_albums WHERE id=?')
-								 ->execute($intAlbumId);
-		if($objAlb->thumb)
+              // Predefine thumb
+              $arrThumb = array(
+                     'name' => basename($this->defaultThumb),
+                     'path' => $this->defaultThumb
+              );
+
+              $objAlb = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+		if($objAlb->thumb > 0)
 		{
-			$objPreviewThumb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')
-											  ->execute($objAlb->thumb);
-			$oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
-			if($oFile !== NULL && is_file(TL_ROOT . '/' . $oFile->path))
-			{
-				$r = array(
-					'name' => basename($oFile->path),
-					'path' => $oFile->path
-				);
-				return $r;
-			}
+                     $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
 		}
+              else
+              {
+                     $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
+              }
 
-		$r = array(
-			'name' => basename($this->defaultThumb),
-			'path' => $this->defaultThumb
-		);
-		return $r;
+              if($objPreviewThumb !== null)
+              {
+                     $oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
+                     if($oFile !== NULL && is_file(TL_ROOT . '/' . $oFile->path))
+                     {
+                            $arrThumb = array(
+                                   'name' => basename($oFile->path),
+                                   'path' => $oFile->path
+                            );
+                     }
+              }
 
-
+		return $arrThumb;
 	}
 
 

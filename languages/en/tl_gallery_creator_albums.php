@@ -21,6 +21,9 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = 'image set
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = 'insert articles before or after the album';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = 'uploader';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = 'Revise tables';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] = 'Album-preview-thumb-settings';
+
+
 
 /**
  * Fields
