@@ -484,7 +484,7 @@ class GcHelpers extends \System
             //[int] Anzahl Bilder im Album
             'count'               => $objPics->numRows,
             //[int] Anzahl Unteralben
-            'count_subalbums'     => count(self::getAllSubalbums($objAlbum->id)),
+            'count_subalbums'     => count(self::getChildAlbums($objAlbum->id)),
             //[string] alt Attribut fuer das Vorschaubild
             'alt'                 => $arrPreviewThumb['name'],
             //[string] Pfad zum Originalbild
@@ -796,7 +796,7 @@ class GcHelpers extends \System
      * @param null $iterationDepth
      * @return array
      */
-    public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
+    public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
     {
         // get the iteration depth
         $iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
@@ -821,7 +821,7 @@ class GcHelpers extends \System
                 return $arrSubAlbums;
             }
             $arrSubAlbums[] = $objAlb->id;
-            $arrSubAlbums = array_merge($arrSubAlbums, self::getAllSubalbums($objAlb->id, $strSorting, $depth));
+            $arrSubAlbums = array_merge($arrSubAlbums, self::getChildAlbums($objAlb->id, $strSorting, $depth));
         }
         return $arrSubAlbums;
     }

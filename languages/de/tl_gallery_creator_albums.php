@@ -21,6 +21,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = "Bildeinst
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = "Artikel vor oder nach dem Album einfügen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = "Uploader";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = "Datenbank-Tabellen bereinigen";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] = "Vorschau-Thumbnail-Einstellungen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['id']['0'] = "Album-ID";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['0'] = "Albumalias";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['1'] = "Der Albumalias ist zugleich auch Verzeichnisnamen der Bilder eines Albums";

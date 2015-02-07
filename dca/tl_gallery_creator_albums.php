@@ -868,7 +868,7 @@ class tl_gallery_creator_albums extends Backend
                             $this->redirect('contao/main.php?do=error');
                      }
                      // also delete the child element
-                     $arrDeletedAlbums = GalleryCreator\GcHelpers::getAllSubalbums(Input::get('id'));
+                     $arrDeletedAlbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
                      $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
                      foreach ($arrDeletedAlbums as $idDelAlbum)
                      {
@@ -1167,8 +1167,8 @@ class tl_gallery_creator_albums extends Backend
        }
 
        /**
-        * Options Callback for the selection of the preview thumb
-        * return an array with all filenames (imagenames) of specified album
+        * Input field callback for the album preview thumb select
+        * list each image of the album (and child-albums)
         * @return string
         */
        public function inputFieldCbThumb()
@@ -1194,61 +1194,58 @@ class tl_gallery_creator_albums extends Backend
               $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=? ORDER BY id')->execute(Input::get('id'));
               while ($objPicture->next())
               {
-                     $oFile = FilesModel::findByUuid($objPicture->uuid);
-                     if ($oFile !== null)
+                     $objFile = FilesModel::findByUuid($objPicture->uuid);
+                     if ($objFile !== null)
                      {
-                            if (file_exists(TL_ROOT . '/' . $oFile->path))
+                            if (file_exists(TL_ROOT . '/' . $objFile->path))
                             {
 
-                                   $src = Image::get($oFile->path, 80, 80, 'crop');
+                                   $src = Image::get($objFile->path, 80, 80, 'crop');
                                    $checked = $objAlbum->thumb == $objPicture->id ? ' checked' : '';
-                                   $class = $checked != '' ? 'class="checked"' : '';
-                                   $html .= '<li ' . $class . '><input type="radio" name="thumb" value="' . $objPicture->id . '"' . $checked . '>' . '<img src="' . $src . '" height="80" width="80" alt=""></li>' . "\r\n";
+                                   $class = $checked != '' ? ' class="checked"' : '';
+                                   $html .= '<li' . $class . '><input type="radio" name="thumb" value="' . $objPicture->id . '"' . $checked . '>' . '<img src="' . $src . '" height="80" alt="' . basename($objFile->path) . '"></li>' . "\r\n";
                             }
                      }
               }
-              $arrSubalbums = GalleryCreator\GcHelpers::getAllSubalbums(Input::get('id'));
+
+              // Get all child albums
+              $arrSubalbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
               if (count($arrSubalbums))
               {
-                     foreach ($arrSubalbums as $albId)
+                     $objPicture = $this->Database->execute("SELECT * FROM tl_gallery_creator_pictures WHERE pid IN (" . implode(',', $arrSubalbums) . ") ORDER BY id");
+                     while ($objPicture->next())
                      {
-                            $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=? ORDER BY id')
-                                   ->execute($albId);
-                            while ($objPicture->next())
+                            $objFile = FilesModel::findByUuid($objPicture->uuid);
+                            if ($objFile !== null)
                             {
-                                   $objAlbName = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($albId);
-                                   while ($objPicture->next())
+                                   if (file_exists(TL_ROOT . '/' . $objFile->path))
                                    {
-                                          $oFile = FilesModel::findByUuid($objPicture->uuid);
-                                          if ($oFile !== null)
-                                          {
-                                                 if (file_exists(TL_ROOT . '/' . $oFile->path))
-                                                 {
-                                                        $checked = $objAlbum->thumb == $objPicture->id ? ' checked' : '';
-                                                        $class = $checked != '' ? 'class="checked"' : '';
-                                                        $html .= '<li ' . $class . '><input type="radio" name="thumb" value="' . $objPicture->id . '"' . $checked . '>' . '<img src="' . $src . '" height="80" width="80" alt=""></li>' . "\r\n";
-                                                 }
-                                          }
+                                          $src = Image::get($objFile->path, 80, 80, 'crop');
+                                          $checked = $objAlbum->thumb == $objPicture->id ? ' checked' : '';
+                                          $class = $checked != '' ? ' class="checked"' : '';
+                                          $html .= '<li' . $class . '><input type="radio" name="thumb" value="' . $objPicture->id . '"' . $checked . '>' . '<img src="' . $src . '" height="80" alt="' . basename($objFile->path) . '"></li>' . "\r\n";
                                    }
                             }
                      }
+
               }
+
+              $html . '</ul>';
+              $html .= '<div style="clear:both"></div>';
+              $html .= '</div>';
 
               // Add javascript
               $script = '
 <script>
        window.addEvent("domready", function() {
            $$(".preview_thumb li").addEvent("click", function(event){
-              this.getChildren("input")[0].setProperty("checked","checked");
+              this.getChildren("input")[0].setProperty("checked", "checked");
               $$(".preview_thumb .checked").removeClass("checked");
               this.addClass("checked");
            });
        });
 </script>
 ';
-              $html . '</ul>';
-              $html .= '<div style="clear:both"></div>';
-              $html .= '</div>';
 
               // Return html
               return $html . $script;

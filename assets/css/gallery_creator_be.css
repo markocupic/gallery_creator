@@ -15,29 +15,34 @@
     padding: 4px;
 }
 .album_infos tr.odd > td {
-    background-color: #CCCCCC;
+    background-color: #cccccc;
 }
 div.readonly input {
-    background-color: #CCCCCC;
+    background-color: #cccccc;
 }
 #tl_gallery_creator_albums .preview_thumb li {
     height: 80px;
-    width: auto;
+    width: 100px;
     margin: 0 20px 20px 0;
     overflow: hidden;
     float: left;
-    background-color: #ccc;
+    background-color: #ececec;
+    position:relative;
 }
 #tl_gallery_creator_albums .preview_thumb input {
-    position: relative;
-    top: -32px;
-    margin-right: 5px;
-    display: inline-block;
+    position: absolute;
+    top: 33px;
+    left: 0;
 }
 #tl_gallery_creator_albums .preview_thumb li img {
-    width: 80px;
-    height: 80px;
+    min-height: 80px;
+    position:absolute;
+    top:0;
+    left: 20px;
+    min-width:80px;
 }
-#tl_gallery_creator_albums .preview_thumb li.checked {
-    background-color: #00aa55;
+#tl_gallery_creator_albums .preview_thumb li.checked,
+#tl_gallery_creator_albums .preview_thumb li:hover
+{
+    background-color: rgb(235, 253, 215);
 }
