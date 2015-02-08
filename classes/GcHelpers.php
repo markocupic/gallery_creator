@@ -796,7 +796,7 @@ class GcHelpers extends \System
      * @param null $iterationDepth
      * @return array
      */
-    public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null) 
+    public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
     {
         // get the iteration depth
         $iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
@@ -920,7 +920,7 @@ class GcHelpers extends \System
         }
         while ($objFilesModel->next())
         {
-            // Continue if the files has been processed or does not exist
+            // Continue if the file has been processed or does not exist
             if (isset($images[$objFilesModel->path]) || !file_exists(TL_ROOT . '/' . $objFilesModel->path))
             {
                 continue;
@@ -938,7 +938,7 @@ class GcHelpers extends \System
             }
             else
             {
-                // if it is a directory, then store its files in the array
+                // If it is a directory, then store its files in the array
                 $objSubfilesModel = \FilesModel::findByPid($objFilesModel->uuid);
                 if ($objSubfilesModel === null)
                 {
@@ -1005,7 +1005,7 @@ class GcHelpers extends \System
         $db = \Database::getInstance()->execute('SELECT id, owner, alias FROM tl_gallery_creator_albums');
         while ($db->next())
         {
-            //Albumbesitzer ueberpruefen
+            // Albumbesitzer ueberpruefen
             $db_2 = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($db->owner);
             $owner = $db_2->name;
             if ($db_2->name == '')
@@ -1021,7 +1021,7 @@ class GcHelpers extends \System
         }
 
 
-        //auf gueltige pid ueberpruefen
+        // Auf gueltige pid ueberpruefen
         $objAlb = \Database::getInstance()->prepare('SELECT id, pid FROM tl_gallery_creator_albums WHERE pid!=?')
             ->execute('0');
         while ($objAlb->next())
@@ -1040,11 +1040,11 @@ class GcHelpers extends \System
         if (\Database::getInstance()->fieldExists('path', 'tl_gallery_creator_pictures'))
         {
 
-            //Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
+            // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
             $objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
             while ($objPictures->next())
             {
-                // get parent album
+                // Get parent album
                 $objAlbum = \GalleryCreatorPicturesModel::findByPk($objPictures->id)->getRelated('pid');
 
                 $objFile = \FilesModel::findByUuid($objPictures->uuid);

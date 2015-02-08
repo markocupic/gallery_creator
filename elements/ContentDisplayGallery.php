@@ -180,6 +180,9 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
                             $this->getAlbumTemplateVars($objAlbum->id, 'cte');
+
+                            // Call gcGenerateFrontendTemplateHook
+                            $this->callGcGenerateFrontendTemplateHook($this);
                             break;
 
                      case 'detailview':
@@ -259,6 +262,9 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
+
+                            // Call gcGenerateFrontendTemplateHook
+                            $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                             break;
                      case 'single_image' :
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
@@ -344,6 +350,10 @@ class ContentDisplayGallery extends DisplayGallery
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
+
+                            // Call gcGenerateFrontendTemplateHook
+                            $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
+
                             break;
 
 
@@ -352,6 +362,8 @@ class ContentDisplayGallery extends DisplayGallery
                             echo $this->getJwImagerotatorXml($this->strAlbumalias);
                             exit;
                             break;
+
+                     die('sdfsfd');
               }
               // end switch
        }

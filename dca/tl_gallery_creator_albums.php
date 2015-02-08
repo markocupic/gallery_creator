@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
        // Palettes
        'palettes'    => array(
               '__selector__'    => array('protected'),
-              'default'         => '{album_info},published,name,alias,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
+              'default'         => '{album_info},published,name,alias,description,keywords,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
               'restricted_user' => '{album_info},link_edit_images,album_info',
               'fileupload'      => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader_legend},uploader,fileupload',
               'import_images'   => '{upload_settings},preserve_filename,multiSRC',
@@ -179,6 +179,24 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'eval'          => array('doNotShow' => false, 'doNotCopy' => true, 'maxlength' => 50, 'tl_class' => 'w50', 'unique' => true),
                      'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbGenerateAlias')),
                      'sql'           => "varbinary(128) NOT NULL default ''"
+              ),
+              'description' => array
+              (
+                     'label'                   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'],
+                     'exclude'                 => true,
+                     'inputType'               => 'textarea',
+                     'search'                  => true,
+                     'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+                     'sql'                     => "text NULL"
+              ),
+              'keywords' => array
+              (
+                     'label'                   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'],
+                     'exclude'                 => true,
+                     'inputType'               => 'textarea',
+                     'search'                  => true,
+                     'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+                     'sql'                     => "text NULL"
               ),
               'comment'              => array(
                      'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'],
