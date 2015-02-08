@@ -1,6 +1,7 @@
 # Gallery Creator
 
-Frontend Modul für Contao 3
+## Frontend Modul für Contao 3.
+
 Mit dem Modul lassen sich Alben verwalten und erstellen. Das Modul ist sehr flexibel und bietet eine Albenübersicht und eine Detailansicht.
 
 ## "gc_generateFrontendTemplate"-Hook
@@ -13,7 +14,8 @@ Der "gc_generateFrontendTemplate"-Hook wird vor der Aufbereitung des Gallery-Cre
 $GLOBALS['TL_HOOKS']['addComment'][] = array('MyGalleryCreatorClass', 'doSomething');
 
 // MyGalleryCreatorClass.php
-class MyGalleryCreatorClass extends \System {
+class MyGalleryCreatorClass extends \System
+{
 
        /**
         * Do some custom modifications
@@ -22,17 +24,17 @@ class MyGalleryCreatorClass extends \System {
         */
        public function doSomething(Module $objModule, $objAlbum=null)
        {
-
               global $objPage;
-              $objPage->pageTitle = '4ae Bildergalerie';
+              $objPage->pageTitle = 'Bildergalerie';
               if($objAlbum !== null)
               {
-                     // $objPage->rootPageTitle = 'Root Page Title';
-                     $objPage->pageTitle = $objAlbum->name;
-                     $objPage->description = $objAlbum->event_location;
-                     $GLOBALS['TL_KEYWORDS'] = $objAlbum->event_location;
+                     // display the album name in the head section of your page (title tag)
+                     $objPage->pageTitle = specialchars($objAlbum->name);
+                     // display the album comment in the head section of your page (description tag)
+                     $objPage->description = specialchars(strip_tags($objAlbum->comment));
+                     // add the album name to the keywords in the head section of your page (keywords tag)
+                     $GLOBALS['TL_KEYWORDS'] .= ',' . specialchars($objAlbum->name) . ',' . specialchars($objAlbum->event_location);
               }
-
        }
 }
 ```
