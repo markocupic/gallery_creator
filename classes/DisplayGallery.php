@@ -386,7 +386,7 @@ abstract class DisplayGallery extends \Module
                      $limit = \Input::get('limit');
                      $objPicture = $this->Database->prepare('SELECT name, uuid FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY id')
                             ->limit(1, $limit)
-                            ->executeUncached(1, \Input::get('AlbumId'), $objAlbum->thumb);
+                            ->execute(1, \Input::get('AlbumId'), $objAlbum->thumb);
                      $objFile = \FilesModel::findByUuid($objPicture->uuid);
                      if ($objFile !== null)
                      {
@@ -430,7 +430,7 @@ abstract class DisplayGallery extends \Module
                      }
 
                      $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)
-                            ->executeUncached(1, \Input::get('albumId'));
+                            ->execute(1, \Input::get('albumId'));
                      while ($objPicture->next())
                      {
                             $objFile = \FilesModel::findByUuid($objPicture->uuid);
@@ -549,7 +549,7 @@ abstract class DisplayGallery extends \Module
                      ->execute($intAlbumId);
 
               // add meta tags to the page object
-              if (TL_MODE == 'FE')
+              if (TL_MODE == 'FE' && $this->DETAIL_VIEW === true)
               {
                      $objPage->description = trim($objPage->description) . (trim($objPage->description) != '' && trim($objAlbum->desription) != '' ? ', ' : '') . specialchars($objAlbum->description);
                      $GLOBALS['TL_KEYWORDS'] = trim($GLOBALS['TL_KEYWORDS']) . (trim($GLOBALS['TL_KEYWORDS']) != '' && $objAlbum->keywords != '' ? ',' : '') . specialchars($objAlbum->keywords);
@@ -562,7 +562,6 @@ abstract class DisplayGallery extends \Module
               // store the data of the current album in the session
               $_SESSION['gallery_creator']['CURRENT_ALBUM'] = $this->Template->arrAlbumdata;
 
-              $this->Template->fmdId = $this->id;
               //der back-Link
               $this->Template->backLink = $this->generateBackLink($strContentType, $intAlbumId);
               //Der dem Bild uebergeordnete Albumname
@@ -578,7 +577,7 @@ abstract class DisplayGallery extends \Module
               //Das Event-Datum des Albums als unix-timestamp
               $this->Template->eventTstamp = $objAlbum->date;
               //Das Event-Datum des Albums formatiert
-              $this->Template->eventDate = $this->parseDate($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
+              $this->Template->eventDate = \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
               //Abstaende
               $this->Template->imagemargin = $this->DETAIL_VIEW ? $this->generateMargin(deserialize($this->gc_imagemargin_detailview), 'margin') : $this->generateMargin(deserialize($this->gc_imagemargin_albumlisting), 'margin');
               //Anzahl Spalten pro Reihe
@@ -657,7 +656,7 @@ abstract class DisplayGallery extends \Module
               {
                      $objDb = \Database::getInstance()
                             ->prepare('SELECT visitors, visitors_details FROM tl_gallery_creator_albums WHERE id=?')
-                            ->executeUncached($intAlbumId);
+                            ->execute($intAlbumId);
                      if (strpos($objDb->visitors_details, $_SERVER['REMOTE_ADDR']))
                      {
                             // return if the visitor is allready registered
@@ -681,7 +680,7 @@ abstract class DisplayGallery extends \Module
                      {
                             $set = array('visitors_details' => '');
                             $objDbUpd = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
-                                   ->set($set)->executeUncached($intAlbumId);
+                                   ->set($set)->execute($intAlbumId);
                      }
 
                      //build up the array
@@ -713,7 +712,7 @@ abstract class DisplayGallery extends \Module
                             'visitors_details' => serialize($arrVisitors)
                      );
                      $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)
-                            ->executeUncached($intAlbumId);
+                            ->execute($intAlbumId);
               }
        }
 
