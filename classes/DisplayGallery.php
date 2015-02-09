@@ -553,7 +553,7 @@ abstract class DisplayGallery extends \Module
               {
                      $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;
                      $GLOBALS['TL_KEYWORDS'] = ltrim($GLOBALS['TL_KEYWORDS'] . ',' . specialchars($objAlbum->keywords), ',');
-              } 
+              }
 
               //store all album-data in the array
               $objAlbum->reset();
