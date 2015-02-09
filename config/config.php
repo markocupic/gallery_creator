@@ -44,5 +44,10 @@ if (TL_MODE == 'BE')
               )
        );
 
+       // revise table script
+       if(count($_GET) == 2 && $_GET['do'] == 'gallery_creator' && $_GET['ref']){
+              $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_revise_table.js';
+       }
+
        $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_be.css';
 }

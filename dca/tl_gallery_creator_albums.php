@@ -28,7 +28,9 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      array('tl_gallery_creator_albums', 'onloadCbCheckFolderSettings'),
                      array('tl_gallery_creator_albums', 'onloadCbImportFromFilesystem'),
                      array('tl_gallery_creator_albums', 'onloadCbGetGcCteElements'),
-                     array('tl_gallery_creator_albums', 'onloadCbReviseTable')
+                     array('tl_gallery_creator_albums', 'onloadCbReviseTable'),
+                     array('tl_gallery_creator_albums', 'isAjaxRequest')
+
               ),
               'ondelete_callback' => array(
                      array('tl_gallery_creator_albums', 'ondeleteCb')
@@ -180,23 +182,23 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                      'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbGenerateAlias')),
                      'sql'           => "varbinary(128) NOT NULL default ''"
               ),
-              'description' => array
+              'description'          => array
               (
-                     'label'                   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'],
-                     'exclude'                 => true,
-                     'inputType'               => 'textarea',
-                     'search'                  => true,
-                     'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-                     'sql'                     => "text NULL"
+                     'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'],
+                     'exclude'   => true,
+                     'inputType' => 'textarea',
+                     'search'    => true,
+                     'eval'      => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
+                     'sql'       => "text NULL"
               ),
-              'keywords' => array
+              'keywords'             => array
               (
-                     'label'                   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'],
-                     'exclude'                 => true,
-                     'inputType'               => 'textarea',
-                     'search'                  => true,
-                     'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-                     'sql'                     => "text NULL"
+                     'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'],
+                     'exclude'   => true,
+                     'inputType' => 'textarea',
+                     'search'    => true,
+                     'eval'      => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
+                     'sql'       => "text NULL"
               ),
               'comment'              => array(
                      'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'],
@@ -750,6 +752,50 @@ class tl_gallery_creator_albums extends Backend
        {
 
               return GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
+       }
+
+
+       /**
+        * handle ajax requests
+        */
+       public function isAjaxRequest()
+       {
+
+              if (Input::get('isAjaxRequest'))
+              {
+                     // revise table in the backend
+                     if (\Input::get('reviseTable'))
+                     {
+                            if (\Input::get('getAlbumIDS'))
+                            {
+                                   $arrIds = array();
+                                   $objDb = $this->Database->execute('SELECT id FROM tl_gallery_creator_albums ORDER BY id DESC');
+                                   while ($objDb->next())
+                                   {
+                                          $arrIds[] = $objDb->id;
+                                   }
+
+                                   echo json_encode(array('albumIDS' => $arrIds));
+                                   exit();
+                            }
+
+                            if (\Input::get('albumId'))
+                            {
+                                   $albumId = \Input::get('albumId');
+                                   \Input::setGet('mode', 'clean_db');
+                                   GalleryCreator\GcHelpers::reviseTable(false, $albumId);
+                                   $strError = '';
+                                   if(is_array($_SESSION['TL_ERROR'])){
+                                          $strError = implode('***', $_SESSION['TL_ERROR']);
+                                   }
+
+                                   unset($_SESSION['TL_ERROR']);
+                                   echo json_encode(array('errors' => $strError));
+                                   exit();
+                            }
+
+                     }
+              }
        }
 
        /**

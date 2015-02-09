@@ -988,9 +988,8 @@ class GcHelpers extends \System
         *
         * @param bool
         */
-       public static function reviseTable($blnCleanDb = false)
+       public static function reviseTable($blnCleanDb = false, $albumId = null)
        {
-
               // Requires a lot of Memory
               if (\Input::get('mode') == 'clean_db')
               {
@@ -1018,6 +1017,7 @@ class GcHelpers extends \System
 
 
                      // Auf gueltige pid ueberpruefen
+
                      $objAlb = \Database::getInstance()->prepare('SELECT id, pid FROM tl_gallery_creator_albums WHERE pid!=?')
                             ->execute('0');
                      while ($objAlb->next())
@@ -1037,7 +1037,15 @@ class GcHelpers extends \System
                      {
 
                             // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
-                            $objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
+                            if ($albumId !== null)
+                            {
+                                   $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')
+                                          ->execute($albumId);
+                            }
+                            else
+                            {
+                                   $objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
+                            }
                             while ($objPictures->next())
                             {
                                    // Get parent album
