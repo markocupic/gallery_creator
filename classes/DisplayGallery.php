@@ -549,11 +549,11 @@ abstract class DisplayGallery extends \Module
                      ->execute($intAlbumId);
 
               // add meta tags to the page object
-              if (TL_MODE == 'FE' && $this->DETAIL_VIEW === true)
+              if (TL_MODE == 'FE' && $this->DETAIL_VIEW === true && $objAlbum !== null)
               {
-                     $objPage->description = trim($objPage->description) . (trim($objPage->description) != '' && trim($objAlbum->desription) != '' ? ', ' : '') . specialchars($objAlbum->description);
-                     $GLOBALS['TL_KEYWORDS'] = trim($GLOBALS['TL_KEYWORDS']) . (trim($GLOBALS['TL_KEYWORDS']) != '' && $objAlbum->keywords != '' ? ',' : '') . specialchars($objAlbum->keywords);
-              }
+                     $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;
+                     $GLOBALS['TL_KEYWORDS'] = ltrim($GLOBALS['TL_KEYWORDS'] . ',' . specialchars($objAlbum->keywords), ',');
+              } 
 
               //store all album-data in the array
               $objAlbum->reset();
