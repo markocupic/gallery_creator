@@ -1,7 +1,7 @@
 *.clear {
     clear: both;
 }
-.icon_clean_db {
+.icon_revise_tables {
     margin-left: 20px;
     padding: 2px 0 3px 22px;
     background: url("../images/database_gear.png") no-repeat left center;
@@ -45,4 +45,36 @@ div.readonly input {
 #tl_gallery_creator_albums .preview_thumb li:hover
 {
     background-color: rgb(235, 253, 215);
+}
+
+
+/**  revise tables **/
+.gc_check_tables .tl_status_box {
+    position:absolute;
+    left:28px;
+    top:3px;
+    font-size: 11px;
+    color:green;
+}
+
+.gc_revise_tables .tl_status_box {
+    font-size: 13px;
+    color:green;
+    padding-left: 20px;
+}
+
+.gc_revise_tables label[for=revise_tables]{
+    font-size:13px;
+    color:blue;
+    line-height:13px;
+    margin:3px;
+}
+.gc_revise_tables input[name=revise_tables]{
+    height:13px;
+    vertical-align:bottom;
+    margin:0;
+}
+
+.gc_revise_tables .gc_message {
+    min-height:100px;
 }
