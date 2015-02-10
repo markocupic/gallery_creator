@@ -1077,7 +1077,7 @@ class GcHelpers extends \System
                                           {
                                                  $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
                                                  $objDel->delete();
-                                                 $_SESSION['GC_ERROR'][] = ' Deleted Datarecord with ID ' . $objPictures->id . '.';
+                                                 $_SESSION['GC_ERROR'][] = ' Deleted data record with ID ' . $objPictures->id . '.';
                                           }
                                           else
                                           {
@@ -1093,7 +1093,7 @@ class GcHelpers extends \System
                                           {
                                                  $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
                                                  $objDel->delete();
-                                                 $_SESSION['GC_ERROR'][] = 'Deleted Datarecord with ID ' . $objPictures->id . '.';
+                                                 $_SESSION['GC_ERROR'][] = 'Deleted data record with ID ' . $objPictures->id . '.';
                                           }
                                           else
                                           {
