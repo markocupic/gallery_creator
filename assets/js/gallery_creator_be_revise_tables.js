@@ -99,6 +99,9 @@
             this.intRequestDone = 0;
             this.errors = 0;
             this.albumIDS = null;
+            $$('.tl_error').each(function(el){
+                el.destroy();
+            });
             this.statusBox.set('text', 'Please wait a moment...');
             this.getAlbumIDS();
         },
