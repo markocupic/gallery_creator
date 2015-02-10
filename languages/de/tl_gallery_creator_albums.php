@@ -91,5 +91,6 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = "Individuelle Reihe
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = "Datenbank bereinigen: Beschädigte/ungültige/verwaiste Datenbankeinträge entfernen ";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables']['1'] = "Alte/fehlerhafte Datenbankeinträge löschen";
-
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['reviseTablesBtn']['0'] = "Datenbank bereinigen";
+ 
 ?>
