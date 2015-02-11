@@ -1,6 +1,6 @@
 <?php
 // Maximum file size in MB
-$intMaxSize = $this->maxFileSize / 1024000;
+$intMaxSize = $this->maxFileSize / 1048576;
 
 // String of accepted file extensions
 $strAccepted = ".jpg,.jpeg";

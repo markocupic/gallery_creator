@@ -27,7 +27,7 @@
         /**
          * count completed requests
          */
-        intRequestDone: 0,
+        intRequestsDone: 0,
 
         /**
          * messageBox
@@ -96,7 +96,7 @@
          * kick off!
          */
         start: function () {
-            this.intRequestDone = 0;
+            this.intRequestsDone = 0;
             this.errors = 0;
             this.albumIDS = null;
             $$('.tl_error').each(function(el){
@@ -182,13 +182,13 @@
 
                     onComplete: function () {
 
-                        self.intRequestDone++;
+                        self.intRequestsDone++;
 
                         // display next message
                         self.statusBox.set('text', 'Check album with ID ' + albumId + '.');
 
                         // finaly display a message, when all requests are done
-                        if (self.intRequestDone == self.albumIDS.length) {
+                        if (self.intRequestsDone == self.albumIDS.length) {
                             var delStatusBox = (function () {
                                 self.statusBox.set('text', 'Database cleaned up. ' + self.errors.toInt().toString() + ' error(s) found.');
                                 self.button.fade(1);

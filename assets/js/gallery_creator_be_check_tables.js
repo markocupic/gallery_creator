@@ -21,16 +21,59 @@
         albumIDS: null,
 
         /**
+         * count errors
+         */
+        errors: 0,
+
+        /**
+         * count completed requests
+         */
+        intRequestsDone: 0,
+
+        /**
+         * messageBox
+         */
+        messageBox: null,
+
+        /**
+         * statusBox
+         */
+        statusBox: null,
+
+        /**
          * constructor
          */
         initialize: function () {
             document.id('main').addClass('gc_check_tables');
+
+            // Inject the message holder into the DOM
+            if (!$$('.tl_message')[0]) {
+                this.messageBox = new Element('div', {
+                    'class': 'tl_message'
+                });
+                this.messageBox.inject(document.id('tl_buttons'), 'after');
+
+                // Inject the status box into the DOM
+                this.statusBox = new Element('p#statusBox', {
+                    'class': 'tl_status_box'
+                });
+                this.statusBox.inject($$('.tl_folder_top')[0]);
+            }
         },
 
         /**
          * kick off!
          */
         start: function () {
+            this.intRequestsDone = 0;
+            this.errors = 0;
+            this.albumIDS = null;
+            $$('.tl_error').each(function(el){
+                el.destroy();
+            });
+            this.statusBox.set('text', 'Checking tables...');
+
+            // Kick off!
             this.getAlbumIDS();
         },
 
@@ -68,6 +111,7 @@
          * display error messages in the head section of the backend
          */
         checkTables: function () {
+            var self = this;
             if (this.albumIDS === null) {
                 return;
             }
@@ -92,12 +136,9 @@
                             return;
                         }
                         var arrError = responseText.errors.toString().split('***');
-                        if (!$$('.tl_message')[0]) {
-                            var messageBox = new Element('div');
-                            messageBox.addClass('tl_message');
-                            messageBox.inject(document.id('tl_buttons'), 'after');
-                        }
+
                         arrError.each(function (errorMsg) {
+                            self.errors++;
                             var error = new Element('p', {
                                     'class': 'tl_error',
                                     text: errorMsg
@@ -108,27 +149,22 @@
                     },
 
                     onComplete: function () {
-                        // destroy previous status boxes
-                        if ($$('.tl_status_box')) {
-                            $$('.tl_status_box').each(function (el) {
-                                el.destroy();
-                            });
+                        self.intRequestsDone++;
+                        self.statusBox.set('text', 'Check album with ID ' + albumId + '.');
+
+                        // finaly display a message, when all requests are done
+                        if (self.intRequestsDone == self.albumIDS.length) {
+                            // Show message after all requests are done
+                            var endCheck = (function () {
+                                self.statusBox.set('text', 'The check ended up. ' + self.errors.toInt().toString() + ' error(s) were found.');
+                            }.delay(3000));
+
+                            // Clear status Box
+                            var cleanStatusBox = (function () {
+                                self.statusBox.set('text', '');
+                            }.delay(15000));
                         }
 
-                        // inject status box into DOM
-                        $$('#tl_listing .tl_folder_top')[0].setStyle('position', 'relative');
-                        var statusBox = new Element('p#statusBox' + albumId, {
-                            'class': 'tl_status_box',
-                            text: 'Check album with ID ' + albumId + '.'
-                        });
-                        statusBox.inject($$('.tl_folder_top')[0]);
-
-                        // delete the last status box after 10s of delay
-                        var delStatusBox = (function () {
-                            if (document.id('statusBox' + albumId)) {
-                                document.id('statusBox' + albumId).destroy();
-                            }
-                        }.delay(10000));
                     },
 
                     onError: function () {
