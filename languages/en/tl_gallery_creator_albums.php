@@ -21,7 +21,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = 'image set
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = 'insert articles before or after the album';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = 'uploader';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = 'Revise tables';
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] = 'Album-preview-thumb-settings';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] = 'Album-preview-thumb-settings & picture sorting';
 
 
 
@@ -40,7 +40,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'] = array('Meta keywo
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'] = array('albumname');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'] = array('albumowner');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'] = array('album-comment');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'] = array('preview-thumb', 'Which image should be displayed in the album preview?');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'] = array('preview-thumb & picture sorting', 'Which image should be displayed in the album preview?');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'] = array('protect album');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'] = array('allowed frontend-groups');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'] = array('insert an article optionally before the album','Insert the id of the article that you optionally like have displayed in the detail view.');
