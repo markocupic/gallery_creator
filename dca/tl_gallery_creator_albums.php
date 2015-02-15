@@ -9,12 +9,13 @@
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
-/**
- * Table tl_gallery_creator_albums
- */
+
 
 $this->import('BackendUser', 'User');
 
+/**
+ * Table tl_gallery_creator_albums
+ */
 $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
     // Config
     'config'      => array(
@@ -69,7 +70,6 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
             )
         ),
         'operations'        => array(
-
             'edit'          => array(
                 'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures'],
                 'href'            => 'table=tl_gallery_creator_pictures',
@@ -571,14 +571,14 @@ class tl_gallery_creator_albums extends Backend
     /**
      * Return the paste-picture-button
      *
-     * @param DataContainer $dc
+     * @param \Contao\DataContainer $dc
      * @param $row
      * @param $table
      * @param $cr
      * @param bool $arrClipboard
      * @return string
      */
-    public function buttonCbPastePicture(DataContainer $dc, $row, $table, $cr, $arrClipboard = false)
+    public function buttonCbPastePicture(\Contao\DataContainer $dc, $row, $table, $cr, $arrClipboard = false)
     {
 
         $disablePA = false;
@@ -629,7 +629,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * return the level of an album or subalbum (level_0, level_1, level_2,...)
-     *
      * @param integer
      * @return integer
      */
@@ -670,7 +669,6 @@ class tl_gallery_creator_albums extends Backend
     /**
      * Input-field-callback
      * return the html
-     *
      * @return string
      */
     public function inputFieldCbCleanDb()
@@ -690,7 +688,6 @@ class tl_gallery_creator_albums extends Backend
     /**
      * Input-field-callback
      * return the html-table with the album-information for restricted users
-     *
      * @return string
      */
     public function inputFieldCbGenerateAlbumInformations()
@@ -792,7 +789,6 @@ class tl_gallery_creator_albums extends Backend
                 exit();
             }
 
-
             // revise table in the backend
             if (\Input::get('checkTables'))
             {
@@ -851,7 +847,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * check if album has subalbums
-     *
      * @param integer
      * @return bool
      */
@@ -869,7 +864,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * label-callback for the albumlisting
-     *
      * @param array
      * @param string
      * @return string
@@ -894,7 +888,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * load-callback for uploader type
-     *
      * @return string
      */
     public function loadCbGetUploader()
@@ -905,7 +898,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * load-callback for image-quality
-     *
      * @return string
      */
     public function loadCbGetImageQuality()
@@ -916,7 +908,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * load-callback for image-resolution
-     *
      * @return string
      */
     public function loadCbGetImageResolution()
@@ -927,7 +918,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * Parse Backend Template Hook
-     *
      * @param string
      * @param string
      * @return string
@@ -1127,7 +1117,6 @@ class tl_gallery_creator_albums extends Backend
     /**
      * onload-callback
      * return an array with the ids of all gallery_creator content-elements where the album with the id "Input::get('id')" is selected
-     *
      * @return array
      */
     public function onloadCbGetGcCteElements()
@@ -1267,7 +1256,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * displ_alb_in_this_ce  - options_callback
-     *
      * @return array
      */
     public function optionsCbDisplAlbInThisContentElements()
@@ -1288,7 +1276,6 @@ class tl_gallery_creator_albums extends Backend
     /**
      * Input field callback for the album preview thumb select
      * list each image of the album (and child-albums)
-     *
      * @return string
      */
     public function inputFieldCbThumb()
@@ -1402,10 +1389,10 @@ class tl_gallery_creator_albums extends Backend
     /**
      * sortBy  - save_callback
      * @param $varValue
-     * @param DataContainer $dc
+     * @param \Contao\DataContainer $dc
      * @return string
      */
-    public function saveCbSortAlbum($varValue, DataContainer $dc)
+    public function saveCbSortAlbum($varValue, \Contao\DataContainer $dc)
     {
 
         if ($varValue == 'custom')
@@ -1467,20 +1454,19 @@ class tl_gallery_creator_albums extends Backend
     /**
      * generate an albumalias based on the albumname and create a directory of the same name
      * and register the directory in tl files
-     *
      * @param $strAlias
-     * @param DataContainer $dc
+     * @param \Contao\DataContainer $dc
      * @return mixed|string
      */
-    public function saveCbGenerateAlias($strAlias, DataContainer $dc)
+    public function saveCbGenerateAlias($strAlias, \Contao\DataContainer $dc)
     {
-
         $strAlias = standardize($strAlias);
         // if there isn't an existing albumalias generate one from the albumname
         if (!strlen($strAlias))
         {
             $strAlias = standardize($dc->activeRecord->name);
         }
+
         // limit alias to 50 characters
         $strAlias = substr($strAlias, 0, 43);
         // remove invalid characters
@@ -1495,7 +1481,6 @@ class tl_gallery_creator_albums extends Backend
 
         // get current row
         $objAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
-        $strAlias = strlen($objAlbum->alias) ? $objAlbum->alias : $strAlias;
 
         // if a new album was created
         $createDir = true;
@@ -1522,12 +1507,11 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * displ_alb_in_this_ce  - save_callback
-     *
      * @param $varValue
-     * @param DataContainer $dc
+     * @param \Contao\DataContainer $dc
      * @return mixed
      */
-    public function saveCbDisplAlbInThisContentElements($varValue, DataContainer $dc)
+    public function saveCbDisplAlbInThisContentElements($varValue, \Contao\DataContainer $dc)
     {
 
         $albumId = $dc->id;
@@ -1582,7 +1566,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * save_callback for the uploader
-     *
      * @param $value
      */
     public function saveCbSaveUploader($value)
@@ -1594,7 +1577,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * save_callback for the image quality above the jumploader applet
-     *
      * @param $value
      */
     public function saveCbSaveImageQuality($value)
@@ -1605,7 +1587,6 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * save_callback for the image resolution above the jumploader applet
-     *
      * @param $value
      */
     public function saveCbSaveImageResolution($value)
