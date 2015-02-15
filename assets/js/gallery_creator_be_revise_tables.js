@@ -1,3 +1,5 @@
+
+
 // Dollar Safe Mode
 (function ($) {
     window.addEvent('domready', function () {
@@ -15,99 +17,94 @@
     GalleryCreatorBeReviseTables = new Class({
 
         /**
-         * array with als albumID's
+         * Array with als albumID's
          */
         albumIDS: null,
 
         /**
-         * count errors
+         * Count errors
          */
         errors: 0,
 
         /**
-         * count completed requests
+         * Count completed requests
          */
-        intRequestsDone: 0,
+        intRequestDone: 0,
 
         /**
-         * messageBox
+         * Message box
          */
         messageBox: null,
 
         /**
-         * statusBox
+         * Status box
          */
         statusBox: null,
 
         /**
-         * button
+         * Button
          */
         button: null,
 
         /**
-         * checkbox
+         * Checkbox
          */
         checkbox: null,
 
         /**
-         * messageBox
+         * Label checkbox
          */
         labelCheckbox: null,
 
 
+
         /**
-         * constructor
+         * Constructor
          */
         initialize: function () {
             var self = this;
             document.id('main').addClass('gc_revise_tables');
 
             this.button = document.id('reviseTableBtn');
-            this.checkbox = $$('input[name=revise_tables]')[0];
-            this.labelCheckbox = $$('label[for=revise_tables]')[0];
+			this.checkbox = $$('input[name=revise_tables]')[0];
+			this.labelCheckbox = $$('label[for=revise_tables]')[0];
 
-            // inject message holder into DOM
-            this.messageBox = new Element('div#messageBox', {
-                'class': 'gc_message'
-            });
+            this.messageBox = new Element('div#messageBox');
+            this.messageBox.addClass('gc_message');
             this.messageBox.inject($$('.tl_formbody_submit')[0], 'before');
 
-            // inect statusBox into DOM
             this.statusBox = new Element('p#statusBox', {
                 'class': 'tl_status_box'
             });
             this.statusBox.inject(this.messageBox);
 
 
-            this.button.addEvent('click', function (event) {
-                if (self.checkbox.checked) {
-                    // hide some elements
+			this.button.addEvent('click', function(event){
+                if(self.checkbox.checked){
                     self.button.fade(0);
-                    self.checkbox.fade(0);
-                    self.labelCheckbox.fade(0);
-
-                    // kick off!
+					self.checkbox.fade(0);
+					self.labelCheckbox.fade(0);
                     self.start();
                 }
             });
         },
 
         /**
-         * kick off!
+         * Kick off!
          */
         start: function () {
-            this.intRequestsDone = 0;
+            this.intRequestDone = 0;
             this.errors = 0;
             this.albumIDS = null;
-            $$('.tl_error').each(function(el){
+            $$('#messageBox .tl_error').each(function(el){
                 el.destroy();
             });
-            this.statusBox.set('text', 'Please wait a moment...');
+            this.statusBox.set('text','Please wait a moment...');
             this.getAlbumIDS();
         },
 
         /**
-         * get all album ids
+         * Get all album ids
          */
         getAlbumIDS: function () {
             var self = this;
@@ -131,15 +128,15 @@
                     //
                 }
             });
-            // fire request (get AlbumIDS)
+            // Fire request (get AlbumIDS)
             myRequest.send();
         },
 
         /**
-         * for each album there will be fired a request
-         * display error messages in the head section of the backend
+         * Fire a request for each album.
+         * Display error messages in the head section of the backend.
          */
-        reviseTables: function () {
+		reviseTables: function () {
             var self = this;
 
             if (this.albumIDS === null) {
@@ -166,31 +163,31 @@
                         if (responseText.errors.toString() == '') {
                             return;
                         }
+                        var arrError = responseText.errors.toString().split('***');
 
-                        var arrResponse = responseText.errors.toString().split('***');
 
-                        arrResponse.each(function (errorMsg) {
-                            var errorBox = new Element('p', {
+                        arrError.each(function (errorMsg) {
+                            var error = new Element('p', {
                                     'class': 'tl_error',
                                     text: errorMsg
                                 }
                             );
-                            errorBox.inject(self.messageBox);
+                            error.inject(self.messageBox);
                             self.errors++;
                         });
                     },
 
                     onComplete: function () {
 
-                        self.intRequestsDone++;
+                        self.intRequestDone++;
 
-                        // display next message
+                        // Display next message
                         self.statusBox.set('text', 'Check album with ID ' + albumId + '.');
 
-                        // finaly display a message, when all requests are done
-                        if (self.intRequestsDone == self.albumIDS.length) {
+                        // Show final message, when all requests have completed
+                        if(self.intRequestDone == self.albumIDS.length) {
                             var delStatusBox = (function () {
-                                self.statusBox.set('text', 'Database cleaned up. ' + self.errors.toInt().toString() + ' error(s) found.');
+                                self.statusBox.set('text','Database cleaned up. ' + self.errors.toInt().toString() + ' errors found.');
                                 self.button.fade(1);
                                 self.checkbox.checked = false;
                                 self.checkbox.fade(1);
@@ -203,8 +200,9 @@
                         //
                     }
                 });
-                // fire request
+                // Fire request
                 myRequest.send();
+
             });
         }
 

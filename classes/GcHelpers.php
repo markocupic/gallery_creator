@@ -415,7 +415,6 @@ class GcHelpers extends \System
      */
     public static function getAlbumInformationArray($intAlbumId, $objThis)
     {
-
         global $objPage;
 
         if ($objThis->moduleType != 'fmd' && $objThis->moduleType != 'cte')
@@ -998,75 +997,59 @@ class GcHelpers extends \System
     }
 
     /**
-     * reviseTable
-     *
-     * @param bool
+     * revise tables
+     * @param $albumId
+     * @param bool $blnCleanDb
      */
-    public static function reviseTable($blnCleanDb = false, $albumId = null)
+    public static function reviseTables($albumId, $blnCleanDb = false)
     {
-
         $_SESSION['GC_ERROR'] = array();
-        // Requires a lot of memory
-        if (\Input::get('mode') == 'revise_tables')
+
+        //Upload-Verzeichnis erstellen, falls nicht mehr vorhanden
+        new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
+
+        // Get album model
+        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
+        if ($objAlbum === null)
         {
-            //Upload-Verzeichnis erstellen, falls nicht mehr vorhanden
-            new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
+            return;
+        }
 
-            //Sorgt dafuer, dass der zur id gehoerende Name immer aktuell ist
-            $db = \Database::getInstance()->execute('SELECT id, owner, alias FROM tl_gallery_creator_albums');
-            while ($db->next())
+        // Check for valid album owner
+        $objUser = \UserModel::findByPk($objAlbum->owner);
+        if ($objUser !== null)
+        {
+            $owner = $objUser->name;
+        }
+        else
+        {
+            $owner = "no-name";
+        }
+        $objAlbum->owners_name = $owner;
+        $objAlbum->save();
+
+        // Check for valid pid
+        if ($objAlbum->pid > 0)
+        {
+            $objParentAlb = $objAlbum->getRelated('pid');
+            if ($objParentAlb === null)
             {
-                // Albumbesitzer ueberpruefen
-                $db_2 = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')->execute($db->owner);
-                $owner = $db_2->name;
-                if ($db_2->name == '')
-                {
-                    $owner = "no-name";
-                }
-                $objUpdate = \GalleryCreatorAlbumsModel::findById($db->id);
-                if (is_object($objUpdate))
-                {
-                    $objUpdate->owners_name = $owner;
-                    $objUpdate->save();
-                }
+                $objAlbum->pid = null;
+                $objAlbum->save();
             }
+        }
 
 
-            // Auf gueltige pid ueberpruefen
+        if (\Database::getInstance()->fieldExists('path', 'tl_gallery_creator_pictures'))
+        {
 
-            $objAlb = \Database::getInstance()->prepare('SELECT id, pid FROM tl_gallery_creator_albums WHERE pid!=?')
-                ->execute('0');
-            while ($objAlb->next())
+            // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
+            $objPictures = \GalleryCreatorPicturesModel::findByPid($albumId);
+            if ($objPictures !== null)
             {
-                $objParentAlb = \Database::getInstance()->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')
-                    ->execute($objAlb->pid);
-                if ($objParentAlb->numRows < 1)
-                {
-                    $objUpd = \FilesModel::findByPk($objAlb->id);
-                    $objUpd->pid = null;
-                    $objUpd->save();
-                }
-            }
-
-
-            if (\Database::getInstance()->fieldExists('path', 'tl_gallery_creator_pictures'))
-            {
-
-                // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
-                if ($albumId !== null)
-                {
-                    $objPictures = \Database::getInstance()
-                        ->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')
-                        ->execute($albumId);
-                }
-                else
-                {
-                    $objPictures = \Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_pictures');
-                }
                 while ($objPictures->next())
                 {
                     // Get parent album
-                    $objAlbum = \GalleryCreatorPicturesModel::findByPk($objPictures->id)->getRelated('pid');
                     $objFile = \FilesModel::findByUuid($objPictures->uuid);
                     if ($objFile === null)
                     {
@@ -1077,18 +1060,17 @@ class GcHelpers extends \System
                                 $objModel = \Dbafs::addResource($objPictures->path);
                                 if (\Validator::isUuid($objModel->uuid))
                                 {
-                                    $objUpd = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-                                    $objUpd->uuid = $objModel->uuid;
-                                    $objUpd->save();
+                                    $objPictures->uuid = $objModel->uuid;
+                                    $objPictures->save();
                                     continue;
                                 }
                             }
                         }
                         if ($blnCleanDb !== false)
                         {
-                            $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-                            $objDel->delete();
-                            $_SESSION['GC_ERROR'][] = ' Deleted data record with ID ' . $objPictures->id . '.';
+                            $msg = ' Deleted Datarecord with ID ' . $objPictures->id . '.';
+                            $_SESSION['GC_ERROR'][] = $msg;
+                            $objPictures->delete();
                         }
                         else
                         {
@@ -1102,9 +1084,9 @@ class GcHelpers extends \System
                         // If file has an entry in Dbafs, but doesn't exist on the server anymore
                         if ($blnCleanDb !== false)
                         {
-                            $objDel = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-                            $objDel->delete();
-                            $_SESSION['GC_ERROR'][] = 'Deleted data record with ID ' . $objPictures->id . '.';
+                            $msg = 'Deleted Datarecord with ID ' . $objPictures->id . '.';
+                            $_SESSION['GC_ERROR'][] = $msg;
+                            $objPictures->delete();
                         }
                         else
                         {
@@ -1116,42 +1098,43 @@ class GcHelpers extends \System
                         // Pfadangaben mit tl_files.path abgleichen (Redundanz)
                         if ($objPictures->path != $objFile->path)
                         {
-                            $objUpd = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-                            $objUpd->path = $objFile->path;
-                            $objUpd->save();
+                            $objPictures->path = $objFile->path;
+                            $objPictures->save();
                         }
                     }
                 }
+
             }
 
+        }
 
-            /**
-             * Sorgt dafuer, dass in tl_content im Feld gc_publish_albums keine verwaisten AlbumId's vorhanden sind
-             * Prueft, ob die im Inhaltselement definiertern Alben auch noch existieren.
-             * Wenn nein, werden diese aus dem Array entfernt.
-             */
-            $objCont = \Database::getInstance()->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')
-                ->execute('gallery_creator');
-            while ($objCont->next())
+
+        /**
+         * Sorgt dafuer, dass in tl_content im Feld gc_publish_albums keine verwaisten AlbumId's vorhanden sind
+         * Prueft, ob die im Inhaltselement definiertern Alben auch noch existieren.
+         * Wenn nein, werden diese aus dem Array entfernt.
+         */
+        $objCont = \Database::getInstance()->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')
+            ->execute('gallery_creator');
+        while ($objCont->next())
+        {
+            $newArr = array();
+            $arrAlbums = unserialize($objCont->gc_publish_albums);
+            if (is_array($arrAlbums))
             {
-                $newArr = array();
-                $arrAlbums = unserialize($objCont->gc_publish_albums);
-                if (is_array($arrAlbums))
+                foreach ($arrAlbums as $AlbumID)
                 {
-                    foreach ($arrAlbums as $AlbumID)
+                    $objAlb = \Database::getInstance()
+                        ->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')->limit('1')
+                        ->execute($AlbumID);
+                    if ($objAlb->next())
                     {
-                        $objAlb = \Database::getInstance()
-                            ->prepare('SELECT id FROM tl_gallery_creator_albums WHERE id=?')->limit('1')
-                            ->execute($AlbumID);
-                        if ($objAlb->next())
-                        {
-                            $newArr[] = $AlbumID;
-                        }
+                        $newArr[] = $AlbumID;
                     }
                 }
-                \Database::getInstance()->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')
-                    ->execute(serialize($newArr), $objCont->id);
             }
+            \Database::getInstance()->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')
+                ->execute(serialize($newArr), $objCont->id);
         }
     }
 }

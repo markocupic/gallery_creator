@@ -790,9 +790,9 @@ class tl_gallery_creator_albums extends Backend
             }
 
             // revise table in the backend
-            if (\Input::get('checkTables'))
+            if (Input::get('checkTables'))
             {
-                if (\Input::get('getAlbumIDS'))
+                if (Input::get('getAlbumIDS'))
                 {
                     $arrIds = array();
                     $objDb = $this->Database->execute("SELECT id FROM tl_gallery_creator_albums ORDER BY RAND()");
@@ -805,20 +805,19 @@ class tl_gallery_creator_albums extends Backend
                     exit();
                 }
 
-                if (\Input::get('albumId'))
+                if (Input::get('albumId'))
                 {
                     $albumId = Input::get('albumId');
 
-                    \Input::setGet('mode', 'revise_tables');
                     if (Input::get('reviseTables') && $this->User->isAdmin)
                     {
                         // delete damaged datarecords
-                        GalleryCreator\GcHelpers::reviseTable(true, $albumId);
+                        GalleryCreator\GcHelpers::reviseTables($albumId, true);
                         $response = true;
                     }
                     else
                     {
-                        GalleryCreator\GcHelpers::reviseTable(false, $albumId);
+                        GalleryCreator\GcHelpers::reviseTables($albumId, false);
                         $response = true;
 
                     }
