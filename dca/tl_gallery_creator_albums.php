@@ -17,12 +17,12 @@ $this->import('BackendUser', 'User');
 
 $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
     // Config
-    'config' => array(
-        'ctable' => array('tl_gallery_creator_pictures'),
-        'doNotCopyRecords' => true,
-        'enableVersioning' => true,
-        'dataContainer' => 'Table',
-        'onload_callback' => array(
+    'config'      => array(
+        'ctable'            => array('tl_gallery_creator_pictures'),
+        'doNotCopyRecords'  => true,
+        'enableVersioning'  => true,
+        'dataContainer'     => 'Table',
+        'onload_callback'   => array(
             array('tl_gallery_creator_albums', 'onloadCbFileupload'),
             array('tl_gallery_creator_albums', 'onloadCbSetUpPalettes'),
             array('tl_gallery_creator_albums', 'onloadCbCheckFolderSettings'),
@@ -34,306 +34,306 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
         'ondelete_callback' => array(
             array('tl_gallery_creator_albums', 'ondeleteCb')
         ),
-        'sql' => array(
+        'sql'               => array(
             'keys' => array(
-                'id' => 'primary',
-                'pid' => 'index',
+                'id'    => 'primary',
+                'pid'   => 'index',
                 'alias' => 'unique'
             )
         )
     ),
     // List
-    'list' => array(
-        'sorting' => array(
-            'panelLayout' => 'limit,sort',
-            'mode' => 5,
+    'list'        => array(
+        'sorting'           => array(
+            'panelLayout'           => 'limit,sort',
+            'mode'                  => 5,
             'paste_button_callback' => array('tl_gallery_creator_albums', 'buttonCbPastePicture')
         ),
-        'label' => array(
-            'fields' => array('name'),
-            'format' => '<span style="#padding-left#"><a href="#href#" title="#title#"><img src="#icon#"></span> #datum# <span style="color:#b3b3b3; padding-left:3px;">[%s] [#count_pics# images]</span></a>',
+        'label'             => array(
+            'fields'         => array('name'),
+            'format'         => '<span style="#padding-left#"><a href="#href#" title="#title#"><img src="#icon#"></span> #datum# <span style="color:#b3b3b3; padding-left:3px;">[%s] [#count_pics# images]</span></a>',
             'label_callback' => array('tl_gallery_creator_albums', 'labelCb')
         ),
         'global_operations' => array(
-            'all' => array(
-                'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
-                'href' => 'act=select',
-                'class' => 'header_edit_all',
+            'all'           => array(
+                'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
+                'href'       => 'act=select',
+                'class'      => 'header_edit_all',
                 'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             ),
             'revise_tables' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables'],
-                'href' => 'href is set in $this->setUpPalettes',
-                'class' => 'icon_revise_tables',
+                'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables'],
+                'href'       => 'href is set in $this->setUpPalettes',
+                'class'      => 'icon_revise_tables',
                 'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             )
         ),
-        'operations' => array(
+        'operations'        => array(
 
-            'edit' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures'],
-                'href' => 'table=tl_gallery_creator_pictures',
-                'icon' => 'system/modules/gallery_creator/assets/images/text_list_bullets.png',
-                'attributes' => 'class="contextmenu"',
+            'edit'          => array(
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures'],
+                'href'            => 'table=tl_gallery_creator_pictures',
+                'icon'            => 'system/modules/gallery_creator/assets/images/text_list_bullets.png',
+                'attributes'      => 'class="contextmenu"',
                 'button_callback' => array('tl_gallery_creator_albums', 'buttonCbEdit')
             ),
-            'delete' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['delete'],
-                'href' => 'act=delete',
-                'icon' => 'delete.gif',
-                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
+            'delete'        => array(
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['delete'],
+                'href'            => 'act=delete',
+                'icon'            => 'delete.gif',
+                'attributes'      => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
                 'button_callback' => array('tl_gallery_creator_albums', 'buttonCbDelete')
             ),
-            'toggle' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['toggle'],
-                'icon' => 'visible.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+            'toggle'        => array(
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['toggle'],
+                'icon'            => 'visible.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
                 'button_callback' => array('tl_gallery_creator_albums', 'toggleIcon')
             ),
             'upload_images' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_images'],
-                'icon' => 'system/modules/gallery_creator/assets/images/image_add.png',
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_images'],
+                'icon'            => 'system/modules/gallery_creator/assets/images/image_add.png',
                 'button_callback' => array('tl_gallery_creator_albums', 'buttonCbAddImages')
             ),
             'import_images' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['import_images'],
-                'icon' => 'system/modules/gallery_creator/assets/images/folder_picture.png',
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['import_images'],
+                'icon'            => 'system/modules/gallery_creator/assets/images/folder_picture.png',
                 'button_callback' => array('tl_gallery_creator_albums', 'buttonCbImportImages')
             ),
-            'cut' => array(
-                'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['cut'],
-                'href' => 'act=paste&mode=cut',
-                'icon' => 'cut.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset();"',
+            'cut'           => array(
+                'label'           => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['cut'],
+                'href'            => 'act=paste&mode=cut',
+                'icon'            => 'cut.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset();"',
                 'button_callback' => array('tl_gallery_creator_albums', 'buttonCbCutPicture')
             )
         )
     ),
     // Palettes
-    'palettes' => array(
-        '__selector__' => array('protected'),
-        'default' => '{album_info},published,name,alias,description,keywords,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
+    'palettes'    => array(
+        '__selector__'    => array('protected'),
+        'default'         => '{album_info},published,name,alias,description,keywords,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
         'restricted_user' => '{album_info},link_edit_images,album_info',
-        'fileupload' => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader_legend},uploader,fileupload',
-        'import_images' => '{upload_settings},preserve_filename,multiSRC',
-        'revise_tables' => '{maintenance},revise_tables'
+        'fileupload'      => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader_legend},uploader,fileupload',
+        'import_images'   => '{upload_settings},preserve_filename,multiSRC',
+        'revise_tables'   => '{maintenance},revise_tables'
     ),
     // Subpalettes
     'subpalettes' => array('protected' => 'groups'),
     // Fields
-    'fields' => array(
-        'id' => array('sql' => "int(10) unsigned NOT NULL auto_increment"),
-        'pid' => array(
+    'fields'      => array(
+        'id'                   => array('sql' => "int(10) unsigned NOT NULL auto_increment"),
+        'pid'                  => array(
             'foreignKey' => 'tl_gallery_creator_albums.alias',
-            'sql' => "int(10) unsigned NOT NULL default '0'",
-            'relation' => array('type' => 'belongsTo', 'load' => 'lazy')
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => array('type' => 'belongsTo', 'load' => 'lazy')
         ),
-        'sorting' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
-        'tstamp' => array('sql' => "int(10) unsigned NOT NULL default '0'"),
-        'published' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published'],
+        'sorting'              => array('sql' => "int(10) unsigned NOT NULL default '0'"),
+        'tstamp'               => array('sql' => "int(10) unsigned NOT NULL default '0'"),
+        'published'            => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published'],
             'inputType' => 'checkbox',
-            'eval' => array('submitOnChange' => true),
-            'sql' => "char(1) NOT NULL default '1'"
+            'eval'      => array('submitOnChange' => true),
+            'sql'       => "char(1) NOT NULL default '1'"
         ),
-        'date' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date'],
+        'date'                 => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date'],
             'inputType' => 'text',
-            'default' => time(),
-            'eval' => array('mandatory' => true, 'datepicker' => true, 'rgxp' => 'date', 'tl_class' => 'w50 wizard', 'submitOnChange' => false),
-            'sql' => "int(10) unsigned NOT NULL default '0'"
+            'default'   => time(),
+            'eval'      => array('mandatory' => true, 'datepicker' => true, 'rgxp' => 'date', 'tl_class' => 'w50 wizard', 'submitOnChange' => false),
+            'sql'       => "int(10) unsigned NOT NULL default '0'"
         ),
-        'owner' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner'],
-            'default' => \BackendUser::getInstance()->id,
+        'owner'                => array(
+            'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner'],
+            'default'    => \BackendUser::getInstance()->id,
             'foreignKey' => 'tl_user.name',
-            'inputType' => 'select',
-            'eval' => array('includeBlankOption' => true, 'blankOptionLabel' => 'noName', 'doNotShow' => true, 'nospace' => true, 'tl_class' => 'w50'),
-            'sql' => "int(10) unsigned NOT NULL default '0'",
-            'relation' => array('type' => 'hasOne', 'load' => 'eager')
+            'inputType'  => 'select',
+            'eval'       => array('includeBlankOption' => true, 'blankOptionLabel' => 'noName', 'doNotShow' => true, 'nospace' => true, 'tl_class' => 'w50'),
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => array('type' => 'hasOne', 'load' => 'eager')
         ),
-        'assignedDir' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'],
-            'exclude' => true,
+        'assignedDir'          => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'],
+            'exclude'   => true,
             'inputType' => 'fileTree',
-            'eval' => array('mandatory' => false, 'fieldType' => 'radio', 'tl_class' => 'clr'),
-            'sql' => "binary(16) NULL"
+            'eval'      => array('mandatory' => false, 'fieldType' => 'radio', 'tl_class' => 'clr'),
+            'sql'       => "binary(16) NULL"
         ),
-        'owners_name' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'],
+        'owners_name'          => array(
+            'label'   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'],
             'default' => \BackendUser::getInstance()->name,
-            'eval' => array('doNotShow' => true, 'tl_class' => 'w50 readonly'),
-            'sql' => "text NULL"
+            'eval'    => array('doNotShow' => true, 'tl_class' => 'w50 readonly'),
+            'sql'     => "text NULL"
         ),
-        'event_location' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location'],
-            'exclude' => true,
+        'event_location'       => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location'],
+            'exclude'   => true,
             'inputType' => 'text',
-            'eval' => array('mandatory' => false, 'tl_class' => 'w50', 'submitOnChange' => false),
-            'sql' => "varchar(255) NOT NULL default ''"
+            'eval'      => array('mandatory' => false, 'tl_class' => 'w50', 'submitOnChange' => false),
+            'sql'       => "varchar(255) NOT NULL default ''"
         ),
-        'name' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'],
+        'name'                 => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'],
             'inputType' => 'text',
-            'eval' => array('mandatory' => true, 'tl_class' => 'w50', 'submitOnChange' => false),
-            'sql' => "varchar(255) NOT NULL default ''"
+            'eval'      => array('mandatory' => true, 'tl_class' => 'w50', 'submitOnChange' => false),
+            'sql'       => "varchar(255) NOT NULL default ''"
         ),
-        'alias' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias'],
-            'inputType' => 'text',
-            'eval' => array('doNotShow' => false, 'doNotCopy' => true, 'maxlength' => 50, 'tl_class' => 'w50', 'unique' => true),
+        'alias'                => array(
+            'label'         => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias'],
+            'inputType'     => 'text',
+            'eval'          => array('doNotShow' => false, 'doNotCopy' => true, 'maxlength' => 50, 'tl_class' => 'w50', 'unique' => true),
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbGenerateAlias')),
-            'sql' => "varbinary(128) NOT NULL default ''"
+            'sql'           => "varbinary(128) NOT NULL default ''"
         ),
-        'description' => array
+        'description'          => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'],
-            'exclude' => true,
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'],
+            'exclude'   => true,
             'inputType' => 'textarea',
-            'search' => true,
-            'eval' => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
-            'sql' => "text NULL"
+            'search'    => true,
+            'eval'      => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
+            'sql'       => "text NULL"
         ),
-        'keywords' => array
+        'keywords'             => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'],
-            'exclude' => true,
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'],
+            'exclude'   => true,
             'inputType' => 'textarea',
-            'search' => true,
-            'eval' => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
-            'sql' => "text NULL"
+            'search'    => true,
+            'eval'      => array('style' => 'height:60px', 'decodeEntities' => true, 'tl_class' => 'clr'),
+            'sql'       => "text NULL"
         ),
-        'comment' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'],
-            'exclude' => true,
+        'comment'              => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'],
+            'exclude'   => true,
             'inputType' => 'textarea',
-            'eval' => array('tl_class' => 'clr long', 'style' => 'height:7em;', 'allowHtml' => false, 'submitOnChange' => false, 'wrap' => 'soft'),
-            'sql' => "text NULL"
+            'eval'      => array('tl_class' => 'clr long', 'style' => 'height:7em;', 'allowHtml' => false, 'submitOnChange' => false, 'wrap' => 'soft'),
+            'sql'       => "text NULL"
         ),
-        'thumb' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'],
-            'inputType' => 'radio',
+        'thumb'                => array(
+            'label'                => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'],
+            'inputType'            => 'radio',
             'input_field_callback' => array('tl_gallery_creator_albums', 'inputFieldCbThumb'),
-            'eval' => array('doNotShow' => true, 'includeBlankOption' => true, 'nospace' => true, 'rgxp' => 'digit', 'maxlength' => 64, 'tl_class' => 'clr', 'submitOnChange' => true),
-            'sql' => "varchar(255) NOT NULL default ''"
+            'eval'                 => array('doNotShow' => true, 'includeBlankOption' => true, 'nospace' => true, 'rgxp' => 'digit', 'maxlength' => 64, 'tl_class' => 'clr', 'submitOnChange' => true),
+            'sql'                  => "varchar(255) NOT NULL default ''"
         ),
-        'fileupload' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'],
+        'fileupload'           => array(
+            'label'                => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'],
             'input_field_callback' => array('tl_gallery_creator_albums', 'inputFieldCbGenerateUploaderMarkup'),
-            'eval' => array('doNotShow' => true)
+            'eval'                 => array('doNotShow' => true)
         ),
-        'album_info' => array(
+        'album_info'           => array(
             'input_field_callback' => array('tl_gallery_creator_albums', 'inputFieldCbGenerateAlbumInformations'),
-            'eval' => array('doNotShow' => true)
+            'eval'                 => array('doNotShow' => true)
         ),
         'displ_alb_in_this_ce' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['displ_alb_in_this_ce'],
-            'exclude' => true,
-            'inputType' => 'checkbox',
+            'label'            => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['displ_alb_in_this_ce'],
+            'exclude'          => true,
+            'inputType'        => 'checkbox',
             'options_callback' => array('tl_gallery_creator_albums', 'optionsCbDisplAlbInThisContentElements'),
-            'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbDisplAlbInThisContentElements')),
-            'eval' => array('multiple' => true, 'doNotShow' => false, 'submitOnChange' => false),
-            'sql' => "text NULL"
+            'save_callback'    => array(array('tl_gallery_creator_albums', 'saveCbDisplAlbInThisContentElements')),
+            'eval'             => array('multiple' => true, 'doNotShow' => false, 'submitOnChange' => false),
+            'sql'              => "text NULL"
         ),
         // save value in tl_user
-        'uploader' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader'],
-            'default' => 'be_gc_jumploader',
-            'inputType' => 'select',
+        'uploader'             => array(
+            'label'         => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader'],
+            'default'       => 'be_gc_jumploader',
+            'inputType'     => 'select',
             'load_callback' => array(array('tl_gallery_creator_albums', 'loadCbGetUploader')),
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbSaveUploader')),
-            'options' => array('be_gc_jumploader', 'be_gc_html5_uploader'),
-            'eval' => array('doNotShow' => true, 'tl_class' => 'clr', 'submitOnChange' => true),
-            'sql' => "varchar(32) NOT NULL default 'be_gc_jumploader'"
+            'options'       => array('be_gc_jumploader', 'be_gc_html5_uploader'),
+            'eval'          => array('doNotShow' => true, 'tl_class' => 'clr', 'submitOnChange' => true),
+            'sql'           => "varchar(32) NOT NULL default 'be_gc_jumploader'"
         ),
         // save value in tl_user
-        'img_resolution' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_resolution'],
-            'default' => '600',
-            'inputType' => 'select',
+        'img_resolution'       => array(
+            'label'         => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_resolution'],
+            'default'       => '600',
+            'inputType'     => 'select',
             'load_callback' => array(array('tl_gallery_creator_albums', 'loadCbGetImageResolution')),
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbSaveImageResolution')),
-            'options' => array_merge(array('no_scaling'), range(100, 3500, 50)),
-            'reference' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference'],
-            'eval' => array('doNotShow' => true, 'tl_class' => 'w50', 'submitOnChange' => true),
-            'sql' => "smallint(5) unsigned NOT NULL default '600'"
+            'options'       => array_merge(array('no_scaling'), range(100, 3500, 50)),
+            'reference'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference'],
+            'eval'          => array('doNotShow' => true, 'tl_class' => 'w50', 'submitOnChange' => true),
+            'sql'           => "smallint(5) unsigned NOT NULL default '600'"
         ),
         // save value in tl_user
-        'img_quality' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'],
-            'default' => '100',
-            'inputType' => 'select',
+        'img_quality'          => array(
+            'label'         => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'],
+            'default'       => '100',
+            'inputType'     => 'select',
             'load_callback' => array(array('tl_gallery_creator_albums', 'loadCbGetImageQuality')),
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbSaveImageQuality')),
-            'options' => range(10, 100, 10),
-            'eval' => array('doNotShow' => true, 'tl_class' => 'w50', 'submitOnChange' => true),
-            'sql' => "smallint(3) unsigned NOT NULL default '100'"
+            'options'       => range(10, 100, 10),
+            'eval'          => array('doNotShow' => true, 'tl_class' => 'w50', 'submitOnChange' => true),
+            'sql'           => "smallint(3) unsigned NOT NULL default '100'"
         ),
-        'preserve_filename' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'],
+        'preserve_filename'    => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'],
             'inputType' => 'checkbox',
-            'default' => true,
-            'eval' => array('doNotShow' => true, 'submitOnChange' => true),
-            'sql' => "char(1) NOT NULL default ''"
+            'default'   => true,
+            'eval'      => array('doNotShow' => true, 'submitOnChange' => true),
+            'sql'       => "char(1) NOT NULL default ''"
         ),
-        'multiSRC' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_content']['multiSRC'],
-            'exclude' => true,
+        'multiSRC'             => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_content']['multiSRC'],
+            'exclude'   => true,
             'inputType' => 'fileTree',
-            'eval' => array('doNotShow' => true, 'multiple' => true, 'fieldType' => 'checkbox', 'files' => true, 'mandatory' => true),
-            'sql' => "blob NULL"
+            'eval'      => array('doNotShow' => true, 'multiple' => true, 'fieldType' => 'checkbox', 'files' => true, 'mandatory' => true),
+            'sql'       => "blob NULL"
         ),
-        'protected' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'],
-            'exclude' => true,
+        'protected'            => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'],
+            'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval' => array('doNotShow' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
-            'sql' => "char(1) NOT NULL default ''"
+            'eval'      => array('doNotShow' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
+            'sql'       => "char(1) NOT NULL default ''"
         ),
-        'groups' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'],
-            'inputType' => 'checkbox',
+        'groups'               => array(
+            'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'],
+            'inputType'  => 'checkbox',
             'foreignKey' => 'tl_member_group.name',
-            'eval' => array('doNotShow' => true, 'mandatory' => true, 'multiple' => true, 'tl_class' => 'clr'),
-            'sql' => "blob NULL"
+            'eval'       => array('doNotShow' => true, 'mandatory' => true, 'multiple' => true, 'tl_class' => 'clr'),
+            'sql'        => "blob NULL"
         ),
-        'insert_article_pre' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'],
+        'insert_article_pre'   => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'],
             'inputType' => 'text',
-            'eval' => array('doNotShow' => false, 'rgxp' => 'digit', 'tl_class' => 'w50',),
-            'sql' => "int(10) unsigned NOT NULL default '0'",
+            'eval'      => array('doNotShow' => false, 'rgxp' => 'digit', 'tl_class' => 'w50',),
+            'sql'       => "int(10) unsigned NOT NULL default '0'",
         ),
-        'insert_article_post' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'],
+        'insert_article_post'  => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'],
             'inputType' => 'text',
-            'eval' => array('doNotShow' => false, 'rgxp' => 'digit', 'tl_class' => 'w50',),
-            'sql' => "int(10) unsigned NOT NULL default '0'",
+            'eval'      => array('doNotShow' => false, 'rgxp' => 'digit', 'tl_class' => 'w50',),
+            'sql'       => "int(10) unsigned NOT NULL default '0'",
         ),
-        'revise_tables' => array(
+        'revise_tables'        => array(
             'input_field_callback' => array('tl_gallery_creator_albums', 'inputFieldCbCleanDb'),
-            'eval' => array('doNotShow' => true)
+            'eval'                 => array('doNotShow' => true)
         ),
-        'visitors_details' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'],
+        'visitors_details'     => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'],
             'inputType' => 'textarea',
-            'sql' => "blob NULL"
+            'sql'       => "blob NULL"
         ),
-        'visitors' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'],
+        'visitors'             => array(
+            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'],
             'inputType' => 'text',
-            'eval' => array('maxlength' => 10, 'tl_class' => 'w50', 'rgxp' => 'digit'),
-            'sql' => "int(10) unsigned NOT NULL default '0'"
+            'eval'      => array('maxlength' => 10, 'tl_class' => 'w50', 'rgxp' => 'digit'),
+            'sql'       => "int(10) unsigned NOT NULL default '0'"
         ),
-        'sortBy' => array(
-            'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'],
-            'exclude' => true,
+        'sortBy'               => array(
+            'label'         => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'],
+            'exclude'       => true,
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbSortAlbum')),
-            'inputType' => 'select',
-            'default' => 'custom',
-            'options' => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc'),
-            'reference' => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums'],
-            'eval' => array('tl_class' => 'w50'),
-            'sql' => "varchar(32) NOT NULL default ''"
+            'inputType'     => 'select',
+            'default'       => 'custom',
+            'options'       => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc'),
+            'reference'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums'],
+            'eval'          => array('tl_class' => 'w50'),
+            'sql'           => "varchar(32) NOT NULL default ''"
         )
     )
 );
@@ -375,7 +375,8 @@ class tl_gallery_creator_albums extends Backend
             'myParseBackendTemplate'
         );
 
-        if ($_SESSION['BE_DATA']['CLIPBOARD']['tl_gallery_creator_albums']['mode'] == 'copyAll') {
+        if ($_SESSION['BE_DATA']['CLIPBOARD']['tl_gallery_creator_albums']['mode'] == 'copyAll')
+        {
             $this->redirect('contao/main.php?do=gallery_creator&clipboard=1');
         }
 
@@ -396,6 +397,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         $href = $href . 'id=' . $row['id'] . '&act=edit&table=tl_gallery_creator_albums&mode=fileupload';
+
         return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . ' style="margin-right:5px">' . Image::getHtml($icon, $label) . '</a>';
     }
 
@@ -413,25 +415,29 @@ class tl_gallery_creator_albums extends Backend
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
 
-        if (strlen(Input::get('tid'))) {
+        if (strlen(Input::get('tid')))
+        {
             $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
             $this->redirect($this->getReferer());
         }
 
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
+        if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+        {
             return '';
         }
 
         $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-        if (!$row['published']) {
+        if (!$row['published'])
+        {
             $icon = 'invisible.gif';
         }
 
         $this->Database->prepare("SELECT * FROM tl_gallery_creator_albums WHERE id=?")->limit(1)->execute($row['id']);
 
-        if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
+        if (!$this->User->isAdmin && $row['owner'] != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+        {
             return Image::getHtml($icon) . ' ';
         }
 
@@ -451,7 +457,8 @@ class tl_gallery_creator_albums extends Backend
         $objAlbum = GalleryCreatorAlbumsModel::findByPk($intId);
 
         // Check permissions to publish
-        if (!$this->User->isAdmin && $objAlbum->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
+        if (!$this->User->isAdmin && $objAlbum->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+        {
             $this->log('Not enough permissions to publish/unpublish tl_gallery_creator_albums ID "' . $intId . '"', __METHOD__, TL_ERROR);
             $this->redirect('contao/main.php?act=error');
         }
@@ -460,12 +467,17 @@ class tl_gallery_creator_albums extends Backend
         $objVersions->initialize();
 
         // Trigger the save_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback'])) {
-            foreach ($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback'] as $callback) {
-                if (is_array($callback)) {
+        if (is_array($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback']))
+        {
+            foreach ($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['published']['save_callback'] as $callback)
+            {
+                if (is_array($callback))
+                {
                     $this->import($callback[0]);
                     $blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
-                } elseif (is_callable($callback)) {
+                }
+                elseif (is_callable($callback))
+                {
                     $blnVisible = $callback($blnVisible, $this);
                 }
             }
@@ -496,6 +508,7 @@ class tl_gallery_creator_albums extends Backend
         // enable cutting albums to album-owners and admins only
         $objAlb = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
             ->execute($row['id']);
+
         return (($this->User->id == $objAlb->owner || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? ' <a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : ' ' . Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ');
     }
 
@@ -515,6 +528,7 @@ class tl_gallery_creator_albums extends Backend
 
         $objAlb = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
             ->execute($row['id']);
+
         return ($this->User->isAdmin || $this->User->id == $objAlb->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
     }
 
@@ -550,6 +564,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         $href = $href . 'id=' . $row['id'] . '&act=edit&table=tl_gallery_creator_albums&mode=import_images';
+
         return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a>';
     }
 
@@ -571,7 +586,8 @@ class tl_gallery_creator_albums extends Backend
         // Disable all buttons if there is a circular reference
         if ($this->User->isAdmin && $arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id']) || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || in_array($row['id'],
                         $arrClipboard['id'])))
-        ) {
+        )
+        {
             $disablePA = true;
             $disablePI = true;
         }
@@ -579,7 +595,8 @@ class tl_gallery_creator_albums extends Backend
         $imagePasteAfter = Image::getHtml('pasteafter.gif', sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']), 'class="blink"');
         $imagePasteInto = Image::getHtml('pasteinto.gif', sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']), 'class="blink"');
 
-        if ($row['id'] > 0) {
+        if ($row['id'] > 0)
+        {
             $return = $disablePA ? Image::getHtml('pasteafter_.gif', '', 'class="blink"') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')) . '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset();">' . $imagePasteAfter . '</a> ';
         }
 
@@ -594,12 +611,16 @@ class tl_gallery_creator_albums extends Backend
 
         $objUser = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
             ->execute(Input::get('id'));
-        if ($this->User->isAdmin || true == $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
+        if ($this->User->isAdmin || true == $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+        {
             $this->restrictedUser = false;
+
             return;
         }
-        if ($objUser->owner != $this->User->id) {
+        if ($objUser->owner != $this->User->id)
+        {
             $this->restrictedUser = true;
+
             return;
         }
         // ...so the current user is the album owner
@@ -616,18 +637,22 @@ class tl_gallery_creator_albums extends Backend
     {
 
         $level = 0;
-        if ($pid == '0') {
+        if ($pid == '0')
+        {
             return $level;
         }
         $hasParent = true;
-        while ($hasParent) {
+        while ($hasParent)
+        {
             $level++;
             $mysql = $this->Database->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->execute($pid);
-            if ($mysql->pid < 1) {
+            if ($mysql->pid < 1)
+            {
                 $hasParent = false;
             }
             $pid = $mysql->pid;
         }
+
         return $level;
     }
 
@@ -658,6 +683,7 @@ class tl_gallery_creator_albums extends Backend
 		<label for="revise_tables">' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] . '</label>
 </div>
 			';
+
         return $output;
     }
 
@@ -675,7 +701,8 @@ class tl_gallery_creator_albums extends Backend
         $objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objAlb->owner);
         // check User Role
         $this->checkUserRole();
-        if (false == $this->restrictedUser) {
+        if (false == $this->restrictedUser)
+        {
             $output = '
 <div class="album_infos">
 <br /><br />
@@ -687,8 +714,11 @@ class tl_gallery_creator_albums extends Backend
 </table>
 </div>
 				';
+
             return $output;
-        } else {
+        }
+        else
+        {
             $output = '
 <div class="album_infos">
 <table cellpadding="0" cellspacing="0" width="100%" summary="">
@@ -720,6 +750,7 @@ class tl_gallery_creator_albums extends Backend
 </table>
 </div>
 		';
+
             return $output;
         }
     }
@@ -742,13 +773,17 @@ class tl_gallery_creator_albums extends Backend
     public function isAjaxRequest()
     {
 
-        if (Input::get('isAjaxRequest')) {
+        if (Input::get('isAjaxRequest'))
+        {
             // change sorting value
-            if (Input::get('pictureSorting')) {
+            if (Input::get('pictureSorting'))
+            {
                 $sorting = 10;
-                foreach (explode(',', Input::get('pictureSorting')) as $pictureId) {
+                foreach (explode(',', Input::get('pictureSorting')) as $pictureId)
+                {
                     $objPicture = \GalleryCreator\GalleryCreatorPicturesModel::findByPk($pictureId);
-                    if ($objPicture !== null) {
+                    if ($objPicture !== null)
+                    {
                         $objPicture->sorting = $sorting;
                         $objPicture->save();
                         $sorting += 10;
@@ -759,11 +794,14 @@ class tl_gallery_creator_albums extends Backend
 
 
             // revise table in the backend
-            if (\Input::get('checkTables')) {
-                if (\Input::get('getAlbumIDS')) {
+            if (\Input::get('checkTables'))
+            {
+                if (\Input::get('getAlbumIDS'))
+                {
                     $arrIds = array();
                     $objDb = $this->Database->execute("SELECT id FROM tl_gallery_creator_albums ORDER BY RAND()");
-                    while ($objDb->next()) {
+                    while ($objDb->next())
+                    {
                         $arrIds[] = $objDb->id;
                     }
 
@@ -771,26 +809,32 @@ class tl_gallery_creator_albums extends Backend
                     exit();
                 }
 
-                if (\Input::get('albumId')) {
+                if (\Input::get('albumId'))
+                {
                     $albumId = Input::get('albumId');
 
                     \Input::setGet('mode', 'revise_tables');
-                    if (Input::get('reviseTables') && $this->User->isAdmin) {
+                    if (Input::get('reviseTables') && $this->User->isAdmin)
+                    {
                         // delete damaged datarecords
                         GalleryCreator\GcHelpers::reviseTable(true, $albumId);
                         $response = true;
-                    } else {
+                    }
+                    else
+                    {
                         GalleryCreator\GcHelpers::reviseTable(false, $albumId);
                         $response = true;
 
                     }
-                    if ($response === true) {
-                        $strError = '';
-
-                        if (is_array($_SESSION['GC_ERROR'])) {
-                            if (count($_SESSION['GC_ERROR'] > 0)) {
+                    if ($response === true)
+                    {
+                        if (is_array($_SESSION['GC_ERROR']))
+                        {
+                            if (count($_SESSION['GC_ERROR']) > 0)
+                            {
                                 $strError = implode('***', $_SESSION['GC_ERROR']);
-                                if ($strError != '') {
+                                if ($strError != '')
+                                {
                                     echo json_encode(array('errors' => $strError));
                                 }
                             }
@@ -815,9 +859,11 @@ class tl_gallery_creator_albums extends Backend
     {
 
         $mysql = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE pid=?')->execute($id);
-        if ($mysql->numRows > 0) {
+        if ($mysql->numRows > 0)
+        {
             return true;
         }
+
         return false;
     }
 
@@ -842,6 +888,7 @@ class tl_gallery_creator_albums extends Backend
         $label = str_replace('#title#', sprintf($GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album'][1], $row['id']), $label);
         $padding = $this->isNode($row["id"]) ? 3 * $this->getLevel($row["pid"]) : 20 + (3 * $this->getLevel($row["pid"]));
         $label = str_replace('#padding-left#', 'padding-left:' . $padding . 'px;', $label);
+
         return $label;
     }
 
@@ -888,22 +935,26 @@ class tl_gallery_creator_albums extends Backend
     public function myParseBackendTemplate($strContent, $strTemplate)
     {
 
-        if (Input::get('mode') == 'revise_tables') {
+        if (Input::get('mode') == 'revise_tables')
+        {
             // remove buttons
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNclose\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"save\"((\r|\n|.)+?)>/', '<input type="button" name="save" id="reviseTableBtn" class="tl_submit" accesskey="s" value="' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['reviseTablesBtn'][0] . '">', $strContent);
 
         }
-        if (Input::get('act') == 'select') {
+        if (Input::get('act') == 'select')
+        {
             // remove buttons
-            if (Input::get('table') != 'tl_gallery_creator_pictures') {
+            if (Input::get('table') != 'tl_gallery_creator_pictures')
+            {
                 $strContent = preg_replace('/<input type=\"submit\" name=\"delete\"((\r|\n|.)+?)>/', '', $strContent);
             }
             $strContent = preg_replace('/<input type=\"submit\" name=\"cut\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"copy\"((\r|\n|.)+?)>/', '', $strContent);
         }
-        if (Input::get('mode') == 'fileupload') {
+        if (Input::get('mode') == 'fileupload')
+        {
             // form encode
             $strContent = str_replace('application/x-www-form-urlencoded', 'multipart/form-data', $strContent);
             // remove buttons
@@ -912,11 +963,13 @@ class tl_gallery_creator_albums extends Backend
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"uploadNback\"((\r|\n|.)+?)>/', '', $strContent);
         }
-        if (Input::get('mode') == 'import_images') {
+        if (Input::get('mode') == 'import_images')
+        {
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNclose\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"uploadNback\"((\r|\n|.)+?)>/', '', $strContent);
         }
+
         return $strContent;
     }
 
@@ -926,19 +979,23 @@ class tl_gallery_creator_albums extends Backend
     public function ondeleteCb()
     {
 
-        if (Input::get('act') != 'deleteAll') {
+        if (Input::get('act') != 'deleteAll')
+        {
             $this->checkUserRole();
-            if ($this->restrictedUser) {
+            if ($this->restrictedUser)
+            {
                 $this->log('Datensatz mit ID ' . Input::get('id') . ' wurde von einem nicht authorisierten Benutzer versucht aus tl_gallery_creator_albums zu loeschen.', __METHOD__, TL_ERROR);
                 $this->redirect('contao/main.php?do=error');
             }
             // also delete the child element
             $arrDeletedAlbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
             $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
-            foreach ($arrDeletedAlbums as $idDelAlbum) {
+            foreach ($arrDeletedAlbums as $idDelAlbum)
+            {
                 $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
                     ->execute($idDelAlbum);
-                if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) {
+                if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                {
                     // remove all pictures from tl_gallery_creator_pictures
                     $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE pid=?')
                         ->execute($idDelAlbum);
@@ -946,11 +1003,14 @@ class tl_gallery_creator_albums extends Backend
                     $this->Database->prepare('DELETE FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                     // remove the directory from the filesystem
                     $oFolder = FilesModel::findByUuid($objAlb->assignedDir);
-                    if ($oFolder !== null) {
+                    if ($oFolder !== null)
+                    {
                         $folder = new Folder($oFolder->path, true);
                         $folder->delete();
                     }
-                } else {
+                }
+                else
+                {
                     // do not delete childalbums, which the user does not owns
                     $this->Database->prepare('UPDATE tl_gallery_creator_albums SET pid=? WHERE id=?')
                         ->execute('0', $idDelAlbum);
@@ -970,26 +1030,32 @@ class tl_gallery_creator_albums extends Backend
         // create the upload directory if it doesn't already exists
         new Folder($this->uploadPath);
         Dbafs::addResource($this->uploadPath, false);
-        if (!is_writable(TL_ROOT . '/' . $this->uploadPath)) {
+        if (!is_writable(TL_ROOT . '/' . $this->uploadPath))
+        {
             $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['dirNotWriteable'], $this->uploadPath);
         }
 
         // create upload directory for all albums and store the uuid in the album settings
         $objAlbum = $this->Database->execute('SELECT * FROM tl_gallery_creator_albums');
-        while ($objAlbum->next()) {
+        while ($objAlbum->next())
+        {
             $ok = false;
             $objFolder = FilesModel::findByUuid($objAlbum->assignedDir);
-            if ($objFolder !== null) {
-                if (is_dir(TL_ROOT . '/' . $objFolder->path)) {
+            if ($objFolder !== null)
+            {
+                if (is_dir(TL_ROOT . '/' . $objFolder->path))
+                {
                     $ok = true;
                 }
             }
-            if ($ok === false) {
+            if ($ok === false)
+            {
                 new Folder($this->uploadPath . '/' . $objAlbum->alias);
                 Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
                 $objDir = FilesModel::findByPath($this->uploadPath . '/' . $objAlbum->alias);
                 $oAlbum = GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
-                if ($oAlbum !== null) {
+                if ($oAlbum !== null)
+                {
                     $oAlbum->assignedDir = $objDir->uuid;
                     $oAlbum->save();
                 }
@@ -1004,7 +1070,8 @@ class tl_gallery_creator_albums extends Backend
     public function onloadCbFileupload()
     {
 
-        if (Input::get('mode') != 'fileupload') {
+        if (Input::get('mode') != 'fileupload')
+        {
             return;
         }
 
@@ -1020,7 +1087,8 @@ class tl_gallery_creator_albums extends Backend
         // Get the album object
         $blnNoAlbum = false;
         $objAlb = GalleryCreatorAlbumsModel::findById($intAlbumId);
-        if ($objAlb === null) {
+        if ($objAlb === null)
+        {
             Message::addError('Album with ID ' . $intAlbumId . ' does not exist.');
             $blnNoAlbum = true;
         }
@@ -1028,26 +1096,30 @@ class tl_gallery_creator_albums extends Backend
         // Check for a valid upload directory
         $blnNoUploadDir = false;
         $objUploadDir = FilesModel::findByUuid($objAlb->assignedDir);
-        if ($objUploadDir === null || !is_dir(TL_ROOT . '/' . $objUploadDir->path)) {
+        if ($objUploadDir === null || !is_dir(TL_ROOT . '/' . $objUploadDir->path))
+        {
             Message::addError('No upload directory defined in the album settings!');
             $blnNoUploadDir = true;
         }
 
         // Exit if there is no upload or the upload directory is missing
-        if (!is_array($_FILES[$strName]) || $blnNoUploadDir || $blnNoAlbum) {
+        if (!is_array($_FILES[$strName]) || $blnNoUploadDir || $blnNoAlbum)
+        {
             return;
         }
 
         // Call the uploader script
         $arrUpload = GcHelpers::fileupload($intAlbumId, $strName);
 
-        foreach ($arrUpload as $strFileSrc) {
+        foreach ($arrUpload as $strFileSrc)
+        {
             // Add  new datarecords into tl_gallery_creator_pictures
             GcHelpers::createNewImage($objAlb->id, $strFileSrc);
         }
 
         // Do not exit script if html5_uploader is selected and Javascript is disabled
-        if (!Input::post('submit')) {
+        if (!Input::post('submit'))
+        {
             exit;
         }
     }
@@ -1061,21 +1133,26 @@ class tl_gallery_creator_albums extends Backend
     public function onloadCbGetGcCteElements()
     {
 
-        if (Input::get('act') != '') {
+        if (Input::get('act') != '')
+        {
             return;
         }
         $objDb = $this->Database->execute('SELECT id FROM tl_gallery_creator_albums');
         $arrAlbumIds = array();
-        while ($objDb->next()) {
+        while ($objDb->next())
+        {
             $arrAlbumIds[] = $objDb->id;
         }
-        foreach ($arrAlbumIds as $albumId) {
+        foreach ($arrAlbumIds as $albumId)
+        {
             $arrGcContentElements = array();
             $objDb = $this->Database->prepare('SELECT id, gc_publish_albums FROM tl_content WHERE type=?')
                 ->execute('gallery_creator');
-            while ($objDb->next()) {
+            while ($objDb->next())
+            {
                 $arrPublAlbums = $objDb->gc_publish_albums != "" ? deserialize($objDb->gc_publish_albums) : array();
-                if (in_array($albumId, $arrPublAlbums)) {
+                if (in_array($albumId, $arrPublAlbums))
+                {
                     $arrGcContentElements[] = $objDb->id;
                 }
             }
@@ -1093,19 +1170,22 @@ class tl_gallery_creator_albums extends Backend
     public function onloadCbImportFromFilesystem()
     {
 
-        if (Input::get('mode') != 'import_images') {
+        if (Input::get('mode') != 'import_images')
+        {
             return;
         }
         // load language file
         $this->loadLanguageFile('tl_content');
-        if (!$this->Input->post('FORM_SUBMIT')) {
+        if (!$this->Input->post('FORM_SUBMIT'))
+        {
             return;
         }
         $blnPreserveFilename = Input::post('preserve_filename');
         $intAlbumId = Input::get('id');
         // comma separated list with folder uuid's => 10585872-5f1f-11e3-858a-0025900957c8,105e9de0-5f1f-11e3-858a-0025900957c8,105e9dd6-5f1f-11e3-858a-0025900957c8
         $strMultiSRC = $this->Input->post('multiSRC');
-        if (strlen(trim($strMultiSRC))) {
+        if (strlen(trim($strMultiSRC)))
+        {
             $this->Database->prepare('UPDATE tl_gallery_creator_albums SET preserve_filename=? WHERE id=?')
                 ->execute($blnPreserveFilename, $intAlbumId);
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
@@ -1124,7 +1204,8 @@ class tl_gallery_creator_albums extends Backend
     {
 
         // global_operations for admin only
-        if (!$this->User->isAdmin) {
+        if (!$this->User->isAdmin)
+        {
             unset($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['list']['global_operations']['all']);
             unset($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['list']['global_operations']['revise_tables']);
         }
@@ -1132,41 +1213,54 @@ class tl_gallery_creator_albums extends Backend
         $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['id']['eval']['style'] = '" readonly="readonly';
         $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['owners_name']['eval']['style'] = '" readonly="readonly';
         // create the jumploader palette
-        if (Input::get('mode') == 'fileupload') {
-            if ($this->User->gc_img_resolution == 'no_scaling') {
+        if (Input::get('mode') == 'fileupload')
+        {
+            if ($this->User->gc_img_resolution == 'no_scaling')
+            {
                 $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['fileupload'] = str_replace(',img_quality', '', $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['fileupload']);
             }
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['default'] = $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['fileupload'];
+
             return;
         }
         // create the import_images palette
-        if (Input::get('mode') == 'import_images') {
+        if (Input::get('mode') == 'import_images')
+        {
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['default'] = $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['import_images'];
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
+
             return;
         }
         // the palette for admins
-        if ($this->User->isAdmin) {
+        if ($this->User->isAdmin)
+        {
             $objAlb = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums')->limit(1)->execute();
-            if ($objAlb->next()) {
+            if ($objAlb->next())
+            {
                 $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['list']['global_operations']['revise_tables']['href'] = 'act=edit&table&mode=revise_tables&id=' . $objAlb->id;
-            } else {
+            }
+            else
+            {
                 unset($GLOBALS['TL_DCA']['tl_gallery_creator_albums']['list']['global_operations']['revise_tables']);
             }
-            if (Input::get('mode') == 'revise_tables') {
+            if (Input::get('mode') == 'revise_tables')
+            {
                 $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['default'] = $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['revise_tables'];
+
                 return;
             }
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['owner']['eval']['doNotShow'] = false;
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['protected']['eval']['doNotShow'] = false;
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['groups']['eval']['doNotShow'] = false;
+
             return;
         }
         $objAlb = $this->Database->prepare('SELECT id, owner FROM tl_gallery_creator_albums WHERE id=?')
             ->execute(Input::get('id'));
         // only adminstrators and album-owners obtains writing-access for these fields
         $this->checkUserRole();
-        if ($objAlb->owner != $this->User->id && true == $this->restrictedUser) {
+        if ($objAlb->owner != $this->User->id && true == $this->restrictedUser)
+        {
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['default'] = $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['restricted_user'];
         }
     }
@@ -1182,9 +1276,11 @@ class tl_gallery_creator_albums extends Backend
         $objDb = $this->Database->prepare('SELECT tl_content.id AS id, tl_article.title as title, tl_page.title as pagename FROM tl_content, tl_article, tl_page  WHERE tl_article.id=tl_content.pid AND tl_page.id=tl_article.pid AND tl_content.type=?')
             ->execute('gallery_creator');
         $opt = array();
-        while ($objDb->next()) {
+        while ($objDb->next())
+        {
             $opt[$objDb->id] = sprintf($GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'], $objDb->id, $objDb->title, $objDb->pagename);
         }
+
         return $opt;
     }
 
@@ -1201,8 +1297,10 @@ class tl_gallery_creator_albums extends Backend
         $objAlbum = \GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
 
         // Save input
-        if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums') {
-            if (Input::post('thumb') == intval(Input::post('thumb'))) {
+        if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums')
+        {
+            if (Input::post('thumb') == intval(Input::post('thumb')))
+            {
                 $objAlbum->thumb = Input::post('thumb');
                 $objAlbum->save();
             }
@@ -1218,33 +1316,41 @@ class tl_gallery_creator_albums extends Backend
         $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=? ORDER BY sorting')
             ->execute(Input::get('id'));
         $arrData = array();
-        while ($objPicture->next()) {
+        while ($objPicture->next())
+        {
             $arrData[] = array('uuid' => $objPicture->uuid, 'id' => $objPicture->id);
         }
         // Get all child albums
         $arrSubalbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
-        if (count($arrSubalbums)) {
+        if (count($arrSubalbums))
+        {
             $arrData[] = array('uuid' => 'beginn_childalbums', 'id' => '');
             $objPicture = $this->Database->execute("SELECT * FROM tl_gallery_creator_pictures WHERE pid IN (" . implode(',', $arrSubalbums) . ") ORDER BY id");
-            while ($objPicture->next()) {
+            while ($objPicture->next())
+            {
                 $arrData[] = array('uuid' => $objPicture->uuid, 'id' => $objPicture->id);
             }
         }
 
-        foreach ($arrData as $arrItem) {
+        foreach ($arrData as $arrItem)
+        {
             $uuid = $arrItem['uuid'];
             $id = $arrItem['id'];
 
-            if ($uuid == 'beginn_childalbums') {
+            if ($uuid == 'beginn_childalbums')
+            {
                 $html .= '</ul><ul id="childAlbumsList">';
                 continue;
             }
             $objFileModel = FilesModel::findByUuid($uuid);
-            if ($objFileModel !== null) {
-                if (file_exists(TL_ROOT . '/' . $objFileModel->path)) {
+            if ($objFileModel !== null)
+            {
+                if (file_exists(TL_ROOT . '/' . $objFileModel->path))
+                {
                     $objFile = new \File($objFileModel->path);
                     $src = 'placeholder.png';
-                    if ($objFile->height <= $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] && $objFile->width <= $GLOBALS['TL_CONFIG']['gdMaxImgWidth']) {
+                    if ($objFile->height <= $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] && $objFile->width <= $GLOBALS['TL_CONFIG']['gdMaxImgWidth'])
+                    {
                         $src = Image::get($objFile->path, 80, 60, 'center_center');
                     }
                     $checked = $objAlbum->thumb == $id ? ' checked' : '';
@@ -1254,33 +1360,35 @@ class tl_gallery_creator_albums extends Backend
             }
         }
 
-        $html . '</ul>';
+        $html .= '</ul>';
         $html .= '</div>';
 
         // Add javascript
         $script = '
 <script>
 	window.addEvent("domready", function() {
-		$$("#previewThumbList li img:hover").setStyle("cursor", "hand");
-		$$("#previewThumbList li img:hover").setStyle("cursor", "pointer");
+		$$(".preview_thumb input").addEvent("click", function(){
+		    $$(".preview_thumb li").removeClass("checked");
+		    this.getParent("li").addClass("checked");
+		});
 
 		/** sort album with drag and drop */
-		var mySortables = new Sortables("#previewThumbList", {
-			    onComplete: function(element){
-			    	var ids = [];
-			    	$$("#previewThumbList > li").each(function(el){
-						ids.push(el.getProperty("data-id"));
-			    	});
-			    	// ajax request
-			    	if(ids.length > 0){
-			    		var myRequest = new Request({
-                		url: document.URL + "&isAjaxRequest=true&pictureSorting=" + ids.join(),
-                		method: "get"
-            		});
-            		// fire request (resort album)
-            		myRequest.send();
-			    	}
-			    }
+		new Sortables("#previewThumbList", {
+            onComplete: function(){
+                var ids = [];
+                $$("#previewThumbList > li").each(function(el){
+                    ids.push(el.getProperty("data-id"));
+                });
+                // ajax request
+                if(ids.length > 0){
+                    var myRequest = new Request({
+                    url: document.URL + "&isAjaxRequest=true&pictureSorting=" + ids.join(),
+                    method: "get"
+                });
+                // fire request (resort album)
+                myRequest.send();
+                }
+            }
 		});
 	});
 </script>
@@ -1293,26 +1401,29 @@ class tl_gallery_creator_albums extends Backend
 
     /**
      * sortBy  - save_callback
-     *
      * @param $varValue
      * @param DataContainer $dc
+     * @return string
      */
     public function saveCbSortAlbum($varValue, DataContainer $dc)
     {
 
-        if ($varValue == 'custom') {
+        if ($varValue == 'custom')
+        {
             return $varValue;
         }
 
         $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
-        if ($objPictures === null) {
+        if ($objPictures === null)
+        {
             return 'custom';
         }
 
         $files = array();
         $auxDate = array();
 
-        while ($objPictures->next()) {
+        while ($objPictures->next())
+        {
             $oFile = FilesModel::findByUuid($objPictures->uuid);
             $objFile = new \File($oFile->path, true);
             $files[$oFile->path] = array(
@@ -1321,7 +1432,8 @@ class tl_gallery_creator_albums extends Backend
             $auxDate[] = $objFile->mtime;
         }
 
-        switch ($varValue) {
+        switch ($varValue)
+        {
             case 'custom':
                 break;
             case 'name_asc':
@@ -1340,12 +1452,14 @@ class tl_gallery_creator_albums extends Backend
         }
 
         $sorting = 0;
-        foreach ($files as $arrFile) {
+        foreach ($files as $arrFile)
+        {
             $sorting += 10;
             $objPicture = GalleryCreatorPicturesModel::findByPk($arrFile['id']);
             $objPicture->sorting = $sorting;
             $objPicture->save();
         }
+
         // return default value
         return 'custom';
     }
@@ -1363,7 +1477,8 @@ class tl_gallery_creator_albums extends Backend
 
         $strAlias = standardize($strAlias);
         // if there isn't an existing albumalias generate one from the albumname
-        if (!strlen($strAlias)) {
+        if (!strlen($strAlias))
+        {
             $strAlias = standardize($dc->activeRecord->name);
         }
         // limit alias to 50 characters
@@ -1373,7 +1488,8 @@ class tl_gallery_creator_albums extends Backend
         // if alias already exists add the album-id to the alias
         $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id!=? AND alias=?')
             ->execute($dc->activeRecord->id, $strAlias);
-        if ($objAlbum->numRows) {
+        if ($objAlbum->numRows)
+        {
             $strAlias = 'id-' . $dc->activeRecord->id . '-' . $strAlias;
         }
 
@@ -1384,13 +1500,16 @@ class tl_gallery_creator_albums extends Backend
         // if a new album was created
         $createDir = true;
         $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
-        if ($oFolder !== null) {
-            if (is_dir(TL_ROOT . '/' . $oFolder->path)) {
+        if ($oFolder !== null)
+        {
+            if (is_dir(TL_ROOT . '/' . $oFolder->path))
+            {
                 $createDir = false;
             }
         }
 
-        if ($createDir === true) {
+        if ($createDir === true)
+        {
             // create the new folder and register it in tl_files
             $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
             Dbafs::addResource($objFolder->path, true);
@@ -1416,31 +1535,39 @@ class tl_gallery_creator_albums extends Backend
 
         $objContent = $this->Database->prepare('SELECT * FROM tl_content WHERE type=?')->execute('gallery_creator');
         // update tl_content.gc_publish_albums in each gallery_creator content element
-        while ($objContent->next()) {
+        while ($objContent->next())
+        {
 
             $arrPublAlbums = is_array($objContent->gc_publish_albums) ? $objContent->gc_publish_albums : deserialize($objContent->gc_publish_albums);
             $arrPublAlbums = count($arrPublAlbums) > 0 ? $arrPublAlbums : array();
-            if (in_array($objContent->id, $arrSelectedElements)) {
+            if (in_array($objContent->id, $arrSelectedElements))
+            {
                 // add to list
                 $arrPublAlbums[] = $albumId;
-            } else {
+            }
+            else
+            {
 
                 // remove from list
-                if (count($arrPublAlbums)) {
-                    if (array_search($albumId, $arrPublAlbums) !== false) {
+                if (count($arrPublAlbums))
+                {
+                    if (array_search($albumId, $arrPublAlbums) !== false)
+                    {
                         unset($arrPublAlbums[array_search($albumId, $arrPublAlbums)]);
                         $arrPublAlbums = array_values($arrPublAlbums);
                     }
                 }
             }
             $arrPublAlbums = array_unique($arrPublAlbums);
-            if (count($arrPublAlbums)) {
+            if (count($arrPublAlbums))
+            {
 
                 // set the new album in a correct order
                 $query = sprintf('SELECT id FROM tl_gallery_creator_albums WHERE id IN(%s) ORDER BY %s %s',
                     implode(',', $arrPublAlbums), $objContent->gc_sorting, $objContent->gc_sorting_direction);
                 $objAlbum = $this->Database->execute($query);
-                if ($objAlbum->numRows) {
+                if ($objAlbum->numRows)
+                {
                     $arrPublAlbums = $objAlbum->fetchEach('id');
                 }
             }
@@ -1449,6 +1576,7 @@ class tl_gallery_creator_albums extends Backend
                 ->execute(serialize($arrPublAlbums), $objContent->id);
             $this->log('A new version of record "tl_content.id=' . $objContent->id . '" has been created', __METHOD__, GENERAL);
         }
+
         return $varValue;
     }
 
