@@ -3,20 +3,19 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2013 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
- * @package Gallery_creator
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @license LGPL-3.0+
  */
 
+//HowTo: https://community.contao.org/de/showthread.php?39985-Das-nutzen-von-Namespaces&p=258501&viewfull=1#post258501
 
 /**
  * Register the namespaces
  */
 ClassLoader::addNamespaces(array
 (
-	'GalleryCreator',
+	'MCupic',
 ));
 
 
@@ -25,19 +24,19 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Elements
-	'GalleryCreator\ContentDisplayGallery'       => 'system/modules/gallery_creator/elements/ContentDisplayGallery.php',
-
 	// Classes
-	'GalleryCreator\DisplayGallery'              => 'system/modules/gallery_creator/classes/DisplayGallery.php',
-	'GalleryCreator\GcHelpers'                   => 'system/modules/gallery_creator/classes/GcHelpers.php',
+	'MCupic\GalleryCreator\GcHelpers'             => 'system/modules/gallery_creator/classes/GcHelpers.php',
+	'MCupic\GalleryCreator\DisplayGallery'        => 'system/modules/gallery_creator/classes/DisplayGallery.php',
 
 	// Models
-	'GalleryCreator\GalleryCreatorAlbumsModel'   => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
-	'GalleryCreator\GalleryCreatorPicturesModel' => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
+	'MCupic\GalleryCreatorPicturesModel'          => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
+	'MCupic\GalleryCreatorAlbumsModel'            => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
 
 	// Modules
-	'GalleryCreator\ModuleDisplayGallery'        => 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
+	'MCupic\GalleryCreator\ModuleDisplayGallery'  => 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
+
+	// Elements
+	'MCupic\GalleryCreator\ContentDisplayGallery' => 'system/modules/gallery_creator/elements/ContentDisplayGallery.php',
 ));
 
 

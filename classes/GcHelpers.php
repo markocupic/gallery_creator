@@ -11,7 +11,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace GalleryCreator;
+namespace MCupic\GalleryCreator;
 
 /**
  * Class GcHelpers
@@ -45,7 +45,7 @@ class GcHelpers extends \System
         }
 
         //get the album-object
-        $objAlbum = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
 
         // get the assigned album directory
         $objFolder = \FilesModel::findByUuid($objAlbum->assignedDir);
@@ -118,7 +118,7 @@ class GcHelpers extends \System
 
 
                 //finally save the new image in tl_gallery_creator_pictures
-                $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
+                $objPicture = \MCupic\GalleryCreatorPicturesModel::findByPk($insertId);
                 $objPicture->uuid = $objFile->getModel()->uuid;
                 $objPicture->owner = $userId;
                 $objPicture->date = $objAlbum->date;
@@ -127,7 +127,7 @@ class GcHelpers extends \System
 
                 \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
                 //check for a valid preview-thumb for the album
-                $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
+                $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
                 if ($objAlbum !== null)
                 {
                     if ($objAlbum->thumb == "")
@@ -169,7 +169,7 @@ class GcHelpers extends \System
         $blnIsError = false;
 
         // Get the album object
-        $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
         if ($objAlb === null)
         {
             $blnIsError = true;
@@ -225,7 +225,7 @@ class GcHelpers extends \System
             if (strlen($_FILES[$strName]['name'][$i]))
             {
                 // Generate unique filename
-                $_FILES[$strName]['name'][$i] = basename(\GcHelpers::generateUniqueFilename($objUploadDir->path . '/' . $_FILES[$strName]['name'][$i]));
+                $_FILES[$strName]['name'][$i] = basename(self::generateUniqueFilename($objUploadDir->path . '/' . $_FILES[$strName]['name'][$i]));
             }
         }
 
@@ -971,7 +971,7 @@ class GcHelpers extends \System
         if (count($images))
         {
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
-            $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+            $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
@@ -1010,7 +1010,7 @@ class GcHelpers extends \System
         new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
 
         // Get album model
-        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($albumId);
         if ($objAlbum === null)
         {
             return;
@@ -1045,7 +1045,7 @@ class GcHelpers extends \System
         {
 
             // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
-            $objPictures = \GalleryCreatorPicturesModel::findByPid($albumId);
+            $objPictures = \MCupic\GalleryCreatorPicturesModel::findByPid($albumId);
             if ($objPictures !== null)
             {
                 while ($objPictures->next())

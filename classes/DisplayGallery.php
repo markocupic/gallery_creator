@@ -13,7 +13,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace GalleryCreator;
+namespace MCupic\GalleryCreator;
 
 /**
  * Class DisplayGallery
@@ -302,7 +302,7 @@ abstract class DisplayGallery extends \Module
               // Get the Album Id
               if (\Input::get('items'))
               {
-                     $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+                     $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                      if ($objAlbum !== null)
                      {
                             $this->intAlbumId = $objAlbum->id;
@@ -322,7 +322,7 @@ abstract class DisplayGallery extends \Module
 
               if (TL_MODE == 'FE')
               {
-                     $objAlb = \GalleryCreatorAlbumsModel::findByAlias($strAlbumalias);
+                     $objAlb = \MCupic\GalleryCreatorAlbumsModel::findByAlias($strAlbumalias);
                      if ($objAlb !== null)
                      {
 
@@ -500,14 +500,14 @@ abstract class DisplayGallery extends \Module
                      'path' => $this->defaultThumb
               );
 
-              $objAlb = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+              $objAlb = \MCupic\GalleryCreatorAlbumsModel::findByPk($intAlbumId);
               if ($objAlb->thumb > 0)
               {
-                     $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
+                     $objPreviewThumb = \MCupic\GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
               }
               else
               {
-                     $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
+                     $objPreviewThumb = \MCupic\GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
               }
 
               if ($objPreviewThumb !== null)
@@ -625,9 +625,9 @@ abstract class DisplayGallery extends \Module
               }
 
               //generiert den Link zum Parent-Album
-              if ($this->gc_hierarchicalOutput && GcHelpers::getParentAlbum($intAlbumId))
+              if ($this->gc_hierarchicalOutput && \MCupic\GalleryCreator\GcHelpers::getParentAlbum($intAlbumId))
               {
-                     $arrParentAlbum = GcHelpers::getParentAlbum($intAlbumId);
+                     $arrParentAlbum = \MCupic\GalleryCreator\GcHelpers::getParentAlbum($intAlbumId);
                      return $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
               }
 

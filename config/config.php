@@ -17,12 +17,12 @@ define('GALLERY_CREATOR_UPLOAD_PATH', $GLOBALS['TL_CONFIG']['uploadPath'] . '/ga
 /**
  * Front end content element
  */
-array_insert($GLOBALS['TL_CTE'], 2, array('ce_type_gallery_creator' => array('gallery_creator' => 'ContentDisplayGallery')));
+array_insert($GLOBALS['TL_CTE'], 2, array('ce_type_gallery_creator' => array('gallery_creator' => 'GalleryCreator\ContentDisplayGallery')));
 
 /**
  * Front end module
  */
-array_insert($GLOBALS['FE_MOD'], 2, array('module_type_gallery_creator' => array('gallery_creator' => 'ModuleDisplayGallery')));
+array_insert($GLOBALS['FE_MOD'], 2, array('module_type_gallery_creator' => array('gallery_creator' => 'GalleryCreator\ModuleDisplayGallery')));
 
 /**
  * Back end module

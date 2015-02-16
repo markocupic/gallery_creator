@@ -13,7 +13,7 @@
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace GalleryCreator;
+namespace MCupic\GalleryCreator;
 
 /**
  * Class ContentDisplayGallery
@@ -175,7 +175,7 @@ class ContentDisplayGallery extends DisplayGallery
                                    {
                                           continue;
                                    }
-                                   $arrAlbums[$objAlbum->id] = \GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
+                                   $arrAlbums[$objAlbum->id] = \MCupic\GalleryCreator\GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
@@ -187,7 +187,7 @@ class ContentDisplayGallery extends DisplayGallery
 
                      case 'detailview':
 
-                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+                            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                             $published = $objAlbum->published ? true : false;
 
                             // for security reasons...
@@ -236,7 +236,7 @@ class ContentDisplayGallery extends DisplayGallery
                                     $basename = $objFilesModel->name;
                                 }
                                 $auxBasename[] = $basename;
-                                $arrPictures[$objPictures->id] = \GcHelpers::getPictureInformationArray($objPictures->id, $this);
+                                $arrPictures[$objPictures->id] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
 
                             // sort by basename
@@ -267,7 +267,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                             break;
                      case 'single_image' :
-                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
+                            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
                             if ($objAlbum === null)
                             {
                                    die('Invalid album alias: ' . \Input::get('items'));
@@ -314,9 +314,9 @@ class ContentDisplayGallery extends DisplayGallery
                             if (count($arrIDS))
                             {
                                    // store $arrPictures in the template variable
-                                   $arrPictures['prev'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex - 1], $this);
-                                   $arrPictures['current'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex], $this);
-                                   $arrPictures['next'] = \GcHelpers::getPictureInformationArray($arrIDS[$currentIndex + 1], $this);
+                                   $arrPictures['prev'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex - 1], $this);
+                                   $arrPictures['current'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex], $this);
+                                   $arrPictures['next'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex + 1], $this);
 
                                    // add navigation href's to the template
                                    $this->Template->prevHref = $arrPictures['prev']['single_image_url'];
