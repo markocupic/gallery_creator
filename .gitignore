@@ -6,10 +6,9 @@
 .idea
 
 #################
-## JUMPLOADER PLUGIN
+## EXCLUDE JUMPLOADER PLUGIN
 #################
-#.jar
-#**/jumploader/
+**/plugins/
 
 #################
 ## Eclipse

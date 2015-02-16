@@ -1,5 +1,3 @@
-
-
 // Dollar Safe Mode
 (function ($) {
     window.addEvent('domready', function () {
@@ -15,7 +13,7 @@
      * @copyright  Marko Cupic 2015
      * @author     Marko Cupic <m.cupic@gmx.ch>
      */
-    GalleryCreatorBeCheckTables = new Class({
+    var GalleryCreatorBeCheckTables = new Class({
 
         /**
          * Array with als albumID's
@@ -26,14 +24,45 @@
          * constructor
          */
         initialize: function () {
-           document.id('main').addClass('gc_check_tables');
+            document.id('main').addClass('gc_check_tables');
         },
 
         /**
          * kick off!
          */
         start: function () {
-            this.getAlbumIDS();
+
+            // Run next check after 10'
+            var now = Math.floor(new Date().getTime() / 1000);
+            var doCheck = true;
+            var intervall = 600;
+            var objCookie = null;
+
+            if (Cookie.read('ContaoGalleryCreatorBe')) {
+                objCookie = JSON.decode(Cookie.read('ContaoGalleryCreatorBe'));
+                if (objCookie.tableCheck.lastCheck) {
+                    if (now - objCookie.tableCheck.lastCheck < intervall) {
+                        doCheck = false;
+                    } else {
+                        objCookie.tableCheck.lastCheck = now;
+                        Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
+                    }
+                } else {
+                    objCookie.tableCheck.lastCheck = now;
+                    Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
+                }
+            } else {
+                objCookie = {
+                    tableCheck: {
+                        lastCheck: now
+                    }
+                };
+                Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
+            }
+
+            if (doCheck === true) {
+                this.getAlbumIDS();
+            }
         },
 
         /**
@@ -126,7 +155,7 @@
                         statusBox.inject($$('.tl_folder_top')[0]);
 
                         // Delete the last status box after 10s of delay
-                        var delStatusBox = (function () {
+                        (function () {
                             if (document.id('statusBox' + albumId)) {
                                 document.id('statusBox' + albumId).destroy();
                             }

@@ -14,7 +14,7 @@
      * @copyright  Marko Cupic 2015
      * @author     Marko Cupic <m.cupic@gmx.ch>
      */
-    GalleryCreatorBeReviseTables = new Class({
+    var GalleryCreatorBeReviseTables = new Class({
 
         /**
          * Array with als albumID's
@@ -34,27 +34,27 @@
         /**
          * Message box
          */
-        messageBox: null,
+        messageBox: false,
 
         /**
          * Status box
          */
-        statusBox: null,
+        statusBox: false,
 
         /**
          * Button
          */
-        button: null,
+        button: false,
 
         /**
          * Checkbox
          */
-        checkbox: null,
+        checkbox: false,
 
         /**
          * Label checkbox
          */
-        labelCheckbox: null,
+        labelCheckbox: false,
 
 
 
@@ -79,7 +79,7 @@
             this.statusBox.inject(this.messageBox);
 
 
-			this.button.addEvent('click', function(event){
+			this.button.addEvent('click', function(){
                 if(self.checkbox.checked){
                     self.button.fade(0);
 					self.checkbox.fade(0);
@@ -93,8 +93,8 @@
          * Kick off!
          */
         start: function () {
-            this.intRequestDone = 0;
-            this.errors = 0;
+            this.intRequestDone = null;
+            this.errors = null;
             this.albumIDS = null;
             $$('#messageBox .tl_error').each(function(el){
                 el.destroy();
@@ -186,7 +186,7 @@
 
                         // Show final message, when all requests have completed
                         if(self.intRequestDone == self.albumIDS.length) {
-                            var delStatusBox = (function () {
+                            (function () {
                                 self.statusBox.set('text','Database cleaned up. ' + self.errors.toInt().toString() + ' errors found.');
                                 self.button.fade(1);
                                 self.checkbox.checked = false;
