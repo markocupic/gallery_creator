@@ -5,6 +5,11 @@
 # ignore phpstorm configuration files
 .idea
 
+#################
+## JUMPLOADER PLUGIN
+#################
+#.jar
+#**/jumploader/
 
 #################
 ## Eclipse

@@ -363,12 +363,12 @@ class GcHelpers extends \System
 
         // Load language-files from jumploader page
         $language = strlen($objUser->language) ? $objUser->language : 'en';
-        // $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader/lang/messages_' . $language . '.zip';
-        $objTemplate->jumploaderLanguageFiles = 'http://jumploader.com/i18n/messages_' . $language . '.zip';
+        $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader/languages/messages_' . $language . '.zip';
+        // $objTemplate->jumploaderLanguageFiles = 'http://jumploader.com/i18n/messages_' . $language . '.zip';
 
         // Load jar-files from jumploader page
-        // $pathToArchive = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
-        $pathToArchive = 'http://jumploader.com/jar';
+        $pathToArchive = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
+        // $pathToArchive = 'http://jumploader.com/jar';
 
         $arrJumploaderArchive = array(
             sprintf('%s/mediautil_z.jar', $pathToArchive),
@@ -649,7 +649,8 @@ class GcHelpers extends \System
             try
             {
                 $exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? exif_read_data($strImageSrc) : array('info' => "The function 'exif_read_data()' is not available on this server.");
-            } catch (Exception $e)
+            }
+            catch (Exception $e)
             {
                 $exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
             }

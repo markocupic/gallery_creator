@@ -68,6 +68,14 @@
 </div>
 
 <script type="text/javascript">
+
+    window.addEvent('domready', function() {
+        // Adjust height and width to the layout
+        var width =  $$('div.jumploaderApplet')[0].offsetWidth;
+        document.id('jumpLoaderApplet').setProperty('width', width);
+        document.id('jumpLoaderApplet').setProperty('height', (width*0.7).round());
+    });
+
     var appletGlobal = null;
 
     // callback function
