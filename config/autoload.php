@@ -8,7 +8,6 @@
  * @license LGPL-3.0+
  */
 
-//HowTo: https://community.contao.org/de/showthread.php?39985-Das-nutzen-von-Namespaces&p=258501&viewfull=1#post258501
 
 /**
  * Register the namespaces
@@ -24,19 +23,13 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Classes
-	'MCupic\GalleryCreator\GcHelpers'             => 'system/modules/gallery_creator/classes/GcHelpers.php',
-	'MCupic\GalleryCreator\DisplayGallery'        => 'system/modules/gallery_creator/classes/DisplayGallery.php',
-
-	// Models
-	'MCupic\GalleryCreatorPicturesModel'          => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
-	'MCupic\GalleryCreatorAlbumsModel'            => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
-
-	// Modules
-	'MCupic\GalleryCreator\ModuleDisplayGallery'  => 'system/modules/gallery_creator/modules/ModuleDisplayGallery.php',
-
-	// Elements
-	'MCupic\GalleryCreator\ContentDisplayGallery' => 'system/modules/gallery_creator/elements/ContentDisplayGallery.php',
+	// Src
+	'MCupic\GalleryCreator\GcHelpers'             => 'system/modules/gallery_creator/src/classes/GcHelpers.php',
+	'MCupic\GalleryCreator\DisplayGallery'        => 'system/modules/gallery_creator/src/classes/DisplayGallery.php',
+	'MCupic\GalleryCreatorPicturesModel'          => 'system/modules/gallery_creator/src/models/GalleryCreatorPicturesModel.php',
+	'MCupic\GalleryCreatorAlbumsModel'            => 'system/modules/gallery_creator/src/models/GalleryCreatorAlbumsModel.php',
+	'MCupic\GalleryCreator\ModuleDisplayGallery'  => 'system/modules/gallery_creator/src/modules/ModuleDisplayGallery.php',
+	'MCupic\GalleryCreator\ContentDisplayGallery' => 'system/modules/gallery_creator/src/elements/ContentDisplayGallery.php',
 ));
 
 

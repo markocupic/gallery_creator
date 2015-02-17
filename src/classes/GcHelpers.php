@@ -363,11 +363,11 @@ class GcHelpers extends \System
 
         // Load language-files from jumploader page
         $language = strlen($objUser->language) ? $objUser->language : 'en';
-        $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader/languages/messages_' . $language . '.zip';
+        $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/vendor/jumploader/languages/messages_' . $language . '.zip';
         // $objTemplate->jumploaderLanguageFiles = 'http://jumploader.com/i18n/messages_' . $language . '.zip';
 
         // Load jar-files from jumploader page
-        $pathToArchive = $domain . 'system/modules/gallery_creator/assets/plugins/jumploader';
+        $pathToArchive = $domain . 'system/modules/gallery_creator/vendor/jumploader/jar';
         // $pathToArchive = 'http://jumploader.com/jar';
 
         $arrJumploaderArchive = array(
