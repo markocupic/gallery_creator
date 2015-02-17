@@ -34,7 +34,7 @@
                 "":"system/modules/gallery_creator"
             },
             "runonce":[
-                "runonce/runonce.php"
+                "src/runonce/runonce.php"
             ]
         }
     }
