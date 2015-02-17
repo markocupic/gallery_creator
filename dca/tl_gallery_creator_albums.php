@@ -361,8 +361,8 @@ class tl_gallery_creator_albums extends Backend
 
     public function __construct()
     {
-
         parent::__construct();
+
         $this->import('BackendUser', 'User');
         $this->import('Files');
 
