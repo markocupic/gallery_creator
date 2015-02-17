@@ -361,8 +361,8 @@ class tl_gallery_creator_albums extends Backend
 
     public function __construct()
     {
-
         parent::__construct();
+
         $this->import('BackendUser', 'User');
         $this->import('Files');
 
@@ -454,7 +454,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
 
-        $objAlbum = GalleryCreatorAlbumsModel::findByPk($intId);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($intId);
 
         // Check permissions to publish
         if (!$this->User->isAdmin && $objAlbum->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
@@ -760,8 +760,7 @@ class tl_gallery_creator_albums extends Backend
      */
     public function inputFieldCbGenerateUploaderMarkup()
     {
-
-        return GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
+        return \GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
     }
 
     /**
@@ -778,7 +777,7 @@ class tl_gallery_creator_albums extends Backend
                 $sorting = 10;
                 foreach (explode(',', Input::get('pictureSorting')) as $pictureId)
                 {
-                    $objPicture = \GalleryCreator\GalleryCreatorPicturesModel::findByPk($pictureId);
+                    $objPicture = \MCupic\GalleryCreatorPicturesModel::findByPk($pictureId);
                     if ($objPicture !== null)
                     {
                         $objPicture->sorting = $sorting;
@@ -812,12 +811,12 @@ class tl_gallery_creator_albums extends Backend
                     if (Input::get('reviseTables') && $this->User->isAdmin)
                     {
                         // delete damaged datarecords
-                        GalleryCreator\GcHelpers::reviseTables($albumId, true);
+                        \GalleryCreator\GcHelpers::reviseTables($albumId, true);
                         $response = true;
                     }
                     else
                     {
-                        GalleryCreator\GcHelpers::reviseTables($albumId, false);
+                        \GalleryCreator\GcHelpers::reviseTables($albumId, false);
                         $response = true;
 
                     }
@@ -977,7 +976,7 @@ class tl_gallery_creator_albums extends Backend
                 $this->redirect('contao/main.php?do=error');
             }
             // also delete the child element
-            $arrDeletedAlbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+            $arrDeletedAlbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
             $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
             foreach ($arrDeletedAlbums as $idDelAlbum)
             {
@@ -1042,7 +1041,7 @@ class tl_gallery_creator_albums extends Backend
                 new Folder($this->uploadPath . '/' . $objAlbum->alias);
                 Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
                 $objDir = FilesModel::findByPath($this->uploadPath . '/' . $objAlbum->alias);
-                $oAlbum = GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
+                $oAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
                 if ($oAlbum !== null)
                 {
                     $oAlbum->assignedDir = $objDir->uuid;
@@ -1075,7 +1074,8 @@ class tl_gallery_creator_albums extends Backend
 
         // Get the album object
         $blnNoAlbum = false;
-        $objAlb = GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlb = MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
+
         if ($objAlb === null)
         {
             Message::addError('Album with ID ' . $intAlbumId . ' does not exist.');
@@ -1098,12 +1098,11 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // Call the uploader script
-        $arrUpload = GcHelpers::fileupload($intAlbumId, $strName);
-
+        $arrUpload = \GalleryCreator\GcHelpers::fileupload($intAlbumId, $strName);
         foreach ($arrUpload as $strFileSrc)
         {
             // Add  new datarecords into tl_gallery_creator_pictures
-            GcHelpers::createNewImage($objAlb->id, $strFileSrc);
+            \GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
         }
 
         // Do not exit script if html5_uploader is selected and Javascript is disabled
@@ -1178,7 +1177,7 @@ class tl_gallery_creator_albums extends Backend
                 ->execute($blnPreserveFilename, $intAlbumId);
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
             // import Images from filesystem and write entries to tl_gallery_creator_pictures
-            GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
+            \GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
         }
         $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
     }
@@ -1280,7 +1279,7 @@ class tl_gallery_creator_albums extends Backend
     public function inputFieldCbThumb()
     {
 
-        $objAlbum = \GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
 
         // Save input
         if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums')
@@ -1307,7 +1306,7 @@ class tl_gallery_creator_albums extends Backend
             $arrData[] = array('uuid' => $objPicture->uuid, 'id' => $objPicture->id);
         }
         // Get all child albums
-        $arrSubalbums = GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+        $arrSubalbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
         if (count($arrSubalbums))
         {
             $arrData[] = array('uuid' => 'beginn_childalbums', 'id' => '');
@@ -1399,7 +1398,7 @@ class tl_gallery_creator_albums extends Backend
             return $varValue;
         }
 
-        $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
+        $objPictures = \MCupic\GalleryCreatorPicturesModel::findByPid($dc->id);
         if ($objPictures === null)
         {
             return 'custom';
@@ -1441,7 +1440,7 @@ class tl_gallery_creator_albums extends Backend
         foreach ($files as $arrFile)
         {
             $sorting += 10;
-            $objPicture = GalleryCreatorPicturesModel::findByPk($arrFile['id']);
+            $objPicture = \MCupic\GalleryCreatorPicturesModel::findByPk($arrFile['id']);
             $objPicture->sorting = $sorting;
             $objPicture->save();
         }
@@ -1479,7 +1478,7 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // get current row
-        $objAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
 
         // if a new album was created
         $createDir = true;
