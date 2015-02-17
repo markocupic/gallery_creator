@@ -454,7 +454,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
 
-        $objAlbum =  \MCupic\GalleryCreatorAlbumsModel::findByPk($intId);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($intId);
 
         // Check permissions to publish
         if (!$this->User->isAdmin && $objAlbum->owner != $this->User->id && !$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
@@ -777,7 +777,7 @@ class tl_gallery_creator_albums extends Backend
                 $sorting = 10;
                 foreach (explode(',', Input::get('pictureSorting')) as $pictureId)
                 {
-                    $objPicture =  \MCupic\GalleryCreatorPicturesModel::findByPk($pictureId);
+                    $objPicture = \MCupic\GalleryCreatorPicturesModel::findByPk($pictureId);
                     if ($objPicture !== null)
                     {
                         $objPicture->sorting = $sorting;
@@ -1041,7 +1041,7 @@ class tl_gallery_creator_albums extends Backend
                 new Folder($this->uploadPath . '/' . $objAlbum->alias);
                 Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
                 $objDir = FilesModel::findByPath($this->uploadPath . '/' . $objAlbum->alias);
-                $oAlbum =  \MCupic\GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
+                $oAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
                 if ($oAlbum !== null)
                 {
                     $oAlbum->assignedDir = $objDir->uuid;
@@ -1099,7 +1099,6 @@ class tl_gallery_creator_albums extends Backend
 
         // Call the uploader script
         $arrUpload = \GalleryCreator\GcHelpers::fileupload($intAlbumId, $strName);
-mail('m.cupic@gmx.ch','','');
         foreach ($arrUpload as $strFileSrc)
         {
             // Add  new datarecords into tl_gallery_creator_pictures
@@ -1280,7 +1279,7 @@ mail('m.cupic@gmx.ch','','');
     public function inputFieldCbThumb()
     {
 
-        $objAlbum =  \MCupic\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
 
         // Save input
         if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums')
@@ -1399,7 +1398,7 @@ mail('m.cupic@gmx.ch','','');
             return $varValue;
         }
 
-        $objPictures =  \MCupic\GalleryCreatorPicturesModel::findByPid($dc->id);
+        $objPictures = \MCupic\GalleryCreatorPicturesModel::findByPid($dc->id);
         if ($objPictures === null)
         {
             return 'custom';
@@ -1479,7 +1478,7 @@ mail('m.cupic@gmx.ch','','');
         }
 
         // get current row
-        $objAlbum =  \MCupic\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
+        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
 
         // if a new album was created
         $createDir = true;
