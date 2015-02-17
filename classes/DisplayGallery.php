@@ -625,9 +625,9 @@ abstract class DisplayGallery extends \Module
               }
 
               //generiert den Link zum Parent-Album
-              if ($this->gc_hierarchicalOutput && \MCupic\GalleryCreator\GcHelpers::getParentAlbum($intAlbumId))
+              if ($this->gc_hierarchicalOutput && \GalleryCreator\GcHelpers::getParentAlbum($intAlbumId))
               {
-                     $arrParentAlbum = \MCupic\GalleryCreator\GcHelpers::getParentAlbum($intAlbumId);
+                     $arrParentAlbum = \GalleryCreator\GcHelpers::getParentAlbum($intAlbumId);
                      return $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
               }
 
@@ -636,7 +636,7 @@ abstract class DisplayGallery extends \Module
               $url .= isset($_SESSION['gallery_creator']['PAGINATION']) ? '?page=' . $_SESSION['gallery_creator']['PAGINATION'] : '';
               return $url;
        }
-
+ 
        /**
         * initCounter
         *

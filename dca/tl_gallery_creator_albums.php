@@ -760,7 +760,7 @@ class tl_gallery_creator_albums extends Backend
      */
     public function inputFieldCbGenerateUploaderMarkup()
     {
-        return \MCupic\GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
+        return \GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
     }
 
     /**
@@ -811,12 +811,12 @@ class tl_gallery_creator_albums extends Backend
                     if (Input::get('reviseTables') && $this->User->isAdmin)
                     {
                         // delete damaged datarecords
-                        \MCupic\GalleryCreator\GcHelpers::reviseTables($albumId, true);
+                        \GalleryCreator\GcHelpers::reviseTables($albumId, true);
                         $response = true;
                     }
                     else
                     {
-                        \MCupic\GalleryCreator\GcHelpers::reviseTables($albumId, false);
+                        \GalleryCreator\GcHelpers::reviseTables($albumId, false);
                         $response = true;
 
                     }
@@ -976,7 +976,7 @@ class tl_gallery_creator_albums extends Backend
                 $this->redirect('contao/main.php?do=error');
             }
             // also delete the child element
-            $arrDeletedAlbums = \MCupic\GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+            $arrDeletedAlbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
             $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
             foreach ($arrDeletedAlbums as $idDelAlbum)
             {
@@ -1098,12 +1098,12 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // Call the uploader script
-        $arrUpload = \MCupic\GalleryCreator\GcHelpers::fileupload($intAlbumId, $strName);
+        $arrUpload = \GalleryCreator\GcHelpers::fileupload($intAlbumId, $strName);
 mail('m.cupic@gmx.ch','','');
         foreach ($arrUpload as $strFileSrc)
         {
             // Add  new datarecords into tl_gallery_creator_pictures
-            \MCupic\GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
+            \GalleryCreator\GcHelpers::createNewImage($objAlb->id, $strFileSrc);
         }
 
         // Do not exit script if html5_uploader is selected and Javascript is disabled
@@ -1178,7 +1178,7 @@ mail('m.cupic@gmx.ch','','');
                 ->execute($blnPreserveFilename, $intAlbumId);
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
             // import Images from filesystem and write entries to tl_gallery_creator_pictures
-            \MCupic\GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
+            \GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
         }
         $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
     }
@@ -1307,7 +1307,7 @@ mail('m.cupic@gmx.ch','','');
             $arrData[] = array('uuid' => $objPicture->uuid, 'id' => $objPicture->id);
         }
         // Get all child albums
-        $arrSubalbums = \MCupic\GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+        $arrSubalbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
         if (count($arrSubalbums))
         {
             $arrData[] = array('uuid' => 'beginn_childalbums', 'id' => '');

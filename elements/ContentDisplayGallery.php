@@ -175,7 +175,7 @@ class ContentDisplayGallery extends DisplayGallery
                                    {
                                           continue;
                                    }
-                                   $arrAlbums[$objAlbum->id] = \MCupic\GalleryCreator\GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
+                                   $arrAlbums[$objAlbum->id] = \GalleryCreator\GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
@@ -236,7 +236,7 @@ class ContentDisplayGallery extends DisplayGallery
                                     $basename = $objFilesModel->name;
                                 }
                                 $auxBasename[] = $basename;
-                                $arrPictures[$objPictures->id] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($objPictures->id, $this);
+                                $arrPictures[$objPictures->id] = \GalleryCreator\GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
 
                             // sort by basename
@@ -314,9 +314,9 @@ class ContentDisplayGallery extends DisplayGallery
                             if (count($arrIDS))
                             {
                                    // store $arrPictures in the template variable
-                                   $arrPictures['prev'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex - 1], $this);
-                                   $arrPictures['current'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex], $this);
-                                   $arrPictures['next'] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex + 1], $this);
+                                   $arrPictures['prev'] = \GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex - 1], $this);
+                                   $arrPictures['current'] = \GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex], $this);
+                                   $arrPictures['next'] = \GalleryCreator\GcHelpers::getPictureInformationArray($arrIDS[$currentIndex + 1], $this);
 
                                    // add navigation href's to the template
                                    $this->Template->prevHref = $arrPictures['prev']['single_image_url'];

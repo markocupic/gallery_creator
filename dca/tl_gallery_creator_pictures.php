@@ -288,7 +288,7 @@ class tl_gallery_creator_pictures extends Backend
                 {
                     // Rotate image anticlockwise
                     $angle = 270;
-                    \MCupic\GalleryCreator\GcHelpers::imageRotate($objFile->path, $angle);
+                    \GalleryCreator\GcHelpers::imageRotate($objFile->path, $angle);
                     Dbafs::addResource($objFile->path, true);
                     $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . Input::get('id'));
                 }

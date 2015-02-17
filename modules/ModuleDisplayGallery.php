@@ -144,7 +144,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             $arrAlbums = array();
                             while ($objAlbum->next())
                             {
-                                   $arrAlbums[$objAlbum->id] = \MCupic\GalleryCreator\GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
+                                   $arrAlbums[$objAlbum->id] = \GalleryCreator\GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
@@ -167,7 +167,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             // generate the subalbum array
                             if ($this->gc_hierarchicalOutput)
                             {
-                                $arrSubalbums = \MCupic\GalleryCreator\GcHelpers::getSubalbumsInformationArray($this->intAlbumId, $this);
+                                $arrSubalbums = \GalleryCreator\GcHelpers::getSubalbumsInformationArray($this->intAlbumId, $this);
                                 $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : NULL;
                             }
 
@@ -200,7 +200,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             while ($objPictures->next())
                             {
                                    // picture array
-                                   $arrPictures[$objPictures->id] = \MCupic\GalleryCreator\GcHelpers::getPictureInformationArray($objPictures->id, $this);
+                                   $arrPictures[$objPictures->id] = \GalleryCreator\GcHelpers::getPictureInformationArray($objPictures->id, $this);
                             }
 
                             // add picture array to the template
