@@ -152,7 +152,7 @@ class ModuleDisplayGallery extends DisplayGallery
                             break;
 
                      case 'detailview' :
-                            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
                             $published = $objAlbum->published ? true : false;
                             if($published){
                                    $published = in_array($this->intAlbumId, explode(',',$strExcludedAlbums)) ? false : true;

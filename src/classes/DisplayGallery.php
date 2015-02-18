@@ -297,7 +297,7 @@ abstract class DisplayGallery extends \Module
         // Get the Album Id
         if (\Input::get('items'))
         {
-            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
             if ($objAlbum !== null)
             {
                 $this->intAlbumId = $objAlbum->id;
@@ -317,7 +317,7 @@ abstract class DisplayGallery extends \Module
 
         if (TL_MODE == 'FE')
         {
-            $objAlb = \MCupic\GalleryCreatorAlbumsModel::findByAlias($strAlbumalias);
+            $objAlb = \GalleryCreatorAlbumsModel::findByAlias($strAlbumalias);
             if ($objAlb !== null)
             {
 
@@ -503,14 +503,14 @@ abstract class DisplayGallery extends \Module
             'path' => $this->defaultThumb
         );
 
-        $objAlb = \MCupic\GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+        $objAlb = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
         if ($objAlb->thumb > 0)
         {
-            $objPreviewThumb = \MCupic\GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
+            $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
         }
         else
         {
-            $objPreviewThumb = \MCupic\GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
+            $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
         }
 
         if ($objPreviewThumb !== null)

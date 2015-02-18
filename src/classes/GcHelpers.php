@@ -35,7 +35,6 @@ class GcHelpers extends \System
      */
     public static function createNewImage($intAlbumId, $strFilepath)
     {
-
         //get the file-object
         $objFile = new \File($strFilepath);
         $objFile->close();
@@ -118,7 +117,7 @@ class GcHelpers extends \System
 
 
                 //finally save the new image in tl_gallery_creator_pictures
-                $objPicture = \MCupic\GalleryCreatorPicturesModel::findByPk($insertId);
+                $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
                 $objPicture->uuid = $objFile->getModel()->uuid;
                 $objPicture->owner = $userId;
                 $objPicture->date = $objAlbum->date;
@@ -169,7 +168,7 @@ class GcHelpers extends \System
         $blnIsError = false;
 
         // Get the album object
-        $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
         if ($objAlb === null)
         {
             $blnIsError = true;
@@ -1045,7 +1044,7 @@ class GcHelpers extends \System
         {
 
             // Datensaetzen ohne gültige uuid über den Feldinhalt path versuchen zu "retten"
-            $objPictures = \MCupic\GalleryCreatorPicturesModel::findByPid($albumId);
+            $objPictures = \GalleryCreatorPicturesModel::findByPid($albumId);
             if ($objPictures !== null)
             {
                 while ($objPictures->next())

@@ -187,7 +187,7 @@ class ContentDisplayGallery extends DisplayGallery
 
                      case 'detailview':
 
-                            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                             $published = $objAlbum->published ? true : false;
 
                             // for security reasons...
@@ -267,7 +267,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                             break;
                      case 'single_image' :
-                            $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
+                            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
                             if ($objAlbum === null)
                             {
                                    die('Invalid album alias: ' . \Input::get('items'));
