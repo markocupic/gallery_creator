@@ -282,7 +282,7 @@ class tl_gallery_creator_pictures extends Backend
 
                      case 'imagerotate' :
 
-                            $objPic = \GalleryCreator\GalleryCreatorPicturesModel::findById(Input::get('imgId'));
+                            $objPic = GalleryCreatorPicturesModel::findById(Input::get('imgId'));
                             $objFile = FilesModel::findByUuid($objPic->uuid);
                             if ($objFile !== null)
                             {
@@ -475,11 +475,11 @@ class tl_gallery_creator_pictures extends Backend
               }
 
               // Get sourceAlbumObject
-              $objSourceAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']);
+              $objSourceAlbum = GalleryCreatorAlbumsModel::findByPk($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']);
               unset($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']);
 
               // Get pictureToMoveObject
-              $objPictureToMove = GalleryCreator\GalleryCreatorPicturesModel::findByPk(Input::get('id'));
+              $objPictureToMove = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
               if ($objSourceAlbum === null || $objPictureToMove === null)
               {
                      return;
@@ -488,12 +488,12 @@ class tl_gallery_creator_pictures extends Backend
               if (Input::get('mode') == '1')
               {
                      // Paste after existing file
-                     $objTargetAlbum = GalleryCreator\GalleryCreatorPicturesModel::findByPk(Input::get('pid'))->getRelated('pid');
+                     $objTargetAlbum = GalleryCreatorPicturesModel::findByPk(Input::get('pid'))->getRelated('pid');
               }
               elseif (Input::get('mode') == '2')
               {
                      // Paste on top
-                     $objTargetAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('pid'));
+                     $objTargetAlbum = GalleryCreatorAlbumsModel::findByPk(Input::get('pid'));
               }
 
               if ($objTargetAlbum === null)
@@ -571,7 +571,7 @@ class tl_gallery_creator_pictures extends Backend
        public function inputFieldCbGenerateImageInformation(DataContainer $dc)
        {
 
-              $objImg = GalleryCreator\GalleryCreatorPicturesModel::findByPk($dc->id);
+              $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
               $objUser = UserModel::findByPk($objImg->owner);
               $oFile = FilesModel::findByUuid($objImg->uuid);
 

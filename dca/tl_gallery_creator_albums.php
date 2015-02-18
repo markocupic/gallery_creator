@@ -778,7 +778,7 @@ class tl_gallery_creator_albums extends Backend
                 $sorting = 10;
                 foreach (explode(',', Input::get('pictureSorting')) as $pictureId)
                 {
-                    $objPicture = \GalleryCreator\GalleryCreatorPicturesModel::findByPk($pictureId);
+                    $objPicture = GalleryCreatorPicturesModel::findByPk($pictureId);
                     if ($objPicture !== null)
                     {
                         $objPicture->sorting = $sorting;
@@ -1280,7 +1280,7 @@ class tl_gallery_creator_albums extends Backend
     public function inputFieldCbThumb()
     {
 
-        $objAlbum = \GalleryCreator\GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
+        $objAlbum = GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
 
         // Save input
         if (Input::post('FORM_SUBMIT') == 'tl_gallery_creator_albums')
@@ -1479,7 +1479,7 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // get current row
-        $objAlbum = GalleryCreator\GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
+        $objAlbum = GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
 
         // if a new album was created
         $createDir = true;
