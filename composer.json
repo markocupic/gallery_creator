@@ -32,10 +32,7 @@
         "contao":{
             "sources":{
                 "":"system/modules/gallery_creator"
-            },
-            "runonce":[
-                "config/runonce.php"
-            ]
+            }
         }
     }
 }

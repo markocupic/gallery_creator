@@ -12,6 +12,11 @@
 
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace MCupic\GalleryCreator;
+
+/**
  * Class GalleryCreatorRunonce
  *
  * Provide methods regarding gallery_creator albums.
@@ -65,4 +70,4 @@ class GalleryCreatorRunonce
 }
 
 
-\GalleryCreatorRunonce::addUuids();
+GalleryCreatorRunonce::addUuids();
