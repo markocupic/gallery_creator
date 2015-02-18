@@ -1,7 +1,7 @@
 {
     "name":"markocupic/gallery_creator",
     "description":"Gallery extension for the Contao Open Source CMS",
-    "keywords":["contao", "Gallery Creator", "gallery_creator", "frontend", "backend"],
+    "keywords":["contao", "Gallery Creator", "gallery_creator", "Frontend", "Backend"],
     "type":"contao-module",
     "license":"LGPL-3.0+",
     "authors":[
@@ -22,6 +22,9 @@
         "contao/core":">=3.4,<4",
         "contao-community-alliance/composer-plugin": "~2.0"
     },
+    "replace": {
+        "contao-legacy/gallery_creator":"self.version"
+    },
     "autoload":{
         "classmap":[""]
     },
@@ -33,4 +36,3 @@
         }
     }
 }
-
