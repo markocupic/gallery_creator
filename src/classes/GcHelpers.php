@@ -415,6 +415,8 @@ class GcHelpers extends \System
     public static function getAlbumInformationArray($intAlbumId, $objThis)
     {
         global $objPage;
+        // Get the page model
+        $objPageModel = \PageModel::findByPk($objPage->id);
 
         if ($objThis->moduleType != 'fmd' && $objThis->moduleType != 'cte')
         {
@@ -441,8 +443,7 @@ class GcHelpers extends \System
         if (TL_MODE == 'FE')
         {
             //generate the url as a formated string
-            $href = \Controller::generateFrontendUrl($objPage->row(),
-                ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/%s##ceId##' : '/items/%s##ceId##'), $objPage->language);
+            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/%s##ceId##' : '/items/%s##ceId##'), $objPage->language);
             //add the content-element-id if necessary
             $href = $objThis->moduleType == 'cte' && $objThis->countGcContentElementsOnPage() > 1 ? str_replace('##ceId##', '/ce/' . $objThis->id, $href) : str_replace('##ceId##', '', $href);
         }
@@ -534,6 +535,9 @@ class GcHelpers extends \System
             return;
         }
         global $objPage;
+
+        // Get the page model
+        $objPageModel = \PageModel::findByPk($objPage->id);
 
         if ($objThis->moduleType != 'fmd' && $objThis->moduleType != 'cte')
         {
@@ -713,7 +717,7 @@ class GcHelpers extends \System
             //[string] path to media (video, picture, sound...)
             'href'             => TL_FILES_URL . $href,
             // single image url
-            'single_image_url' => \Controller::generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/img/' . $arrFile["filename"], $objPage->language),
+            'single_image_url' => $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/img/' . $arrFile["filename"], $objPage->language),
             //[string] path to the image,
             'image_src'        => $arrFile["path"],
             //[string] path to the other selected media

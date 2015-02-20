@@ -538,6 +538,9 @@ abstract class DisplayGallery extends \Module
     {
 
         global $objPage;
+
+        // Get the page model
+        $objPageModel = \PageModel::findByPk($objPage->id);
         if ($strContentType != 'fmd' && $strContentType != 'cte')
         {
             $strMessage = "<pre>Parameter 'ContentType' must be 'fmd' or 'cte'! <br /></pre>";
@@ -586,7 +589,7 @@ abstract class DisplayGallery extends \Module
         //Anzahl Spalten pro Reihe
         $this->Template->colsPerRow = $this->gc_rows == "" ? 4 : $this->gc_rows;
         //Pfad zur xml-Ausgabe fuer jw_imagerotator
-        $this->Template->jw_imagerotator_path = TL_MODE == 'FE' ? $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $objAlbum->alias . '/jw_imagerotator/true') : null;
+        $this->Template->jw_imagerotator_path = TL_MODE == 'FE' ? $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $objAlbum->alias . '/jw_imagerotator/true') : null;
         //Inhaltselement Id anhaengen wenn es sich um ein Inhaltselement handelt
         if ($strContentType == 'cte')
         {
@@ -627,16 +630,18 @@ abstract class DisplayGallery extends \Module
             }
         }
 
+        // Get the page model
+        $objPageModel = \PageModel::findByPk($objPage->id);
+
         //generiert den Link zum Parent-Album
         if ($this->gc_hierarchicalOutput && GcHelpers::getParentAlbum($intAlbumId))
         {
             $arrParentAlbum = GcHelpers::getParentAlbum($intAlbumId);
-
-            return $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
+            return $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
         }
 
         //generiert den Link zur Startuebersicht unter Beruecksichtigung der pagination
-        $url = $this->generateFrontendUrl($objPage->row(), '');
+        $url = $objPageModel->getFrontendUrl();
         $url .= isset($_SESSION['gallery_creator']['PAGINATION']) ? '?page=' . $_SESSION['gallery_creator']['PAGINATION'] : '';
 
         return $url;

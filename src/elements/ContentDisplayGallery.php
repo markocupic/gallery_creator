@@ -342,7 +342,9 @@ class ContentDisplayGallery extends DisplayGallery
                                           $this->Template->prevItem = null;
                                    }
                             }
-                            $this->Template->returnHref = $this->generateFrontendUrl($objPage->row(), ($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items'), $objPage->language);
+                            // Get the page model
+                            $objPageModel = \PageModel::findByPk($objPage->id);
+                            $this->Template->returnHref = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items'), $objPage->language);
                             $this->Template->arrPictures = $arrPictures;
 
                             // generate other template variables
