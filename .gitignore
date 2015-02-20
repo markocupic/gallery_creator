@@ -8,7 +8,7 @@
 #################
 ## EXCLUDE JUMPLOADER PLUGIN
 #################
-**/jumploader/ 
+#**/jumploader/
 
 #################
 ## Eclipse

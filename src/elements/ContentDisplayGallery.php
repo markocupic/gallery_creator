@@ -63,7 +63,7 @@ class ContentDisplayGallery extends DisplayGallery
               global $objPage;
 
               // process request variables
-              $this->evalRequestVars();
+              $this->getUrlParams();
 
               if (!is_array(deserialize($this->gc_publish_albums)) && !$this->gc_publish_all_albums)
               {
@@ -170,7 +170,7 @@ class ContentDisplayGallery extends DisplayGallery
 
                                    $currAlbumId = $arrAllowedAlbums[$i];
                                    $objAlbum = $this->Database->prepare('SELECT id, alias FROM tl_gallery_creator_albums WHERE id=?')->execute($currAlbumId);
-                                   if (false === $this->feUserAuthentication($objAlbum->alias))
+                                   if (false === $this->authenticate($objAlbum->alias))
                                    {
                                           continue;
                                    }
@@ -178,7 +178,7 @@ class ContentDisplayGallery extends DisplayGallery
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
-                            $this->getAlbumTemplateVars($objAlbum->id, 'cte');
+                            $this->getAlbumTemplateVars($objAlbum->id);
 
                             // Call gcGenerateFrontendTemplateHook
                             $this->callGcGenerateFrontendTemplateHook($this);
@@ -257,7 +257,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->Template->arrPictures = $arrPictures;
 
                             // generate other template variables
-                            $this->getAlbumTemplateVars($this->intAlbumId, 'cte');
+                            $this->getAlbumTemplateVars($this->intAlbumId);
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
@@ -347,7 +347,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->Template->arrPictures = $arrPictures;
 
                             // generate other template variables
-                            $this->getAlbumTemplateVars($this->intAlbumId, 'cte');
+                            $this->getAlbumTemplateVars($this->intAlbumId);
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);

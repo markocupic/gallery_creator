@@ -245,9 +245,10 @@ abstract class DisplayGallery extends \Module
     }
 
     /**
-     * evaluate the request and extracts the album-id and the content-element-id
+     * evaluate the url data
+     * extracts the album-id, the content-element-id, etc.
      */
-    public function evalRequestVars()
+    public function getUrlParams()
     {
 
         if ($this->gc_publish_all_albums != 1)
@@ -264,7 +265,7 @@ abstract class DisplayGallery extends \Module
             $this->strAlbumalias = \Input::get('items');
 
             //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->feUserAuthentication($this->strAlbumalias);
+            $this->authenticate($this->strAlbumalias);
 
             //fuer jw_imagerotator ajax-requests
             if (\Input::get('jw_imagerotator'))
@@ -290,7 +291,7 @@ abstract class DisplayGallery extends \Module
             }
 
             //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->feUserAuthentication($objAlbum->alias);
+            $this->authenticate($objAlbum->alias);
 
             \Input::setGet('items', $objAlbum->alias);
             $this->strAlbumalias = $objAlbum->alias;
@@ -309,12 +310,12 @@ abstract class DisplayGallery extends \Module
     }
 
     /**
-     * Check if fe-user is allowed watching this album
+     * Check if fe-user has access to a certain album
      *
      * @param string
      * @return bool
      */
-    protected function feUserAuthentication($strAlbumalias)
+    protected function authenticate($strAlbumalias)
     {
 
         if (TL_MODE == 'FE')
@@ -370,7 +371,7 @@ abstract class DisplayGallery extends \Module
                 ->execute(\Input::get('AlbumId'));
 
             //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->feUserAuthentication($objAlbum->alias);
+            $this->authenticate($objAlbum->alias);
             if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
             {
                 return false;
@@ -409,7 +410,7 @@ abstract class DisplayGallery extends \Module
             $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')
                 ->execute(\Input::get('albumId'));
 
-            $this->feUserAuthentication($objAlbum->alias);
+            $this->authenticate($objAlbum->alias);
             if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
             {
                 return false;
@@ -531,24 +532,17 @@ abstract class DisplayGallery extends \Module
     }
 
     /**
-     * Sets the template-vars for the selected album
+     * Set the template-vars to the template object for the selected album
      *
      * @param integer
-     * @param string
      */
-    protected function getAlbumTemplateVars($intAlbumId, $strContentType)
+    protected function getAlbumTemplateVars($intAlbumId)
     {
 
         global $objPage;
 
         // Get the page model
         $objPageModel = \PageModel::findByPk($objPage->id);
-        if ($strContentType != 'fmd' && $strContentType != 'cte')
-        {
-            $strMessage = "<pre>Parameter 'ContentType' must be 'fmd' or 'cte'! <br /></pre>";
-            __error(E_USER_ERROR, $strMessage, __FILE__, __LINE__);
-        }
-
 
         // Load the current album from db
         $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
@@ -569,7 +563,7 @@ abstract class DisplayGallery extends \Module
         $_SESSION['gallery_creator']['CURRENT_ALBUM'] = $this->Template->arrAlbumdata;
 
         //der back-Link
-        $this->Template->backLink = $this->generateBackLink($strContentType, $intAlbumId);
+        $this->Template->backLink = $this->generateBackLink($intAlbumId);
         //Der dem Bild uebergeordnete Albumname
         $this->Template->Albumname = $objAlbum->name;
         // Albumbesucher (Anzahl Klicks)
@@ -591,7 +585,7 @@ abstract class DisplayGallery extends \Module
         //Pfad zur xml-Ausgabe fuer jw_imagerotator
         $this->Template->jw_imagerotator_path = TL_MODE == 'FE' ? $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $objAlbum->alias . '/jw_imagerotator/true') : null;
         //Inhaltselement Id anhaengen wenn es sich um ein Inhaltselement handelt
-        if ($strContentType == 'cte')
+        if ($this->moduleType == 'cte')
         {
             //Pfad zur xml-Ausgabe fuer jw_imagerotator
             if ($this->countGcContentElementsOnPage() > 1)
@@ -611,7 +605,7 @@ abstract class DisplayGallery extends \Module
      * @param int
      * @return string
      */
-    public function generateBackLink($strContentType, $intAlbumId)
+    public function generateBackLink($intAlbumId)
     {
 
         global $objPage;
@@ -621,7 +615,7 @@ abstract class DisplayGallery extends \Module
             return false;
         }
 
-        if ($strContentType == 'cte')
+        if ($this->moduleType == 'cte')
         {
             //Nur, wenn nicht automatisch zu overview weitergeleitet wurde, wird der back Link angezeigt
             if ($this->doRedirectOnSingleAlbum())

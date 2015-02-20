@@ -69,7 +69,7 @@ class ModuleDisplayGallery extends DisplayGallery
               {
                      $this->strAlbumalias = \Input::get('items');
                      // authenticate user if album is protected
-                     $this->feUserAuthentication($this->strAlbumalias);
+                     $this->authenticate($this->strAlbumalias);
 
                      // get the album id from the album alias
                      $objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')->execute($this->strAlbumalias);
@@ -145,7 +145,10 @@ class ModuleDisplayGallery extends DisplayGallery
                             }
                             $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                             $this->Template->arrAlbums = $arrAlbums;
-                            $this->getAlbumTemplateVars($objAlbum->id, 'fmd');
+                            $this->getAlbumTemplateVars($objAlbum->id);
+
+                            // Call gcGenerateFrontendTemplateHook
+                            $this->callGcGenerateFrontendTemplateHook($this);
                             break;
 
                      case 'detailview' :
@@ -204,10 +207,13 @@ class ModuleDisplayGallery extends DisplayGallery
                             $this->Template->arrPictures = $arrPictures;
 
                             // add some other useful template vars
-                            $this->getAlbumTemplateVars($this->intAlbumId, 'fmd');
+                            $this->getAlbumTemplateVars($this->intAlbumId);
 
                             // init the counter
                             $this->initCounter($this->intAlbumId);
+
+                            // Call gcGenerateFrontendTemplateHook
+                            $this->callGcGenerateFrontendTemplateHook($this);
                             break;
 
                      case 'jw_imagerotator' :
