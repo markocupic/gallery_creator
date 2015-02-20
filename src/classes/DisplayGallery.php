@@ -70,6 +70,9 @@ abstract class DisplayGallery extends \Module
     public function generate()
     {
 
+        // Get the module type 'cte' or 'fmd'
+        $this->moduleType = strpos(strtolower(get_class($this)), 'content') !== false ? 'cte' : 'fmd';
+
         // Ajax Requests
         if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
         {
@@ -80,7 +83,6 @@ abstract class DisplayGallery extends \Module
         if (TL_MODE == 'BE')
         {
             $objTemplate = new \BackendTemplate('be_wildcard');
-
             $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG'][strtoupper($this->moduleType)]['gallery_creator'][0]) . ' ###';
             $objTemplate->title = $this->headline;
 
@@ -546,9 +548,7 @@ abstract class DisplayGallery extends \Module
             $strMessage = "<pre>Parameter 'ContentType' must be 'fmd' or 'cte'! <br /></pre>";
             __error(E_USER_ERROR, $strMessage, __FILE__, __LINE__);
         }
-        //wichtig fuer Ajax-Anwendungen
-        $this->Template->elementType = strtolower($strContentType);
-        $this->Template->elementId = $this->id;
+
 
         // Load the current album from db
         $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')

@@ -418,12 +418,6 @@ class GcHelpers extends \System
         // Get the page model
         $objPageModel = \PageModel::findByPk($objPage->id);
 
-        if ($objThis->moduleType != 'fmd' && $objThis->moduleType != 'cte')
-        {
-            $strMessage = "<pre>Parameter 'ContentType' must be 'fmd' or 'cte'! <br /></pre>";
-            __error(E_USER_ERROR, $strMessage, __FILE__, __LINE__);
-        }
-
         $objAlbum = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
             ->execute($intAlbumId);
         //Anzahl Subalben ermitteln
@@ -538,17 +532,6 @@ class GcHelpers extends \System
 
         // Get the page model
         $objPageModel = \PageModel::findByPk($objPage->id);
-
-        if ($objThis->moduleType != 'fmd' && $objThis->moduleType != 'cte')
-        {
-            $strMessage = "<pre>Parameter 'ContentType' must be 'fmd' or 'cte'! <br /></pre>";
-            __error(E_USER_ERROR, $strMessage, __FILE__, __LINE__);
-        }
-        if ($objThis->Template)
-        {
-            $objThis->Template->elementType = strtolower($objThis->moduleType);
-            $objThis->Template->elementId = $objThis->id;
-        }
 
         $objPicture = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')
             ->execute($intPictureId);

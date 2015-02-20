@@ -28,7 +28,6 @@ class ModuleDisplayGallery extends DisplayGallery
        public function generate()
        {
 
-              $this->moduleType = 'fmd';
               // set the item from the auto_item parameter
               if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
               {
@@ -77,8 +76,6 @@ class ModuleDisplayGallery extends DisplayGallery
                      $this->intAlbumId = $objAlbum->id;
               }
 
-              // moduleType is used for ajax applications
-              $this->Template->moduleType = $this->moduleType;
               $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
               $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
 

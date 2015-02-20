@@ -33,7 +33,6 @@ class ContentDisplayGallery extends DisplayGallery
        public function generate()
        {
 
-              $this->moduleType = 'cte';
 
               // set the item from the auto_item parameter
               if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
@@ -49,7 +48,7 @@ class ContentDisplayGallery extends DisplayGallery
                      // only display the detail view of the selected album if multiple gallery_creator content elements are embeded on the current page
                      if ($this->id != $this->ContentElementId && $this->countGcContentElementsOnPage() > 1)
                      {
-                            return '';
+                         return '';
                      }
               }
               return parent::generate();
