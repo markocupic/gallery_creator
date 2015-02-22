@@ -364,7 +364,6 @@ class ContentDisplayGallery extends DisplayGallery
                             exit;
                             break;
 
-                     die('sdfsfd');
               }
               // end switch
        }

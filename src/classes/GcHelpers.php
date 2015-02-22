@@ -37,7 +37,6 @@ class GcHelpers extends \System
     {
         //get the file-object
         $objFile = new \File($strFilepath);
-        $objFile->close();
         if (!$objFile->isGdImage)
         {
             return false;
@@ -62,7 +61,10 @@ class GcHelpers extends \System
         }
 
         //check if the file ist stored in the album-directory or if it is stored in an external directory
-        $blnExternalFile = strstr($objFile->dirname, $assignedDir) ? false : true;
+        $blnExternalFile = false;
+        if(\Input::get('importFromFilesystem')){
+            $blnExternalFile = strstr($objFile->dirname, $assignedDir) ? false : true;
+        }
 
         //get the album object and the alias
         $strAlbumAlias = $objAlbum->alias;
@@ -76,21 +78,21 @@ class GcHelpers extends \System
         if ($objImg->id)
         {
             $insertId = $objImg->id;
-            //get the next sorting index
+            // Get the next sorting index
             $objImg_2 = \Database::getInstance()
                 ->prepare('SELECT MAX(sorting)+10 AS maximum FROM tl_gallery_creator_pictures WHERE pid=?')
                 ->execute($objAlbum->id);
             $sorting = $objImg_2->maximum;
 
-            //if filename should be generated
-            if (!$objAlbum->preserve_filename)
+            // If filename should be generated
+            if (!$objAlbum->preserve_filename && $blnExternalFile === false)
             {
                 $newFilepath = sprintf('%s/alb%s_img%s.%s', $assignedDir, $objAlbum->id, $insertId, $objFile->extension);
                 $objFile->renameTo($newFilepath);
             }
 
-            //galleryCreatorImagePostInsert - HOOK
-            //uebergibt die id des neu erstellten db-Eintrages ($lastInsertId)
+            // GalleryCreatorImagePostInsert - HOOK
+            // übergibt die id des neu erstellten db-Eintrages ($lastInsertId)
             if (isset($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']) && is_array($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']))
             {
                 foreach ($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert'] as $callback)
@@ -115,10 +117,12 @@ class GcHelpers extends \System
                     $userId = $objAlbum->owner;
                 }
 
+                // Get the FilesModel
+                $objFileModel = \FilesModel::findByPath($objFile->path);
 
                 //finally save the new image in tl_gallery_creator_pictures
                 $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
-                $objPicture->uuid = $objFile->getModel()->uuid;
+                $objPicture->uuid = $objFileModel->uuid;
                 $objPicture->owner = $userId;
                 $objPicture->date = $objAlbum->date;
                 $objPicture->sorting = $sorting;
@@ -140,7 +144,7 @@ class GcHelpers extends \System
             }
             else
             {
-                if ($blnExternalFile === 1)
+                if ($blnExternalFile === true)
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file'], $strFilepath);
                 }
@@ -246,9 +250,8 @@ class GcHelpers extends \System
 
         foreach ($arrUpload as $strFileSrc)
         {
-            // store file in tl_files
-            $objFile = new \File($strFileSrc);
-            $objFile->close();
+            // Store file in tl_files
+            \Dbafs::addResource($strFileSrc);
         }
 
         return $arrUpload;
@@ -579,7 +582,6 @@ class GcHelpers extends \System
         $arrSize[1] = $objFileThumb->height;
         $arrFile["thumb_width"] = $objFileThumb->width;
         $arrFile["thumb_height"] = $objFileThumb->height;
-        $objFileThumb->close();
 
         // get some image params
         if (is_file(TL_ROOT . '/' . $strImageSrc))
@@ -597,7 +599,6 @@ class GcHelpers extends \System
             $arrFile["dirname"] = $objFileImage->dirname;
             $arrFile["image_width"] = $objFileImage->width;
             $arrFile["image_height"] = $objFileImage->height;
-            $objFileImage->close();
         }
         else
         {
@@ -623,7 +624,6 @@ class GcHelpers extends \System
                         $arrSize[1] = $objFileCustomThumb->height;
                         $arrFile["thumb_width"] = $objFileCustomThumb->width;
                         $arrFile["thumb_height"] = $objFileCustomThumb->height;
-                        $objFileCustomThumb->close();
                     }
                 }
             }
@@ -911,8 +911,10 @@ class GcHelpers extends \System
         {
             return;
         }
+
         while ($objFilesModel->next())
         {
+
             // Continue if the file has been processed or does not exist
             if (isset($images[$objFilesModel->path]) || !file_exists(TL_ROOT . '/' . $objFilesModel->path))
             {
@@ -927,18 +929,19 @@ class GcHelpers extends \System
                 {
                     $images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
                 }
-                $objFile->close();
             }
             else
             {
                 // If it is a directory, then store its files in the array
-                $objSubfilesModel = \FilesModel::findByPid($objFilesModel->uuid);
+                $objSubfilesModel = \FilesModel::findMultipleFilesByFolder($objFilesModel->path);
                 if ($objSubfilesModel === null)
                 {
                     continue;
                 }
+
                 while ($objSubfilesModel->next())
                 {
+
                     // Skip subfolders
                     if ($objSubfilesModel->type == 'folder' || !is_file(TL_ROOT . '/' . $objSubfilesModel->path))
                     {
@@ -950,7 +953,6 @@ class GcHelpers extends \System
                     {
                         $images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
                     }
-                    $objFile->close();
                 }
             }
         }
@@ -960,6 +962,7 @@ class GcHelpers extends \System
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
+               \Input::setGet('importFromFilesystem','true');
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
                 {
 
@@ -971,7 +974,7 @@ class GcHelpers extends \System
                         //copy Image to the upload folder
                         $objFile = new \File($strSource);
                         $objFile->copyTo($strDestination);
-                        $objFile->close();
+                        \Dbafs::addResource($strSource);
                     }
                     self::createNewImage($objAlb->id, $strDestination);
                 }
@@ -1090,9 +1093,7 @@ class GcHelpers extends \System
                         }
                     }
                 }
-
             }
-
         }
 
 
