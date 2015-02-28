@@ -62,7 +62,8 @@ class GcHelpers extends \System
 
         //check if the file ist stored in the album-directory or if it is stored in an external directory
         $blnExternalFile = false;
-        if(\Input::get('importFromFilesystem')){
+        if (\Input::get('importFromFilesystem'))
+        {
             $blnExternalFile = strstr($objFile->dirname, $assignedDir) ? false : true;
         }
 
@@ -484,7 +485,7 @@ class GcHelpers extends \System
             //[int] Anzahl Bilder im Album
             'count'               => $objPics->numRows,
             //[int] Anzahl Unteralben
-            'count_subalbums'     => count(self::getChildAlbums($objAlbum->id)),
+            'count_subalbums'     => count(\GalleryCreatorAlbumsModel::getChildAlbums($objAlbum->id)),
             //[string] alt Attribut fuer das Vorschaubild
             'alt'                 => $arrPreviewThumb['name'],
             //[string] Pfad zum Originalbild
@@ -783,6 +784,19 @@ class GcHelpers extends \System
     }
 
     /**
+     * @deprecated Use \GalleryCreatorAlbumsModel::getChildAlbums() instead
+     * @param $parentId
+     * @param string $strSorting
+     * @param null $iterationDepth
+     * @return array
+     */
+    public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
+    {
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth = null);
+    }
+
+    /**
+     * @deprecated Use \GalleryCreatorAlbumsModel::getChildAlbums() instead
      * @param $parentId
      * @param string $strSorting
      * @param null $iterationDepth
@@ -790,56 +804,18 @@ class GcHelpers extends \System
      */
     public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
     {
-
-        // get the iteration depth
-        $iterationDepth = $iterationDepth === '' ? null : $iterationDepth;
-
-        $arrSubAlbums = array();
-        if ($strSorting == '')
-        {
-            $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY sorting';
-        }
-        else
-        {
-            $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY ' . $strSorting;
-        }
-        $objAlb = \Database::getInstance()->prepare($strSql)->execute($parentId);
-        $depth = $iterationDepth !== null ? $iterationDepth - 1 : null;
-
-
-        while ($objAlb->next())
-        {
-            if ($depth < 0 && $iterationDepth !== null)
-            {
-                return $arrSubAlbums;
-            }
-            $arrSubAlbums[] = $objAlb->id;
-            $arrSubAlbums = array_merge($arrSubAlbums, self::getChildAlbums($objAlb->id, $strSorting, $depth));
-        }
-
-        return $arrSubAlbums;
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth = null);
     }
 
     /**
      * gibt ein Array mit allen Angaben des Parent-Albums zurueck
-     *
+     * @deprecated Use \GalleryCreatorAlbumsModel::getParentAlbum($AlbumId) instead
      * @param integer
      * @return array
      */
     public static function getParentAlbum($AlbumId)
     {
-
-        $objAlbPid = \Database::getInstance()->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($AlbumId);
-        $parentAlb = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($objAlbPid->pid);
-        if ($parentAlb->numRows == 0)
-        {
-            return null;
-        }
-        $arrParentAlbum = $parentAlb->fetchAllAssoc();
-
-        return $arrParentAlbum[0];
+        return \GalleryCreatorAlbumsModel::getParentAlbum($AlbumId);
     }
 
     /**
@@ -962,7 +938,7 @@ class GcHelpers extends \System
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
-               \Input::setGet('importFromFilesystem','true');
+                \Input::setGet('importFromFilesystem', 'true');
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
                 {
 

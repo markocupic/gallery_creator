@@ -977,7 +977,7 @@ class tl_gallery_creator_albums extends Backend
                 $this->redirect('contao/main.php?do=error');
             }
             // also delete the child element
-            $arrDeletedAlbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+            $arrDeletedAlbums = GalleryCreatorAlbumsModel::getChildAlbums(Input::get('id'));
             $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
             foreach ($arrDeletedAlbums as $idDelAlbum)
             {
@@ -1307,7 +1307,7 @@ class tl_gallery_creator_albums extends Backend
             $arrData[] = array('uuid' => $objPicture->uuid, 'id' => $objPicture->id);
         }
         // Get all child albums
-        $arrSubalbums = \GalleryCreator\GcHelpers::getChildAlbums(Input::get('id'));
+        $arrSubalbums = GalleryCreatorAlbumsModel::getChildAlbums(Input::get('id'));
         if (count($arrSubalbums))
         {
             $arrData[] = array('uuid' => 'beginn_childalbums', 'id' => '');

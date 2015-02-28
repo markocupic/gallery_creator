@@ -628,9 +628,9 @@ abstract class DisplayGallery extends \Module
         $objPageModel = \PageModel::findByPk($objPage->id);
 
         //generiert den Link zum Parent-Album
-        if ($this->gc_hierarchicalOutput && GcHelpers::getParentAlbum($intAlbumId))
+        if ($this->gc_hierarchicalOutput && \GalleryCreatorAlbumsModel::getParentAlbum($intAlbumId))
         {
-            $arrParentAlbum = GcHelpers::getParentAlbum($intAlbumId);
+            $arrParentAlbum = \GalleryCreatorAlbumsModel::getParentAlbum($intAlbumId);
             return $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $arrParentAlbum["alias"]);
         }
 
