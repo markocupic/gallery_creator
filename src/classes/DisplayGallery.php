@@ -169,7 +169,6 @@ abstract class DisplayGallery extends \Module
      */
     public function countGcContentElementsOnPage($intPageId = null)
     {
-
         if ($intPageId)
         {
             $objPage = $this->Database->prepare('SELECT * FROM tl_page WHERE id=?')->execute($intPageId);
@@ -178,26 +177,46 @@ abstract class DisplayGallery extends \Module
         {
             global $objPage;
         }
-
+        $objArticle = \ArticleModel::findByPk($this->pid);
+        if($objArticle === null)
+        {
+            return 0;
+        }
+        if($objArticle->showatdevice != '')
+        {
+            // If extension "mobilecontent" is installed
+            $query = "SELECT id FROM tl_article WHERE pid=? AND published=? AND showatdevice='%s'";
+            $query = sprintf($query, $objArticle->showatdevice);
+        }
+        else
+        {
+            $query = "SELECT id FROM tl_article WHERE pid=? AND published=?";
+        }
         //kontrollieren, ob Weiterleitung zu detailview  moeglich ist
         //Keine Weiterleitung moeglich, bei mehreren aktivierten GALLERY_CREATOR Inhaltselementen im selben Artikel
-        $objArticlesOfCurrentPage = $this->Database->prepare('SELECT id FROM tl_article WHERE pid=? AND published=?')
-            ->execute($objPage->id, 1);
 
-        $arrArticlesOfCurrentPage = array();
-        while ($objArticlesOfCurrentPage->next())
-        {
-            $arrArticlesOfCurrentPage[] = (int)$objArticlesOfCurrentPage->id;
-        }
+        $objArticlesOfCurrentPage = $this->Database->prepare($query)->execute($objPage->id, 1);
+
+        $arrArticlesOfCurrentPage = $objArticlesOfCurrentPage->fetchEach('id');
 
         $gcElementCounter = 0;
-        $objCE = $this->Database->prepare('SELECT pid FROM tl_content WHERE type=? AND invisible=?')
-            ->execute('gallery_creator', 0);
+
+        if($this->showatdevice != '')
+        {
+            // If extension "mobilecontent" is installed
+            $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=? AND showatdevice='%s'";
+            $query = sprintf($query, $this->showatdevice);
+        }
+        else
+        {
+            $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=?";
+        }
+        $objCE = $this->Database->prepare($query)->execute('gallery_creator', 0);
         while ($objCE->next())
         {
             if (in_array($objCE->pid, $arrArticlesOfCurrentPage))
             {
-                $gcElementCounter += 1;
+                $gcElementCounter++;
             }
         }
 
