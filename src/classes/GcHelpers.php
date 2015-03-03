@@ -792,7 +792,7 @@ class GcHelpers extends \System
      */
     public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
     {
-        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth = null);
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth);
     }
 
     /**
@@ -804,7 +804,7 @@ class GcHelpers extends \System
      */
     public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
     {
-        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth = null);
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth);
     }
 
     /**

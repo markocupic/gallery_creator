@@ -51,6 +51,31 @@ class GalleryCreatorAlbumsModel extends \Model
     }
 
     /**
+     * Get the parent album trail as an array
+     * @param $AlbumId
+     * @return array
+     */
+    public static function getParentAlbums($AlbumId)
+    {
+
+        $arrParentAlbums = array();
+        $objAlb = \GalleryCreatorAlbumsModel::findByPk($AlbumId);
+        if($objAlb !== null){
+            $pid = $objAlb->pid;
+            while($pid > 0)
+            {
+                $parentAlb = \GalleryCreatorAlbumsModel::findByPk($pid);
+                if ($parentAlb !== null){
+                    $arrParentAlbums[] = $parentAlb->id;
+                    $pid = $parentAlb->pid;
+                }
+            }
+        }
+
+        return $arrParentAlbums;
+    }
+
+    /**
      * @param $parentId
      * @param string $strSorting
      * @param null $iterationDepth
