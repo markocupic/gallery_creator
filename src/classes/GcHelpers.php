@@ -903,7 +903,7 @@ class GcHelpers extends \System
                 $objFile = new \File($objFilesModel->path);
                 if ($objFile->isGdImage)
                 {
-                    $images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
+                    $images[$objFile->path] = array('uuid' => $objFilesModel->uuid, 'basename' => $objFile->basename, 'path' => $objFile->path);
                 }
             }
             else
@@ -927,7 +927,7 @@ class GcHelpers extends \System
                     $objFile = new \File($objSubfilesModel->path);
                     if ($objFile->isGdImage)
                     {
-                        $images[$objFile->path] = array('name' => $objFile->basename, 'path' => $objFile->path);
+                        $images[$objFile->path] = array('uuid' => $objSubfilesModel->uuid, 'basename' => $objFile->basename, 'path' => $objFile->path);
                     }
                 }
             }
@@ -935,9 +935,30 @@ class GcHelpers extends \System
         if (count($images))
         {
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
+            $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
+            $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
+            $arrPictures['path'] = $objPictures->fetchEach('path');
+            foreach($arrPictures['path'] as $path)
+            {
+                $arrPictures['basename'][] = basename($path);
+            }
+
+
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
+                // Prevent duplicate entries
+                if(in_array($image['uuid'], $arrPictures['uuid']))
+                {
+                    continue;
+                }
+
+                // Prevent duplicate entries
+                if(in_array($image['basename'], $arrPictures['basename']))
+                {
+                    continue;
+                }
+
                 \Input::setGet('importFromFilesystem', 'true');
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
                 {
@@ -952,6 +973,7 @@ class GcHelpers extends \System
                         $objFile->copyTo($strDestination);
                         \Dbafs::addResource($strSource);
                     }
+
                     self::createNewImage($objAlb->id, $strDestination);
                 }
                 else
