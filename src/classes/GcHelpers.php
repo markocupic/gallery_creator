@@ -964,8 +964,24 @@ class GcHelpers extends \System
                 {
 
                     $strSource = $image['path'];
-                    $strDestination = $uploadPath . '/' . $objAlb->alias . '/' . basename($strSource);
-                    $strDestination = self::generateUniqueFilename($strDestination);
+
+                    // Get the album upload directory
+                    $objFolderModel = \FilesModel::findByUuid($objAlb->assignedDir);
+                    $errMsg = 'Aborted import process, because there is no upload folder assigned to the album with ID ' . $objAlb->id . '.';
+                    if ($objFolderModel === null)
+                    {
+                        die($errMsg);
+                    }
+                    if ($objFolderModel->type != 'folder')
+                    {
+                        die($errMsg);
+                    }
+                    if(!is_dir(TL_ROOT . '/' . $objFolderModel->path))
+                    {
+                        die($errMsg);
+                    }
+
+                    $strDestination = self::generateUniqueFilename($objFolderModel->path . '/' . basename($strSource));
                     if (is_file(TL_ROOT . '/' . $strSource))
                     {
                         //copy Image to the upload folder

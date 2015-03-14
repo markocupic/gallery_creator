@@ -339,14 +339,14 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
 );
 
 /**
- * Class tl_gallery_creator_albums
- *
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @copyright  Marko Cupic
- * @author     Marko Cupic
- * @package    Controller
- */
+* Class tl_gallery_creator_albums
+*
+* Provide miscellaneous methods that are used by the data configuration array.
+*
+* @copyright  Marko Cupic
+* @author     Marko Cupic
+* @package    GalleryCreator
+*/
 class tl_gallery_creator_albums extends Backend
 {
 
