@@ -20,7 +20,7 @@ class MyGalleryCreatorClass extends \System
        /**
         * Do some custom modifications
         * @param Module $objModule
-        * @param null $objAlbum 
+        * @param null $objAlbum
         */
        public function doSomething(\Module $objModule, $objAlbum=null)
        {

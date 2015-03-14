@@ -40,3 +40,9 @@ $GLOBALS['TL_LANG']['gallery_creator']['pictures'] = 'pictures';
 $GLOBALS['TL_LANG']['gallery_creator']['contains'] = 'contains';
 $GLOBALS['TL_LANG']['gallery_creator']['visitors'] = 'visitors';
 $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'] = array('Authentification error', 'You tried to enter a protected album. Please log in as a frontend user or check your member-rights.');
+
+/**
+ * Miscelaneous
+ */
+$GLOBALS['TL_LANG']['MSC']['gcDeleteConfirmAlbum'] = "Do you really want to delete album with ID %s? \\r\\nAttention! \\nAll image-files in the assigned directory will be deleted too!!!";
+$GLOBALS['TL_LANG']['MSC']['gcDeleteConfirmPicture'] = "Do you really want to delete picture with ID %s? \\r\\nAttention! \\nThe image-file will be deleted too!!!";
