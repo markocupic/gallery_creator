@@ -11,7 +11,7 @@ Der "gc_generateFrontendTemplate"-Hook wird vor der Aufbereitung des Gallery-Cre
 ```php
 <?php
 // config.php
-$GLOBALS['TL_HOOKS']['addComment'][] = array('MyGalleryCreatorClass', 'doSomething');
+$GLOBALS['TL_HOOKS']['gc_generateFrontendTemplate'][] = array('MyGalleryCreatorClass', 'doSomething');
 
 // MyGalleryCreatorClass.php
 class MyGalleryCreatorClass extends \System
@@ -20,9 +20,9 @@ class MyGalleryCreatorClass extends \System
        /**
         * Do some custom modifications
         * @param Module $objModule
-        * @param null $objAlbum
+        * @param null $objAlbum 
         */
-       public function doSomething(Module $objModule, $objAlbum=null)
+       public function doSomething(\Module $objModule, $objAlbum=null)
        {
               global $objPage;
               $objPage->pageTitle = 'Bildergalerie';
