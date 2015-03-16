@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
                 'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             ),
             'revise_tables' => array(
-                'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables'],
                 'href'       => 'href is set in $this->setUpPalettes',
                 'class'      => 'icon_revise_tables',
                 'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
@@ -929,7 +929,7 @@ class tl_gallery_creator_albums extends Backend
             // remove buttons
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNclose\"((\r|\n|.)+?)>/', '', $strContent);
             $strContent = preg_replace('/<input type=\"submit\" name=\"saveNcreate\"((\r|\n|.)+?)>/', '', $strContent);
-            $strContent = preg_replace('/<input type=\"submit\" name=\"save\"((\r|\n|.)+?)>/', '<input type="button" name="save" id="reviseTableBtn" class="tl_submit" accesskey="s" value="' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['reviseTablesBtn'][0] . '">', $strContent);
+            $strContent = preg_replace('/<input type=\"submit\" name=\"save\"((\r|\n|.)+?)>/', '<input type="button" name="save" id="reviseTableBtn" class="tl_submit" accesskey="s" value="' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn'][0] . '">', $strContent);
 
         }
         if (Input::get('act') == 'select')
@@ -981,22 +981,41 @@ class tl_gallery_creator_albums extends Backend
             $arrDeletedAlbums = array_merge(array(Input::get('id')), $arrDeletedAlbums);
             foreach ($arrDeletedAlbums as $idDelAlbum)
             {
-                $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-                    ->execute($idDelAlbum);
+                $objAlbumModel = GalleryCreatorAlbumsModel::findByPk($idDelAlbum);
                 if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                 {
                     // remove all pictures from tl_gallery_creator_pictures
-                    $this->Database->prepare('DELETE FROM tl_gallery_creator_pictures WHERE pid=?')
-                        ->execute($idDelAlbum);
+                    $objPicturesModel = GalleryCreatorPicturesModel::findByPid($idDelAlbum);
+                    if($objPicturesModel !== null){
+                        while($objPicturesModel->next())
+                        {
+                            $fileUuid = $objPicturesModel->uuid;
+                            $objPicturesModel->delete();
+                            $objPicture = GalleryCreatorPicturesModel::findByUuid($fileUuid);
+                            if($objPicture ===  null)
+                            {
+                                $oFile = FilesModel::findByUuid($fileUuid);
+                                if ($oFile !== null)
+                                {
+                                    $file = new File($oFile->path);
+                                    $file->delete();
+                                }
+                            }
+                        }
+                    }
                     // remove the albums from tl_gallery_creator_albums
-                    $this->Database->prepare('DELETE FROM tl_gallery_creator_albums WHERE id=?')->execute($idDelAlbum);
                     // remove the directory from the filesystem
-                    $oFolder = FilesModel::findByUuid($objAlb->assignedDir);
+                    $oFolder = FilesModel::findByUuid($objAlbumModel->assignedDir);
                     if ($oFolder !== null)
                     {
+                        sleep(2);
                         $folder = new Folder($oFolder->path, true);
-                        $folder->delete();
+                        if($folder->isEmpty())
+                        {
+                            $folder->delete();
+                        }
                     }
+                    $objAlbumModel->delete();
                 }
                 else
                 {
@@ -1025,29 +1044,36 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // create upload directory for all albums and store the uuid in the album settings
-        $objAlbum = $this->Database->execute('SELECT * FROM tl_gallery_creator_albums');
+        $objAlbum = GalleryCreatorAlbumsModel::findAll();
+        if($objAlbum === null)
+        {
+            return;
+        }
         while ($objAlbum->next())
         {
-            $ok = false;
+            if($objAlbum->alias == '') continue;
+            if($this->Input->post('assignedDir'))
+            {
+                $objAlbum->assignedDir = $this->Input->post('assignedDir');
+                $objAlbum->save();
+            }
+
             $objFolder = FilesModel::findByUuid($objAlbum->assignedDir);
             if ($objFolder !== null)
             {
-                if (is_dir(TL_ROOT . '/' . $objFolder->path))
+                if (!is_dir(TL_ROOT . '/' . $objFolder->path))
                 {
-                    $ok = true;
+                    new Folder($objFolder->path);
+                    Dbafs::addResource($objFolder->path, false);
+                    return;
                 }
             }
-            if ($ok === false)
+            else
             {
                 new Folder($this->uploadPath . '/' . $objAlbum->alias);
-                Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
-                $objDir = FilesModel::findByPath($this->uploadPath . '/' . $objAlbum->alias);
-                $oAlbum = GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
-                if ($oAlbum !== null)
-                {
-                    $oAlbum->assignedDir = $objDir->uuid;
-                    $oAlbum->save();
-                }
+                $objFilesModel = Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
+                $objAlbum->assignedDir = $objFilesModel->uuid;
+                $objAlbum->save();
             }
         }
     }
@@ -1168,19 +1194,26 @@ class tl_gallery_creator_albums extends Backend
         {
             return;
         }
-        $blnPreserveFilename = Input::post('preserve_filename');
         $intAlbumId = Input::get('id');
-        // comma separated list with folder uuid's => 10585872-5f1f-11e3-858a-0025900957c8,105e9de0-5f1f-11e3-858a-0025900957c8,105e9dd6-5f1f-11e3-858a-0025900957c8
-        $strMultiSRC = $this->Input->post('multiSRC');
-        if (strlen(trim($strMultiSRC)))
+
+        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+        if($objAlbum !== null)
         {
-            $this->Database->prepare('UPDATE tl_gallery_creator_albums SET preserve_filename=? WHERE id=?')
-                ->execute($blnPreserveFilename, $intAlbumId);
-            $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
-            // import Images from filesystem and write entries to tl_gallery_creator_pictures
-            \GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
+            $objAlbum->preserve_filename = Input::post('preserve_filename');
+            $objAlbum->save();
+            // comma separated list with folder uuid's => 10585872-5f1f-11e3-858a-0025900957c8,105e9de0-5f1f-11e3-858a-0025900957c8,105e9dd6-5f1f-11e3-858a-0025900957c8
+            $strMultiSRC = $this->Input->post('multiSRC');
+            if (strlen(trim($strMultiSRC)))
+            {
+                $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
+                // import Images from filesystem and write entries to tl_gallery_creator_pictures
+                \GalleryCreator\GcHelpers::importFromFilesystem($intAlbumId, $strMultiSRC);
+                $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
+            }
         }
-        $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
+        $this->redirect('contao/main.php?do=gallery_creator');
+
+
     }
 
 
@@ -1459,6 +1492,16 @@ class tl_gallery_creator_albums extends Backend
      */
     public function saveCbGenerateAlias($strAlias, \Contao\DataContainer $dc)
     {
+        // get current row
+        $objAlbum = GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
+
+        // Save assigned Dir if it was defined.
+        if($this->Input->post('assignedDir'))
+        {
+            $objAlbum->assignedDir = $this->Input->post('assignedDir');
+            $objAlbum->save();
+        }
+
         $strAlias = standardize($strAlias);
         // if there isn't an existing albumalias generate one from the albumname
         if (!strlen($strAlias))
@@ -1471,16 +1514,15 @@ class tl_gallery_creator_albums extends Backend
         // remove invalid characters
         $strAlias = preg_replace("/[^a-z0-9\_\-]/", "", $strAlias);
         // if alias already exists add the album-id to the alias
-        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id!=? AND alias=?')
+        $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id!=? AND alias=?')
             ->execute($dc->activeRecord->id, $strAlias);
-        if ($objAlbum->numRows)
+        if ($objAlb->numRows)
         {
             $strAlias = 'id-' . $dc->activeRecord->id . '-' . $strAlias;
         }
 
-        // get current row
-        $objAlbum = GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
 
+        // Autocreate assigned dir if it hasn't been defined
         // if a new album was created
         $createDir = true;
         $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
@@ -1496,9 +1538,9 @@ class tl_gallery_creator_albums extends Backend
         {
             // create the new folder and register it in tl_files
             $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
-            Dbafs::addResource($objFolder->path, true);
-            $oFolder = FilesModel::findByPath($objFolder->path);
+            $oFolder = Dbafs::addResource($objFolder->path, true);
             $objAlbum->assignedDir = $oFolder->uuid;
+            $objAlbum->save();
         }
 
         return $strAlias;

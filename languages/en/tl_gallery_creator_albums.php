@@ -58,8 +58,10 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'] = array('Assigne
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['revise_tables'] = array('Clean the Database', 'Tidy up the database from old entries');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['reviseTablesBtn'] = array('Revise Tables');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn'] = array('revise tables');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['0'] = "Revise tables";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['1'] = "Remove orphaned/incorrect entries";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']    = array('new album', 'Create a new album.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures']   = array('list pictures', 'List pictures of album with ID %s.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album'] = array('Edit album', 'Edit Album with ID %s.');
