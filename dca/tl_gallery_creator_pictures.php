@@ -681,28 +681,34 @@ class tl_gallery_creator_pictures extends Backend
        {
 
               $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
+              $pid = $objImg->pid;
               if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
-                     //Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
+                  // Datensatz löschen
+                  $uuid = $objImg->uuid;
+
+                  $objImg->delete();
+
+                  //Nur Bilder innerhalb des gallery_creator_albums und wenn sie nicht in einem anderen Datensatz noch Verwendung finden, werden vom Server geloescht
 
                      // Prüfen, ob das Bild noch mit einem anderen Datensatz verknüpft ist
-                     $objImgNumRows = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE uuid=?')->execute($objImg->uuid);
-                     if ($objImgNumRows->numRows)
+                     $objPictureModel = GalleryCreatorPicturesModel::findByUuid($uuid);
+                     if ($objPictureModel === null)
                      {
-                            $oFile = FilesModel::findByUuid($objImg->uuid);
+                         // Wenn nein darf gelöscht werden...
+                         $oFile = FilesModel::findByUuid($uuid);
 
-                            $objAlbum = GalleryCreatorAlbumsModel::findByPk($objImg->pid);
-                            $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
+                         $objAlbum = GalleryCreatorAlbumsModel::findByPk($pid);
+                         $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
 
-                            // Bild nur löschen, wenn es im Verzeichnis liegt, das dem Album zugewiesen ist
-                            if ($oFile !== null && strstr($oFile->path, $oFolder->path))
-                            {
-                                   // delete file from filesystem
-                                   $file = new File($oFile->path, true);
-                                   $file->delete();
-                            }
+                         // Bild nur löschen, wenn es im Verzeichnis liegt, das dem Album zugewiesen ist
+                         if ($oFile !== null && strstr($oFile->path, $oFolder->path))
+                         {
+                             // delete file from filesystem
+                             $file = new File($oFile->path, true);
+                             $file->delete();
+                         }
                      }
-                     $objImg->delete();
               }
 
               elseif (!$this->User->isAdmin && $objImg->owner != $this->User->id)
