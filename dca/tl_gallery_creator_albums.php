@@ -509,10 +509,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         // enable cutting albums to album-owners and admins only
-        $objAlb = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($row['id']);
-
-        return (($this->User->id == $objAlb->owner || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? ' <a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : ' ' . Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ');
+        return (($this->User->id == $row['owner'] || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? ' <a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : ' ' . Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ');
     }
 
     /**
@@ -529,10 +526,8 @@ class tl_gallery_creator_albums extends Backend
     public function buttonCbDelete($row, $href, $label, $title, $icon, $attributes)
     {
 
-        $objAlb = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($row['id']);
-
-        return ($this->User->isAdmin || $this->User->id == $objAlb->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        // enable deleting albums to album-owners and admins only
+        return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
     }
 
     /**
@@ -609,18 +604,16 @@ class tl_gallery_creator_albums extends Backend
     /**
      * Checks if the current user obtains full rights or only restricted rights on the selected album
      */
-    public function checkUserRole()
+    public function checkUserRole($albumId)
     {
 
-        $objUser = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute(Input::get('id'));
-        if ($this->User->isAdmin || true == $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+        $objAlbum = GalleryCreatorAlbumsModel::findByPk($albumId);
+        if ($this->User->isAdmin || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'] == true)
         {
             $this->restrictedUser = false;
-
             return;
         }
-        if ($objUser->owner != $this->User->id)
+        if ($objAlbum->owner != $this->User->id)
         {
             $this->restrictedUser = true;
 
@@ -647,12 +640,12 @@ class tl_gallery_creator_albums extends Backend
         while ($hasParent)
         {
             $level++;
-            $mysql = $this->Database->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')->execute($pid);
-            if ($mysql->pid < 1)
+            $objAlbum = GalleryCreatorAlbumsModel::findByPk($pid);
+            if ($objAlbum->pid < 1)
             {
                 $hasParent = false;
             }
-            $pid = $mysql->pid;
+            $pid = $objAlbum->pid;
         }
 
         return $level;
@@ -696,11 +689,11 @@ class tl_gallery_creator_albums extends Backend
     public function inputFieldCbGenerateAlbumInformations()
     {
 
-        $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute(Input::get('id'));
-        $objUser = $this->Database->prepare('SELECT name FROM tl_user WHERE id=?')->execute($objAlb->owner);
+        $objAlb = GalleryCreatorAlbumsModel::findByPk(Input::get('id'));
+        $objUser = \Contao\UserModel::findByPk($objAlb->owner);
+        $owner = $objUser === null ? 'no-name' : $objUser->name;
         // check User Role
-        $this->checkUserRole();
+        $this->checkUserRole(Input::get('id'));
         if (false == $this->restrictedUser)
         {
             $output = '
@@ -732,7 +725,7 @@ class tl_gallery_creator_albums extends Backend
 	</tr>
 	<tr class="odd">
 		<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'][0] . ': </strong></td>
-		<td>' . $objUser->name . '</td>
+		<td>' . $owner . '</td>
 	</tr>
 	<tr>
 		<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'][0] . ': </strong></td>
@@ -855,8 +848,8 @@ class tl_gallery_creator_albums extends Backend
     private function isNode($id)
     {
 
-        $mysql = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE pid=?')->execute($id);
-        if ($mysql->numRows > 0)
+        $objAlbums = GalleryCreatorAlbumsModel::findByPid($id);
+        if ($objAlbums !== null)
         {
             return true;
         }
@@ -973,7 +966,7 @@ class tl_gallery_creator_albums extends Backend
 
         if (Input::get('act') != 'deleteAll')
         {
-            $this->checkUserRole();
+            $this->checkUserRole(Input::get('id'));
             if ($this->restrictedUser)
             {
                 $this->log('Datensatz mit ID ' . Input::get('id') . ' wurde von einem nicht authorisierten Benutzer versucht aus tl_gallery_creator_albums zu loeschen.', __METHOD__, TL_ERROR);
@@ -985,6 +978,7 @@ class tl_gallery_creator_albums extends Backend
             foreach ($arrDeletedAlbums as $idDelAlbum)
             {
                 $objAlbumModel = GalleryCreatorAlbumsModel::findByPk($idDelAlbum);
+                if($objAlbumModel === null)continue;
                 if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                 {
                     // remove all pictures from tl_gallery_creator_pictures
@@ -1011,7 +1005,6 @@ class tl_gallery_creator_albums extends Backend
                     $oFolder = FilesModel::findByUuid($objAlbumModel->assignedDir);
                     if ($oFolder !== null)
                     {
-                        sleep(2);
                         $folder = new Folder($oFolder->path, true);
                         if($folder->isEmpty())
                         {
@@ -1247,7 +1240,7 @@ class tl_gallery_creator_albums extends Backend
         $objAlb = $this->Database->prepare('SELECT id, owner FROM tl_gallery_creator_albums WHERE id=?')
             ->execute(Input::get('id'));
         // only adminstrators and album-owners obtains writing-access for these fields
-        $this->checkUserRole();
+        $this->checkUserRole(Input::get('id'));
         if ($objAlb->owner != $this->User->id && true == $this->restrictedUser)
         {
             $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['default'] = $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['palettes']['restricted_user'];
