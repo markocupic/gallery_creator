@@ -1052,7 +1052,7 @@ class tl_gallery_creator_albums extends Backend
         while ($objAlbum->next())
         {
             if($objAlbum->alias == '') continue;
-            if($this->Input->post('assignedDir'))
+            if($this->Input->post('assignedDir') && $this->Input->post('id') == $objAlbum->id)
             {
                 $objAlbum->assignedDir = $this->Input->post('assignedDir');
                 $objAlbum->save();
