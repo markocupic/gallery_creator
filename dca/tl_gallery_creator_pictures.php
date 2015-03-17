@@ -677,7 +677,7 @@ class tl_gallery_creator_pictures extends Backend
         * ondelete-callback
         * prevents deleting images by unauthorised users
         */
-       public function ondeleteCb(DC_Table $dc)
+       public function ondeleteCb(\Contao\DC_Table $dc)
        {
 
               $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);

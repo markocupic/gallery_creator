@@ -26,10 +26,13 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
         'onload_callback'   => array(
             array('tl_gallery_creator_albums', 'onloadCbFileupload'),
             array('tl_gallery_creator_albums', 'onloadCbSetUpPalettes'),
-            array('tl_gallery_creator_albums', 'onloadCbCheckFolderSettings'),
             array('tl_gallery_creator_albums', 'onloadCbImportFromFilesystem'),
             array('tl_gallery_creator_albums', 'onloadCbGetGcCteElements'),
             array('tl_gallery_creator_albums', 'isAjaxRequest')
+
+        ),
+        'onsubmit_callback'   => array(
+            array('tl_gallery_creator_albums', 'onsubmitCbCheckFolderSettings'),
 
         ),
         'ondelete_callback' => array(
@@ -157,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
             'exclude'   => true,
             'inputType' => 'fileTree',
             'eval'      => array('mandatory' => false, 'fieldType' => 'radio', 'tl_class' => 'clr'),
-            'sql'       => "binary(16) NULL"
+            'sql'       => "blob NULL",
         ),
         'owners_name'          => array(
             'label'   => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'],
@@ -1032,49 +1035,14 @@ class tl_gallery_creator_albums extends Backend
      * onload-callback
      * checks availability of the upload-folder
      */
-    public function onloadCbCheckFolderSettings()
+    public function onsubmitCbCheckFolderSettings(Contao\DC_Table $dc)
     {
-
         // create the upload directory if it doesn't already exists
         new Folder($this->uploadPath);
         Dbafs::addResource($this->uploadPath, false);
         if (!is_writable(TL_ROOT . '/' . $this->uploadPath))
         {
             $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['dirNotWriteable'], $this->uploadPath);
-        }
-
-        // create upload directory for all albums and store the uuid in the album settings
-        $objAlbum = GalleryCreatorAlbumsModel::findAll();
-        if($objAlbum === null)
-        {
-            return;
-        }
-        while ($objAlbum->next())
-        {
-            if($objAlbum->alias == '') continue;
-            if($this->Input->post('assignedDir') && $this->Input->post('id') == $objAlbum->id)
-            {
-                $objAlbum->assignedDir = $this->Input->post('assignedDir');
-                $objAlbum->save();
-            }
-
-            $objFolder = FilesModel::findByUuid($objAlbum->assignedDir);
-            if ($objFolder !== null)
-            {
-                if (!is_dir(TL_ROOT . '/' . $objFolder->path))
-                {
-                    new Folder($objFolder->path);
-                    Dbafs::addResource($objFolder->path, false);
-                    return;
-                }
-            }
-            else
-            {
-                new Folder($this->uploadPath . '/' . $objAlbum->alias);
-                $objFilesModel = Dbafs::addResource($this->uploadPath . '/' . $objAlbum->alias, false);
-                $objAlbum->assignedDir = $objFilesModel->uuid;
-                $objAlbum->save();
-            }
         }
     }
 
@@ -1492,14 +1460,18 @@ class tl_gallery_creator_albums extends Backend
      */
     public function saveCbGenerateAlias($strAlias, \Contao\DataContainer $dc)
     {
+        $blnDoNotCreateDir = false;
+
         // get current row
-        $objAlbum = GalleryCreatorAlbumsModel::findByPk($dc->activeRecord->id);
+        $objAlbum = GalleryCreatorAlbumsModel::findByPk($dc->id);
+        if($objAlbum === null) return;
 
         // Save assigned Dir if it was defined.
-        if($this->Input->post('assignedDir'))
+        if($this->Input->post('FORM_SUBMIT') && strlen($this->Input->post('assignedDir')))
         {
             $objAlbum->assignedDir = $this->Input->post('assignedDir');
             $objAlbum->save();
+            $blnDoNotCreateDir = true;
         }
 
         $strAlias = standardize($strAlias);
@@ -1518,29 +1490,19 @@ class tl_gallery_creator_albums extends Backend
             ->execute($dc->activeRecord->id, $strAlias);
         if ($objAlb->numRows)
         {
-            $strAlias = 'id-' . $dc->activeRecord->id . '-' . $strAlias;
+            $strAlias = 'id-' . $dc->id . '-' . $strAlias;
         }
 
-
-        // Autocreate assigned dir if it hasn't been defined
-        // if a new album was created
-        $createDir = true;
-        $oFolder = FilesModel::findByUuid($objAlbum->assignedDir);
-        if ($oFolder !== null)
-        {
-            if (is_dir(TL_ROOT . '/' . $oFolder->path))
-            {
-                $createDir = false;
-            }
-        }
-
-        if ($createDir === true)
+        // Create default upload folder
+        if ($blnDoNotCreateDir === false)
         {
             // create the new folder and register it in tl_files
             $objFolder = new Folder ($this->uploadPath . '/' . $strAlias);
             $oFolder = Dbafs::addResource($objFolder->path, true);
             $objAlbum->assignedDir = $oFolder->uuid;
             $objAlbum->save();
+            // Important
+            Input::setPost('assignedDir', String::binToUuid($objAlbum->assignedDir));
         }
 
         return $strAlias;
