@@ -519,14 +519,32 @@ abstract class DisplayGallery extends \Module
     public function getAlbumPreviewThumb($intAlbumId)
     {
 
+        $thumbSRC = $this->defaultThumb;
+
+        // Check for an alternate thumbnail
+        if(\Config::get('gc_error404_thumb') !== '')
+        {
+            $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
+            if($objFile !== null)
+            {
+                if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
+                {
+                    if (is_file(TL_ROOT . '/' . $objFile->path))
+                    {
+                        $thumbSRC = $objFile->path;
+                    }
+                }
+            }
+        }
+
         // Predefine thumb
         $arrThumb = array(
-            'name' => basename($this->defaultThumb),
-            'path' => $this->defaultThumb
+            'name' => basename($thumbSRC),
+            'path' => $thumbSRC
         );
 
         $objAlb = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
-        if ($objAlb->thumb > 0)
+        if ($objAlb->thumb !== null)
         {
             $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
         }
@@ -538,12 +556,15 @@ abstract class DisplayGallery extends \Module
         if ($objPreviewThumb !== null)
         {
             $oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
-            if ($oFile !== null && is_file(TL_ROOT . '/' . $oFile->path))
+            if ($oFile !== null)
             {
-                $arrThumb = array(
-                    'name' => basename($oFile->path),
-                    'path' => $oFile->path
-                );
+                if(is_file(TL_ROOT . '/' . $oFile->path))
+                {
+                    $arrThumb = array(
+                        'name' => basename($oFile->path),
+                        'path' => $oFile->path
+                    );
+                }
             }
         }
 

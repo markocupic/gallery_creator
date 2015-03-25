@@ -534,6 +534,23 @@ class GcHelpers extends \System
         }
         global $objPage;
 
+
+        $defaultThumbSRC =  $objThis->defaultThumb;
+        if(\Config::get('gc_error404_thumb') !== '')
+        {
+            $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
+            if($objFile !== null)
+            {
+                if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
+                {
+                    if (is_file(TL_ROOT . '/' . $objFile->path))
+                    {
+                        $defaultThumbSRC = $objFile->path;
+                    }
+                }
+            }
+        }
+
         // Get the page model
         $objPageModel = \PageModel::findByPk($objPage->id);
 
@@ -553,14 +570,14 @@ class GcHelpers extends \System
         $objFileModel = \FilesModel::findByUuid($objPicture->uuid);
         if ($objFileModel == null)
         {
-            $strImageSrc = $objThis->defaultThumb;
+            $strImageSrc = $defaultThumbSRC;
         }
         else
         {
             $strImageSrc = $objFileModel->path;
             if (!is_file(TL_ROOT . '/' . $strImageSrc))
             {
-                $strImageSrc = $objThis->defaultThumb;
+                $strImageSrc = $defaultThumbSRC;
             }
 
             //meta
