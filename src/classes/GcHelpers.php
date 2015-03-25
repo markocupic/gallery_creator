@@ -436,7 +436,6 @@ class GcHelpers extends \System
         //Array Thumbnailbreite
         $arrSize = unserialize($objThis->gc_size_albumlisting);
 
-
         $href = null;
         if (TL_MODE == 'FE')
         {
@@ -447,6 +446,29 @@ class GcHelpers extends \System
         }
 
         $arrPreviewThumb = $objThis->getAlbumPreviewThumb($objAlbum->id);
+        $strImageSrc = $arrPreviewThumb['path'];
+
+        //Generate the thumbnails and the picture element
+        try
+        {
+            $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
+            $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
+
+            if ($thumbSrc !== $strImageSrc)
+            {
+                $objFile = new \File(rawurldecode($thumbSrc), true);
+            }
+        }
+        catch (\Exception $e)
+        {
+            \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+
+            $thumbSrc = '';
+            $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
+        }
+
+        $picture['alt'] = specialchars($objAlbum->name);
+        $picture['title'] = specialchars($objAlbum->name);
 
         $arrAlbum = array(
             'id'                  => $objAlbum->id,
@@ -501,7 +523,9 @@ class GcHelpers extends \System
             //[int] Thumbnailgrösse
             'size'                => $arrSize,
             //[string] javascript-Aufruf
-            'thumbMouseover'      => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : ""
+            'thumbMouseover'      => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
+            //[array] picture
+            'picture'            => $picture
         );
 
         //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
@@ -577,6 +601,7 @@ class GcHelpers extends \System
             $strImageSrc = $objFileModel->path;
             if (!is_file(TL_ROOT . '/' . $strImageSrc))
             {
+                // Fallback to the default thumb
                 $strImageSrc = $defaultThumbSRC;
             }
 
@@ -593,8 +618,29 @@ class GcHelpers extends \System
         // get thumb dimensions
         $arrSize = unserialize($objThis->gc_size_detailview);
 
-        //Thumbnails generieren
-        $thumbSrc = \Image::get($strImageSrc, $arrSize[0], $arrSize[1], $arrSize[2]);
+        //Generate the thumbnails and the picture element
+        try
+        {
+            $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
+            $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
+
+            if ($thumbSrc !== $strImageSrc)
+            {
+                $objFile = new \File(rawurldecode($thumbSrc), true);
+            }
+        }
+        catch (\Exception $e)
+        {
+            \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+
+            $thumbSrc = '';
+            $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
+        }
+
+        $picture['alt'] = $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']);
+        $picture['title'] = $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']);
+
+
         $objFileThumb = new \File(rawurldecode($thumbSrc));
         $arrSize[0] = $objFileThumb->width;
         $arrSize[1] = $objFileThumb->height;
@@ -761,6 +807,8 @@ class GcHelpers extends \System
             'cssClass'         => $cssID[1] != '' ? $cssID[1] : '',
             //[bool] true, wenn es sich um ein Bild handelt, das nicht in files/gallery_creator_albums/albumname gespeichert ist
             'externalFile'     => $objPicture->externalFile,
+            // [array] picture
+            'picture' => $picture
         );
 
         //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_pictures erweitert wurde
