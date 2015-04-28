@@ -440,7 +440,10 @@ class GcHelpers extends \System
         if (TL_MODE == 'FE')
         {
             //generate the url as a formated string
-            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/%s##ceId##' : '/items/%s##ceId##'), $objPage->language);
+            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/##albumAlias####ceId##' : '/items/##albumAlias####ceId##'), $objPage->language);
+            // add albumAlias
+            $href = str_replace('##albumAlias##', $objAlbum->alias, $href);
+
             //add the content-element-id if necessary
             $href = $objThis->moduleType == 'cte' && $objThis->countGcContentElementsOnPage() > 1 ? str_replace('##ceId##', '/ce/' . $objThis->id, $href) : str_replace('##ceId##', '', $href);
         }
@@ -501,7 +504,7 @@ class GcHelpers extends \System
             //[int] Albumbesucher (Anzahl Klicks)
             'visitors'            => $objAlbum->visitors,
             //[string] Link zur Detailansicht
-            'href'                => TL_MODE == 'FE' ? sprintf($href, $objAlbum->alias) : null,
+            'href'                => $href,
             //[string] Inhalt fuer das title Attribut
             'title'               => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objThis->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
             //[int] Anzahl Bilder im Album
