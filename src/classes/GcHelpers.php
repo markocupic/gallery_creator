@@ -613,7 +613,7 @@ class GcHelpers extends \System
             // Use the file name as title if none is given
             if ($arrMeta['title'] == '')
             {
-                $arrMeta['title'] = specialchars(str_replace('_', ' ', preg_replace('/^[0-9]+_/', '', $objFileModel->name)));
+                $arrMeta['title'] = specialchars($objFileModel->name);
             }
         }
 
