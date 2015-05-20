@@ -130,7 +130,12 @@ abstract class DisplayGallery extends \Module
 
     }
 
-    protected function callGcGenerateFrontendTemplateHook($objModule, $objAlbum = null)
+    /**
+     * @param \Module $objModule
+     * @param null $objAlbum
+     * @return mixed
+     */
+    protected function callGcGenerateFrontendTemplateHook(\Module $objModule, $objAlbum = null)
     {
 
         // HOOK: modify the page or template object
@@ -139,9 +144,10 @@ abstract class DisplayGallery extends \Module
             foreach ($GLOBALS['TL_HOOKS']['gc_generateFrontendTemplate'] as $callback)
             {
                 $this->import($callback[0]);
-                $this->$callback[0]->$callback[1]($objModule, $objAlbum);
+                $objModule->Template = $this->$callback[0]->$callback[1]($objModule, $objAlbum);
             }
         }
+        return $objModule->Template;
     }
 
     /**

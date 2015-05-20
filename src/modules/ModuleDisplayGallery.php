@@ -150,7 +150,7 @@ class ModuleDisplayGallery extends DisplayGallery
                 $this->getAlbumTemplateVars($objAlbum->id);
 
                 // Call gcGenerateFrontendTemplateHook
-                $this->callGcGenerateFrontendTemplateHook($this);
+                $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
                 break;
 
             case 'detailview' :
@@ -216,7 +216,7 @@ class ModuleDisplayGallery extends DisplayGallery
                 $this->initCounter($this->intAlbumId);
 
                 // Call gcGenerateFrontendTemplateHook
-                $this->callGcGenerateFrontendTemplateHook($this);
+                $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
                 break;
 
             case 'jw_imagerotator' :

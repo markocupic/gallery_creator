@@ -6,7 +6,7 @@ Mit dem Modul lassen sich Alben verwalten und erstellen. Das Modul ist sehr flex
 
 ## "gc_generateFrontendTemplate"-Hook
 Mit dem "gc_generateFrontendTemplate"-Hook lässt sich die Frontend-Ausgabe anpassen.
-Der "gc_generateFrontendTemplate"-Hook wird vor der Aufbereitung des Gallery-Creator-Frontend-Templates ausgeführt. Er übergibt das Modul-Objekt und in der Detailansicht das aktuelle Album-Objekt. Der Hook verlangt keinen Rückgabewert. Hinzugefügt in Version 4.8.0.
+Der "gc_generateFrontendTemplate"-Hook wird vor der Aufbereitung des Gallery-Creator-Frontend-Templates ausgeführt. Er übergibt das Modul-Objekt und in der Detailansicht das aktuelle Album-Objekt. Als Rückgabewert wird das Template-Objekt erwartet. Hinzugefügt in Version 4.8.0.
 
 ```php
 <?php
@@ -21,6 +21,7 @@ class MyGalleryCreatorClass extends \System
         * Do some custom modifications
         * @param Module $objModule
         * @param null $objAlbum
+        * @return mixed
         */
        public function doSomething(\Module $objModule, $objAlbum=null)
        {
@@ -35,6 +36,7 @@ class MyGalleryCreatorClass extends \System
                      // add the album name to the keywords in the head section of your page (keywords tag)
                      $GLOBALS['TL_KEYWORDS'] .= ',' . specialchars($objAlbum->name) . ',' . specialchars($objAlbum->event_location);
               }
+              return $objModule->Template;
        }
 }
 ```

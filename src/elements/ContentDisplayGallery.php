@@ -181,7 +181,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->getAlbumTemplateVars($objAlbum->id);
 
                             // Call gcGenerateFrontendTemplateHook
-                            $this->callGcGenerateFrontendTemplateHook($this);
+                            $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
                             break;
 
                      case 'detailview':
@@ -263,7 +263,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->initCounter($this->intAlbumId);
 
                             // Call gcGenerateFrontendTemplateHook
-                            $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
+                            $this->Template = $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                             break;
                      case 'single_image' :
                             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
@@ -353,7 +353,7 @@ class ContentDisplayGallery extends DisplayGallery
                             $this->initCounter($this->intAlbumId);
 
                             // Call gcGenerateFrontendTemplateHook
-                            $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
+                            $this->Template = $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
 
                             break;
 
