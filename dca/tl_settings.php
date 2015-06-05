@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['gc_read_exif'] = array(
 $GLOBALS['TL_DCA']['tl_settings']['fields']['gc_error404_thumb'] = array(
 	'label'         => &$GLOBALS['TL_LANG']['tl_settings']['gc_error404_thumb'],
 	'inputType'     => 'fileTree',
-	'eval'          => array('fieldType' => 'radio', 'extensions' => 'jpg,jpeg', 'filesOnly' => true, 'files' => true, 'mandatory' => false, 'tl_class' => 'clr')
+	'eval'          => array('fieldType' => 'radio', 'extensions' => 'jpg,jpeg,png,gif', 'filesOnly' => true, 'files' => true, 'mandatory' => false, 'tl_class' => 'clr')
 );
 
 

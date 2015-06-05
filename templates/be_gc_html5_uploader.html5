@@ -3,7 +3,7 @@
 $intMaxSize = $this->maxFileSize / 1048576;
 
 // String of accepted file extensions
-$strAccepted = ".jpg,.jpeg";
+$strAccepted = ".jpg,.jpeg,.png,.gif";
 
 // Add the scripts
 $GLOBALS['TL_CSS'][] = 'assets/dropzone/' . $GLOBALS['TL_ASSETS']['DROPZONE'] . '/css/dropzone.min.css';
