@@ -1006,6 +1006,7 @@ class GcHelpers extends \System
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
             $arrPictures['path'] = $objPictures->fetchEach('path');
+            $arrPictures['basename'] = array();
             foreach($arrPictures['path'] as $path)
             {
                 $arrPictures['basename'][] = basename($path);
