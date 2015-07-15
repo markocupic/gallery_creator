@@ -25,7 +25,7 @@ array_insert($GLOBALS['TL_CTE'], 2, array('ce_type_gallery_creator' => array('ga
 // Show news ce_element in the news-module only
 if (TL_MODE == 'BE' && Input::get('do') == 'news')
 {
-unset($GLOBALS['TL_CTE']['ce_type_gallery_creator']['gallery_creator_ce']);
+    unset($GLOBALS['TL_CTE']['ce_type_gallery_creator']['gallery_creator_ce']);
 }
 if (TL_MODE == 'BE' && Input::get('do') != 'news')
 {
