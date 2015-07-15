@@ -23,6 +23,8 @@ $GLOBALS['TL_LANG']['tl_content']['gc_rows']['0'] = "Vorschaubilder pro Reihe";
 $GLOBALS['TL_LANG']['tl_content']['gc_rows']['1'] = "Wählen Sie die Anzahl Vorschaubilder pro Reihe aus. (0=So viele wie möglich)";
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums']['0'] = "Lediglich folgende Alben im Frontend anzeigen";
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums']['1'] = "Ausgewählte Alben werden im Frontend angezeigt.";
+$GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album']['0'] = "Album auswählen";
+$GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album']['1'] = "Das ausgewählte Album wird im Frontend angezeigt.";
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums']['0'] = "Alle angelegten Alben im Frontend zeigen";
 $GLOBALS['TL_LANG']['tl_content']['gc_template']['0'] = "Galerietemplate";
 $GLOBALS['TL_LANG']['tl_content']['gc_template']['1'] = "Hier können Sie das Galerietemplate auswählen.";

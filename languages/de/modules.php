@@ -23,5 +23,7 @@ $GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd']['1'] = "Gallery-Creator-Album 
 $GLOBALS['TL_LANG']['CTE']['ce_type_gallery_creator'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['0'] = "Gallery-Creator-Inhaltselement";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['1'] = "Gallery-Creator-Album als Inhaltselement einbinden.";
- 
+$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce_news']['0'] = "Gallery-Creator-News-Inhaltselement";
+$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce_news']['1'] = "Ein Gallery-Creator-Album als Inhaltselement einbinden.";
+
 ?>
