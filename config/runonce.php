@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contao Open Source CMS
  *
@@ -9,13 +8,10 @@
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
-
-
 /**
  * Run in a custom namespace, so the class can be replaced
  */
 namespace MCupic\GalleryCreator;
-
 /**
  * Class GalleryCreatorRunonce
  *
@@ -27,47 +23,65 @@ namespace MCupic\GalleryCreator;
  */
 class GalleryCreatorRunonce
 {
+    /**
+     *
+     */
+    public static function renameContentElementsOrFrontendModules()
+    {
+        // Rename CTE's
+        $objContent = \ContentModel::findByType('gallery_creator');
+        if($objContent !== null)
+        {
+            $objContent->type = 'gallery_creator_ce';
+            $objContent->save();
+        }
 
-	/**
-	 * add uuids to tl_gallery_creator_pictures version added in 4.8.0
-	 */
-	public static function addUuids()
-	{
+        // Rename FMD's
+        $objModule = \ModuleModel::findByType('gallery_creator');
+        if($objModule !== null)
+        {
+            $objModule->type = 'gallery_creator_fmd';
+            $objModule->save();
+        }
 
-		// add field
-		if(!\Database::getInstance()->fieldExists('uuid', 'tl_gallery_creator_pictures'))
-		{
-			\Database::getInstance()->query("ALTER TABLE `tl_gallery_creator_pictures` ADD `uuid` BINARY(16) NULL");
-		}
+    }
 
-		$objDB = \Database::getInstance()->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
-		while($objDB->next())
-		{
-			if($objDB->path == '')
-			{
-				continue;
-			}
-
-			if(is_file(TL_ROOT . '/' . $objDB->path))
-			{
-				\Dbafs::addResource($objDB->path);
-			}
-			else
-			{
-				continue;
-			}
-
-			$oFile = new \File($objDB->path);
-			$oFile->close();
-			$fileModel = $oFile->getModel();
-			if(\Validator::isUuid($fileModel->uuid))
-			{
-				\Database::getInstance()->prepare("UPDATE tl_gallery_creator_pictures SET uuid=? WHERE id=?")->execute($fileModel->uuid, $objDB->id);
-				$_SESSION["TL_CONFIRM"][] = "Added a valid file-uuid into tl_gallery_creator_pictures.uuid ID " . $objDB->id . ". Please check if all the galleries are running properly.";
-			}
-		}
-	}
+    /**
+     * add uuids to tl_gallery_creator_pictures version added in 4.8.0
+     */
+    public static function addUuids()
+    {
+        // add field
+        if(!\Database::getInstance()->fieldExists('uuid', 'tl_gallery_creator_pictures'))
+        {
+            \Database::getInstance()->query("ALTER TABLE `tl_gallery_creator_pictures` ADD `uuid` BINARY(16) NULL");
+        }
+        $objDB = \Database::getInstance()->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
+        while($objDB->next())
+        {
+            if($objDB->path == '')
+            {
+                continue;
+            }
+            if(is_file(TL_ROOT . '/' . $objDB->path))
+            {
+                \Dbafs::addResource($objDB->path);
+            }
+            else
+            {
+                continue;
+            }
+            $oFile = new \File($objDB->path);
+            $oFile->close();
+            $fileModel = $oFile->getModel();
+            if(\Validator::isUuid($fileModel->uuid))
+            {
+                \Database::getInstance()->prepare("UPDATE tl_gallery_creator_pictures SET uuid=? WHERE id=?")->execute($fileModel->uuid, $objDB->id);
+                $_SESSION["TL_CONFIRM"][] = "Added a valid file-uuid into tl_gallery_creator_pictures.uuid ID " . $objDB->id . ". Please check if all the galleries are running properly.";
+            }
+        }
+    }
 }
 
-
+GalleryCreatorRunonce::renameContentElementsOrFrontendModules();
 GalleryCreatorRunonce::addUuids();

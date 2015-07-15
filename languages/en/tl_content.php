@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -25,6 +25,7 @@ $GLOBALS['TL_LANG']['tl_content']['picture_listing_legend'] = 'Picture listing l
 //Fields
 $GLOBALS['TL_LANG']['tl_content']['gc_rows'] = array('Thumbnails per row', 'Select the number of thumbnails per row. (0=As much as possible)');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums'] = array('Publish these albums only', 'Selected albums will be displayed in the frontend.');
+$GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album'] = array('Publish this album', 'The selected album will be displayed in the frontend.');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums'] = array('Publish all given albums in the frontend');
 $GLOBALS['TL_LANG']['tl_content']['gc_template'] = array('Gallery template', 'Select a personal gallery template.');
 $GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider'] = array('Activate Ajax-Thumb-Slider', 'Activate Ajax-Thumb-Slider on mouseover in the album listing?');

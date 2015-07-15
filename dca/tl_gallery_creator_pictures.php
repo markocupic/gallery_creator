@@ -2,7 +2,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org

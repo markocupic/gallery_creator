@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -17,7 +17,7 @@ namespace MCupic\GalleryCreator;
  * Class GcHelpers
  * Provide methods for using the gallery_creator extension
  *
- * @copyright  Marko Cupic 2012
+ * @copyright  Marko Cupic 2015
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
@@ -1006,7 +1006,6 @@ class GcHelpers extends \System
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
             $arrPictures['path'] = $objPictures->fetchEach('path');
-            $arrPictures['basename'] = array();
             foreach($arrPictures['path'] as $path)
             {
                 $arrPictures['basename'][] = basename($path);

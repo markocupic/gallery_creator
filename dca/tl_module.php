@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -13,7 +13,7 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator'] = 'name,type,headline;{excluded_albums_legend:hide},gc_excludedAlbums;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{pagination_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;{image_legend},gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['gallery_creator_fmd'] = 'name,type,headline;{excluded_albums_legend:hide},gc_excludedAlbums;{thumb_legend},gc_size_albumlisting,gc_imagemargin_albumlisting,gc_size_detailview,gc_imagemargin_detailview,gc_fullsize;{pagination_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;{image_legend},gc_rows,gc_activateThumbSlider,gc_redirectSingleAlb,gc_hierarchicalOutput;{template_legend:hide},gc_template;{protected_legend:hide},protected;{expert_legend:hide},align,space,cssID';
 
 /**
  * Add fields to tl_module
