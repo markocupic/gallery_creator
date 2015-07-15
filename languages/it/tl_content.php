@@ -5,7 +5,7 @@
  * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
- * Copyright : &copy; 2011 Marko Cupic 
+ * Copyright : &copy; 2015 Marko Cupic
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Andrea Bizioli (Abisem) 

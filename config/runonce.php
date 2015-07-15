@@ -24,7 +24,7 @@ namespace MCupic\GalleryCreator;
 class GalleryCreatorRunonce
 {
     /**
-     *
+     * added in 4.9.0
      */
     public static function renameContentElementsOrFrontendModules()
     {

@@ -2,10 +2,10 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/modules.php 
  * 
- * Contao extension: gallery_creator 4.9.0 
+ * Contao extension: gallery_creator 4.9.0
  * Deutsch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic 
+ * Copyright : &copy; 2015 Marko Cupic
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
@@ -23,7 +23,5 @@ $GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd']['1'] = "Gallery-Creator-Album 
 $GLOBALS['TL_LANG']['CTE']['ce_type_gallery_creator'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['0'] = "Gallery-Creator-Inhaltselement";
 $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['1'] = "Gallery-Creator-Album als Inhaltselement einbinden.";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce_news']['0'] = "Gallery-Creator-News-Inhaltselement";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce_news']['1'] = "Ein Gallery-Creator-Album im Newsbeitrag anzeigen lassen.";
  
 ?>

@@ -28,7 +28,8 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce'] = 'name,type,
 {expert_legend:hide},align,space,cssID';
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce_news'] = 'name,type,headline;
-{pagination_legend},gc_publish_single_album,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
+{album_listing_legend},gc_publish_single_album;
+{pagination_legend},gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
 {picture_listing_legend},gc_rows,gc_fullsize,gc_picture_sorting,gc_picture_sorting_direction,gc_size_detailview,gc_imagemargin_detailview;
 {template_legend:hide},gc_template;
 {protected_legend:hide},protected;
