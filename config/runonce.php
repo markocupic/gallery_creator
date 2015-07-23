@@ -17,7 +17,7 @@ namespace MCupic\GalleryCreator;
  *
  * Provide methods regarding gallery_creator albums.
  *
- * @copyright  Marko Cupic 2012
+ * @copyright  Marko Cupic 2015
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
@@ -30,7 +30,7 @@ class GalleryCreatorRunonce
     {
         // Rename CTE's
         $objContent = \ContentModel::findByType('gallery_creator');
-        if($objContent !== null)
+        if ($objContent !== null)
         {
             $objContent->type = 'gallery_creator_ce';
             $objContent->save();
@@ -38,7 +38,7 @@ class GalleryCreatorRunonce
 
         // Rename FMD's
         $objModule = \ModuleModel::findByType('gallery_creator');
-        if($objModule !== null)
+        if ($objModule !== null)
         {
             $objModule->type = 'gallery_creator_fmd';
             $objModule->save();
@@ -52,36 +52,42 @@ class GalleryCreatorRunonce
     public static function addUuids()
     {
         // add field
-        if(!\Database::getInstance()->fieldExists('uuid', 'tl_gallery_creator_pictures'))
+        if (!\Database::getInstance()->fieldExists('uuid', 'tl_gallery_creator_pictures'))
         {
             \Database::getInstance()->query("ALTER TABLE `tl_gallery_creator_pictures` ADD `uuid` BINARY(16) NULL");
         }
-        $objDB = \Database::getInstance()->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
-        while($objDB->next())
+        $objPicture = \Database::getInstance()->execute("SELECT * FROM tl_gallery_creator_pictures WHERE uuid IS NULL");
+        while ($objPicture->next())
         {
-            if($objDB->path == '')
+            if ($objPicture->path == '')
             {
                 continue;
             }
-            if(is_file(TL_ROOT . '/' . $objDB->path))
+            if (is_file(TL_ROOT . '/' . $objPicture->path))
             {
-                \Dbafs::addResource($objDB->path);
+                $filesModel = \Dbafs::addResource($objPicture->path);
+                if ($filesModel !== null)
+                {
+                    if (\Validator::isUuid($filesModel->uuid))
+                    {
+                        $objUpd = \GalleryCreatorPicturesModel::findByPk($objPicture->id);
+                        $objUpd->uuid = $filesModel->uuid;
+                        $objUpd->save();
+                        $_SESSION["TL_CONFIRM"][] = "Added a valid file-uuid into tl_gallery_creator_pictures.uuid ID " . $objPicture->id . ". Please check if all the galleries are running properly.";
+                    }
+                }
             }
             else
             {
                 continue;
             }
-            $oFile = new \File($objDB->path);
-            $oFile->close();
-            $fileModel = $oFile->getModel();
-            if(\Validator::isUuid($fileModel->uuid))
-            {
-                \Database::getInstance()->prepare("UPDATE tl_gallery_creator_pictures SET uuid=? WHERE id=?")->execute($fileModel->uuid, $objDB->id);
-                $_SESSION["TL_CONFIRM"][] = "Added a valid file-uuid into tl_gallery_creator_pictures.uuid ID " . $objDB->id . ". Please check if all the galleries are running properly.";
-            }
+
         }
     }
 }
 
-GalleryCreatorRunonce::renameContentElementsOrFrontendModules();
+/** version 4.8.0 hack */
 GalleryCreatorRunonce::addUuids();
+
+/** version 4.9.0 hack */
+GalleryCreatorRunonce::renameContentElementsOrFrontendModules();

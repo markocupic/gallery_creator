@@ -71,3 +71,4 @@ if (TL_MODE == 'BE')
 
        $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_be.css';
 }
+

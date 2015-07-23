@@ -727,7 +727,7 @@ abstract class GalleryCreator extends \Module
             if (is_array($arrVisitors))
             {
                 // keep visiors data in the db unless 20 other users visited the album
-                if (count($arrVisitors) == 20)
+                if (count($arrVisitors) == 50)
                 {
                     // slice the last position
                     $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
@@ -736,7 +736,7 @@ abstract class GalleryCreator extends \Module
             else
             {
                 $set = array('visitors_details' => '');
-                $objDbUpd = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
+                \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
                     ->set($set)->execute($intAlbumId);
             }
 
