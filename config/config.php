@@ -43,32 +43,32 @@ array_insert($GLOBALS['FE_MOD'], 2, array('fmd_type_gallery_creator' => array('g
  */
 if (TL_MODE == 'BE')
 {
-       // Jumploader bypass
-       if ($_GET['mode'] == 'fileupload' && isset($_FILES['file']) && $_GET['rt'] != '')
-       {
-              $_POST['REQUEST_TOKEN'] = $_GET['rt'];
-              $_POST['FORM_SUBMIT'] = $_GET['tl_upload'];
-       }
+    // Jumploader bypass
+    if ($_GET['mode'] == 'fileupload' && isset($_FILES['file']) && $_GET['rt'] != '')
+    {
+        $_POST['REQUEST_TOKEN'] = $_GET['rt'];
+        $_POST['FORM_SUBMIT'] = $_GET['tl_upload'];
+    }
 
-       $GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
-              'icon' => 'system/modules/gallery_creator/assets/images/picture.png',
-              'tables' => array(
-                     'tl_gallery_creator_albums',
-                     'tl_gallery_creator_pictures'
-              )
-       );
+    $GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
+        'icon' => 'system/modules/gallery_creator/assets/images/picture.png',
+        'tables' => array(
+            'tl_gallery_creator_albums',
+            'tl_gallery_creator_pictures'
+        )
+    );
 
-       // check tables script
-       if(count($_GET) <= 2 && $_GET['do'] == 'gallery_creator' &&  $_GET['mode'] != 'revise_tables'){
-              $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_check_tables.js';
-       }
+    // check tables script
+    if (count($_GET) <= 2 && $_GET['do'] == 'gallery_creator' && $_GET['mode'] != 'revise_tables')
+    {
+        $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_check_tables.js';
+    }
 
-       // revise table script
-       if($_GET['do'] == 'gallery_creator' && $_GET['mode'] == 'revise_tables')
-       {
-              $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_revise_tables.js';
-       }
+    // revise table script
+    if ($_GET['do'] == 'gallery_creator' && $_GET['mode'] == 'revise_tables')
+    {
+        $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_revise_tables.js';
+    }
 
-       $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_be.css';
+    $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_be.css';
 }
-

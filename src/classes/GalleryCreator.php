@@ -69,7 +69,6 @@ abstract class GalleryCreator extends \Module
      */
     public function generate()
     {
-
         // Get the module type 'cte' or 'fmd'
         $this->moduleType = strpos(strtolower(get_class($this)), 'content') !== false ? 'cte' : 'fmd';
 
@@ -77,12 +76,12 @@ abstract class GalleryCreator extends \Module
         if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
         {
             $this->generateAjax();
-            exit;
         }
+
         if (TL_MODE == 'BE')
         {
             $objTemplate = new \BackendTemplate('be_wildcard');
-            if($this->moduleType == 'cte')
+            if ($this->moduleType == 'cte')
             {
                 $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce'][0] . ' ###';
             }
@@ -191,11 +190,11 @@ abstract class GalleryCreator extends \Module
             global $objPage;
         }
         $objArticle = \ArticleModel::findByPk($this->pid);
-        if($objArticle === null)
+        if ($objArticle === null)
         {
             return 0;
         }
-        if($objArticle->showatdevice != '')
+        if ($objArticle->showatdevice != '')
         {
             // If extension "mobilecontent" is installed
             $query = "SELECT id FROM tl_article WHERE pid=? AND published=? AND showatdevice='%s'";
@@ -214,7 +213,7 @@ abstract class GalleryCreator extends \Module
 
         $gcElementCounter = 0;
 
-        if($this->showatdevice != '')
+        if ($this->showatdevice != '')
         {
             // If extension "mobilecontent" is installed
             $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=? AND showatdevice='%s'";
@@ -391,6 +390,7 @@ abstract class GalleryCreator extends \Module
             $arrPicture = $this->getPictureInformationArray(\Input::get('imageId'), null, \Input::get('action'));
 
             return json_encode($arrPicture);
+            exit;
         }
 
         //thumbslider der Albenübersicht
@@ -426,7 +426,7 @@ abstract class GalleryCreator extends \Module
             {
                 $jsonUrl = array(
                     'thumbPath' => \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]),
-                    'eventId'   => \Input::get('eventId')
+                    'eventId' => \Input::get('eventId')
                 );
             }
 
@@ -486,7 +486,6 @@ abstract class GalleryCreator extends \Module
             exit;
         }
 
-        return null;
     }
 
     /**
@@ -535,10 +534,10 @@ abstract class GalleryCreator extends \Module
         $thumbSRC = $this->defaultThumb;
 
         // Check for an alternate thumbnail
-        if(\Config::get('gc_error404_thumb') !== '')
+        if (\Config::get('gc_error404_thumb') !== '')
         {
             $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
-            if($objFile !== null)
+            if ($objFile !== null)
             {
                 if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
                 {
@@ -571,7 +570,7 @@ abstract class GalleryCreator extends \Module
             $oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
             if ($oFile !== null)
             {
-                if(is_file(TL_ROOT . '/' . $oFile->path))
+                if (is_file(TL_ROOT . '/' . $oFile->path))
                 {
                     $arrThumb = array(
                         'name' => basename($oFile->path),
@@ -743,11 +742,11 @@ abstract class GalleryCreator extends \Module
             //build up the array
             $newVisitor = array(
                 $_SERVER['REMOTE_ADDR'] => array(
-                    'ip'         => $_SERVER['REMOTE_ADDR'],
-                    'pid'        => $intAlbumId,
+                    'ip' => $_SERVER['REMOTE_ADDR'],
+                    'pid' => $intAlbumId,
                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-                    'tstamp'     => time(),
-                    'url'        => \Environment::get('request'),
+                    'tstamp' => time(),
+                    'url' => \Environment::get('request'),
                 )
             );
 
@@ -765,7 +764,7 @@ abstract class GalleryCreator extends \Module
 
             // update database
             $set = array(
-                'visitors'         => $intCount,
+                'visitors' => $intCount,
                 'visitors_details' => serialize($arrVisitors)
             );
             $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)
