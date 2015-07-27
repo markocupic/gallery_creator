@@ -1417,7 +1417,7 @@ class tl_gallery_creator_albums extends Backend
                         if(is_file(TL_ROOT . '/' . $objFile->path))
                         {
                             $oFile = new File($objFile->path);
-
+                            $i++;
                             while(is_file($oFile->dirname . '/' . $strPrefix . '_' . $i . '.' . strtolower($oFile->extension)))
                             {
                                 $i++;
