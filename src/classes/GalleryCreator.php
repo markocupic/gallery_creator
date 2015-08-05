@@ -223,7 +223,7 @@ abstract class GalleryCreator extends \Module
         {
             $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=?";
         }
-        $objCE = $this->Database->prepare($query)->execute('gallery_creator', 0);
+        $objCE = $this->Database->prepare($query)->execute('gallery_creator_ce', 0);
         while ($objCE->next())
         {
             if (in_array($objCE->pid, $arrArticlesOfCurrentPage))
@@ -249,13 +249,14 @@ abstract class GalleryCreator extends \Module
             return false;
         }
         //if all albums are published
-        $objAlb = $this->Database->prepare('SELECT count(id) AS countPublishedAlbums FROM tl_gallery_creator_albums WHERE published=?')
+        $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')
             ->execute('1');
-        if ($this->gc_publish_all_albums && $objAlb->countPublishedAlbums == 1)
+        $countPublishedAlbums = $objAlb->numRows;
+        if ($this->gc_publish_all_albums && $countPublishedAlbums == 1)
         {
             $singleAlbum = true;
         }
-        if ($this->gc_publish_all_albums && $objAlb->countPublishedAlbums > 1)
+        if ($this->gc_publish_all_albums && $countPublishedAlbums > 1)
         {
             return false;
         }
