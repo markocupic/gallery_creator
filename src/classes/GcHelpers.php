@@ -561,6 +561,8 @@ class GcHelpers extends \System
         }
         global $objPage;
 
+        $hasCustomThumb = false;
+
 
         $defaultThumbSRC =  $objThis->defaultThumb;
         if(\Config::get('gc_error404_thumb') !== '')
@@ -634,17 +636,15 @@ class GcHelpers extends \System
                     {
                         $objFileCustomThumb = new \File($customThumbModel->path, true);
                         if ($objFileCustomThumb->isGdImage) {
-                            $strImageSrc = $objFileCustomThumb->path;
+                            $thumbSrc = \Image::create($objFileCustomThumb->path, $arrSize)->executeResize()->getResizedPath();
+                            $hasCustomThumb = true;
                         }
                     }
                 }
             }
-            $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
+            $thumbPath = $hasCustomThumb ? $objFileCustomThumb->path : $strImageSrc;
+            $picture = \Picture::create($thumbPath, $arrSize)->getTemplateData();
 
-            if ($thumbSrc !== $strImageSrc)
-            {
-                $objFile = new \File(rawurldecode($thumbSrc), true);
-            }
         }
         catch (\Exception $e)
         {
@@ -686,29 +686,6 @@ class GcHelpers extends \System
             return null;
         }
 
-
-        //check if there is a custom thumbnail selected
-        if ($objPicture->addCustomThumb && !empty($objPicture->customThumb))
-        {
-            $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
-            if ($customThumbModel !== null)
-            {
-                if (is_file(TL_ROOT . '/' . $customThumbModel->path))
-                {
-                    $objFileCustomThumb = new \File($customThumbModel->path, true);
-                    if ($objFileCustomThumb->isGdImage)
-                    {
-                        $arrSize = unserialize($objThis->gc_size_detailview);
-                        $thumbSrc = \Image::get($objFileCustomThumb->path, $arrSize[0], $arrSize[1], $arrSize[2]);
-                        $objFileCustomThumb = new \File(rawurldecode($thumbSrc));
-                        $arrSize[0] = $objFileCustomThumb->width;
-                        $arrSize[1] = $objFileCustomThumb->height;
-                        $arrFile["thumb_width"] = $objFileCustomThumb->width;
-                        $arrFile["thumb_height"] = $objFileCustomThumb->height;
-                    }
-                }
-            }
-        }
 
         //exif
         if ($GLOBALS['TL_CONFIG']['gc_read_exif'])
