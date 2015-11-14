@@ -69,6 +69,9 @@ abstract class GalleryCreator extends \Module
      */
     public function generate()
     {
+
+
+
         // Get the module type 'cte' or 'fmd'
         $this->moduleType = strpos(strtolower(get_class($this)), 'content') !== false ? 'cte' : 'fmd';
 

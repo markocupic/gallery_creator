@@ -174,10 +174,20 @@ class ContentGalleryCreator extends GalleryCreator
                     {
                         continue;
                     }
-                    $arrAlbums[$objAlbum->id] = GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
+                    $arrAlbums[] = GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                 }
+                // Add css classes
+                if(count($arrAlbums) > 0)
+                {
+                    $arrAlbums[0]['cssClass'] = 'first';
+                    $arrAlbums[count($arrAlbums)-1]['cssClass'] = 'last';
+                }
+
                 $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                 $this->Template->arrAlbums = $arrAlbums;
+
+
+
                 $this->getAlbumTemplateVars($objAlbum->id);
 
                 // Call gcGenerateFrontendTemplateHook

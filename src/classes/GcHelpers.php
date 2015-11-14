@@ -625,6 +625,20 @@ class GcHelpers extends \System
         try
         {
             $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
+            // overwrite $thumbSrc if there is a valid custom thumb
+            if ($objPicture->addCustomThumb && !empty($objPicture->customThumb)){
+                $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
+                if ($customThumbModel !== null)
+                {
+                    if (is_file(TL_ROOT . '/' . $customThumbModel->path))
+                    {
+                        $objFileCustomThumb = new \File($customThumbModel->path, true);
+                        if ($objFileCustomThumb->isGdImage) {
+                            $strImageSrc = $objFileCustomThumb->path;
+                        }
+                    }
+                }
+            }
             $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
 
             if ($thumbSrc !== $strImageSrc)
@@ -949,7 +963,11 @@ class GcHelpers extends \System
     public static function importFromFilesystem($intAlbumId, $strMultiSRC)
     {
 
-        $images = array();
+        $images = array(
+            'uuid' => array(),
+            'basename' => array()
+        );
+
         $objFilesModel = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
         if ($objFilesModel === null)
         {
