@@ -649,7 +649,6 @@ class GcHelpers extends \System
         catch (\Exception $e)
         {
             \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-
             $thumbSrc = '';
             $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
         }
@@ -940,10 +939,7 @@ class GcHelpers extends \System
     public static function importFromFilesystem($intAlbumId, $strMultiSRC)
     {
 
-        $images = array(
-            'uuid' => array(),
-            'basename' => array()
-        );
+        $images = array();
 
         $objFilesModel = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
         if ($objFilesModel === null)
@@ -995,8 +991,16 @@ class GcHelpers extends \System
                 }
             }
         }
+
         if (count($images))
         {
+            $arrPictures = array(
+                'uuid' => array(),
+                'path' => array(),
+                'basename' => array()
+            );
+
+
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
@@ -1005,6 +1009,7 @@ class GcHelpers extends \System
             {
                 $arrPictures['basename'][] = basename($path);
             }
+
 
 
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
@@ -1057,6 +1062,7 @@ class GcHelpers extends \System
                 }
                 else
                 {
+                    die($image['path']);
                     self::createNewImage($objAlb->id, $image['path']);
                 }
             }
