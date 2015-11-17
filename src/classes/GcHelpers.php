@@ -1000,7 +1000,6 @@ class GcHelpers extends \System
                 'basename' => array()
             );
 
-
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
@@ -1009,8 +1008,6 @@ class GcHelpers extends \System
             {
                 $arrPictures['basename'][] = basename($path);
             }
-
-
 
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
@@ -1062,7 +1059,6 @@ class GcHelpers extends \System
                 }
                 else
                 {
-                    die($image['path']);
                     self::createNewImage($objAlb->id, $image['path']);
                 }
             }
