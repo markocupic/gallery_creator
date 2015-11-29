@@ -70,8 +70,6 @@ abstract class GalleryCreator extends \Module
     public function generate()
     {
 
-
-
         // Get the module type 'cte' or 'fmd'
         $this->moduleType = strpos(strtolower(get_class($this)), 'content') !== false ? 'cte' : 'fmd';
 
@@ -370,8 +368,9 @@ abstract class GalleryCreator extends \Module
                 if (!FE_USER_LOGGED_IN || !is_array($groups) || count($groups) < 1 || !array_intersect($groups, $this->User->groups))
                 {
                     // abort script and display authentification error
-                    $strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
-                    die($strContent);
+                    //$strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
+                    //die($strContent);
+                    return false;
                 }
             }
         }

@@ -33,12 +33,6 @@ class ContentGalleryCreator extends GalleryCreator
     public function generate()
     {
 
-        // set the item from the auto_item parameter
-        if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
-        {
-            \Input::setGet('items', \Input::get('auto_item'));
-        }
-
         if (\Input::get('items'))
         {
             // get the content element id from the $_GET - variable if multiple gallery_creator content elements are embeded on the current page
@@ -84,8 +78,8 @@ class ContentGalleryCreator extends GalleryCreator
         // clean array from unpublished or empty or protected albums
         foreach ($arrSelectedAlb as $key => $albumId)
         {
-            $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=? AND published=?')->execute($albumId, '1');
-            $objPics = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE pid = ? AND published=?')->execute($albumId, '1');
+            // Get all not empty albums
+            $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE (SELECT COUNT(id) FROM tl_gallery_creator_pictures WHERE pid = ? AND published=?) > 0 AND id=? AND published=?')->execute($albumId, '1', $albumId, '1');
 
             // if the album doesn't exist
             if (!$objAlbum->numRows)
@@ -94,29 +88,11 @@ class ContentGalleryCreator extends GalleryCreator
                 continue;
             }
 
-            // if the album doesn't contain any pictures
-            if (!$objPics->numRows)
-            {
-                unset($arrSelectedAlb[$key]);
-                continue;
-            }
-
             // remove id from $arrSelectedAlb if user is not allowed
             if (TL_MODE == 'FE' && $objAlbum->protected == true)
             {
-                $blnAllowed = null;
-                $this->import('FrontendUser', 'User');
-                // remove id from $arrSelectedAlb if user is not allowed
-                if (FE_USER_LOGGED_IN && is_array(unserialize($this->User->allGroups)))
-                {
-                    // check for accordance
-                    if (array_intersect(unserialize($this->User->allGroups), unserialize($objAlbum->groups)))
-                    {
-                        $blnAllowed = true;
-                    }
-                }
-                if (!$blnAllowed)
-                {
+               if(!$this->authenticate($objAlbum->alias))
+               {
                     unset($arrSelectedAlb[$key]);
                     continue;
                 }
@@ -168,8 +144,8 @@ class ContentGalleryCreator extends GalleryCreator
                         continue;
                     }
 
-                    $currAlbumId = $arrAllowedAlbums[$i];
-                    $objAlbum = $this->Database->prepare('SELECT id, alias FROM tl_gallery_creator_albums WHERE id=?')->execute($currAlbumId);
+                    $intAlbumId = $arrAllowedAlbums[$i];
+                    $objAlbum = $this->Database->prepare('SELECT id, alias FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
                     if (false === $this->authenticate($objAlbum->alias))
                     {
                         continue;
