@@ -971,7 +971,6 @@ class tl_gallery_creator_albums extends Backend
      */
     public function ondeleteCb()
     {
-
         if (Input::get('act') != 'deleteAll')
         {
             $this->checkUserRole(Input::get('id'));
@@ -987,7 +986,7 @@ class tl_gallery_creator_albums extends Backend
             {
                 $objAlbumModel = GalleryCreatorAlbumsModel::findByPk($idDelAlbum);
                 if($objAlbumModel === null)continue;
-                if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                if ($this->User->isAdmin || $objAlbumModel->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                 {
                     // remove all pictures from tl_gallery_creator_pictures
                     $objPicturesModel = GalleryCreatorPicturesModel::findByPid($idDelAlbum);
