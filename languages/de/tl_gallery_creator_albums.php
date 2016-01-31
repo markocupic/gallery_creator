@@ -2,10 +2,10 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 4.9.0
+ * Contao extension: gallery_creator 5.0.0 
  * Deutsch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic
+ * Copyright : &copy; 2015 Marko Cupic 
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
@@ -58,10 +58,10 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors']['0'] = "Anzahl Albu
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details']['0'] = "Besucher-Details (IP, Browserdetails, Zugriffszeit, etc.)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['0'] = "Sortieren nach";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['1'] = "Bitte wählen Sie eine Sortierreihenfolge aus.";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['0'] = "Bilder mit Hilfe eines Dateipräfixes umbenennen";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['1'] = "Geben Sie ein gültiges Präfix ein, um alle Bilder dieses Albums umzubenennen (z.B. \"me-in-paris-2012\").";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['0'] = "Zugewiesenes Upload Verzeichnis";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['1'] = "Neue Bilder werden vom Uploader in das gewählte Verzeichnis hochgeladen.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['0'] = "Bilder mit Hilfe eines Dateipräfixes umbenennen";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['1'] = "Geben Sie ein gültiges Präfix ein, um alle Bilder dieses Albums umzubenennen (z.B. \"me-in-paris-2012\").";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['1'] = "Alte/fehlerhafte Datenbankeinträge löschen";
@@ -92,5 +92,5 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = "Datum (aufsteige
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = "Datum (absteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = "Individuelle Reihenfolge";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = "Datenbank bereinigen: Beschädigte/ungültige/verwaiste Datenbankeinträge entfernen ";
-
+ 
 ?>

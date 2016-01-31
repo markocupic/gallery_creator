@@ -2,10 +2,10 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_content.php 
  * 
- * Contao extension: gallery_creator 4.9.0
+ * Contao extension: gallery_creator 5.0.0 
  * Deutsch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic
+ * Copyright : &copy; 2015 Marko Cupic 
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
@@ -26,6 +26,8 @@ $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums']['1'] = "Ausgewählte Albe
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album']['0'] = "Album auswählen";
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album']['1'] = "Das ausgewählte Album wird im Frontend angezeigt.";
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums']['0'] = "Alle angelegten Alben im Frontend zeigen";
+$GLOBALS['TL_LANG']['tl_content']['gc_hierarchicalOutput']['0'] = "Alben im Frontend hierarchisch anzeigen";
+$GLOBALS['TL_LANG']['tl_content']['gc_hierarchicalOutput']['1'] = "Alben im Frontend hierarchisch anzeigen (Alben und Unteralben)";
 $GLOBALS['TL_LANG']['tl_content']['gc_template']['0'] = "Galerietemplate";
 $GLOBALS['TL_LANG']['tl_content']['gc_template']['1'] = "Hier können Sie das Galerietemplate auswählen.";
 $GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider']['0'] = "Ajax-Thumb-Slider aktivieren";
