@@ -32,17 +32,16 @@ class ContentGalleryCreator extends GalleryCreator
      */
     public function generate()
     {
+        if($_SESSION['GcRedirectToAlbum'])
+        {
+            \Input::setGet('items', $_SESSION['GcRedirectToAlbum']);
+            unset($_SESSION['GcRedirectToAlbum']);
+        }
 
         if (\Input::get('items'))
         {
             // get the content element id from the $_GET - variable if multiple gallery_creator content elements are embeded on the current page
-            $this->ContentElementId = $this->countGcContentElementsOnPage() > 1 ? \Input::get('ce') : $this->id;
-
-            // only display the detail view of the selected album if multiple gallery_creator content elements are embeded on the current page
-            if ($this->id != $this->ContentElementId && $this->countGcContentElementsOnPage() > 1)
-            {
-                return '';
-            }
+            $this->ContentElementId = $this->id;
         }
 
         return parent::generate();
@@ -102,7 +101,6 @@ class ContentGalleryCreator extends GalleryCreator
         $arrAllowedAlbums = array_values($arrSelectedAlb);
 
         $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
-        $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
         $switch = strlen(\Input::get('img')) ? 'single_image' : $switch;
 
 
@@ -114,6 +112,20 @@ class ContentGalleryCreator extends GalleryCreator
                 if (count($arrAllowedAlbums) < 1)
                 {
                     return;
+                }
+
+                //Hierarchische Ausgabe
+                if($this->gc_hierarchicalOutput)
+                {
+                    foreach($arrAllowedAlbums as $key => $albumId)
+                    {
+                        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
+                        if ($objAlbum->pid > 0)
+                        {
+                            unset($arrAllowedAlbums[$key]);
+                        }
+                    }
+                    array_values($arrAllowedAlbums);
                 }
 
                 // pagination settings
@@ -152,6 +164,14 @@ class ContentGalleryCreator extends GalleryCreator
                     }
                     $arrAlbums[] = GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
                 }
+
+                // Redirect to detailview if there is only one album
+                if(count($arrAlbums) == 1 && $this->gc_redirectSingleAlb)
+                {
+                    $_SESSION['GcRedirectToAlbum'] =  $arrAlbums[0]['alias'];
+                    $this->reload();
+                }
+
                 // Add css classes
                 if(count($arrAlbums) > 0)
                 {
@@ -161,8 +181,6 @@ class ContentGalleryCreator extends GalleryCreator
 
                 $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                 $this->Template->arrAlbums = $arrAlbums;
-
-
 
                 $this->getAlbumTemplateVars($objAlbum->id);
 
@@ -179,6 +197,13 @@ class ContentGalleryCreator extends GalleryCreator
                 if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
                 {
                     die("Gallery with alias " . $this->strAlbumalias . " is either not published or not available or you haven't got enough permission to watch it!!!");
+                }
+
+                // generate the subalbum array
+                if ($this->gc_hierarchicalOutput)
+                {
+                    $arrSubalbums = GcHelpers::getSubalbumsInformationArray($this->intAlbumId, $this);
+                    $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : null;
                 }
 
                 // pagination settings
@@ -251,6 +276,7 @@ class ContentGalleryCreator extends GalleryCreator
                 // Call gcGenerateFrontendTemplateHook
                 $this->Template = $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                 break;
+
             case 'single_image' :
                 $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
                 if ($objAlbum === null)
@@ -341,13 +367,6 @@ class ContentGalleryCreator extends GalleryCreator
                 // Call gcGenerateFrontendTemplateHook
                 $this->Template = $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
 
-                break;
-
-
-            case 'jw_imagerotator' :
-                header("content-type:text/xml;charset=utf-8");
-                echo $this->getJwImagerotatorXml($this->strAlbumalias);
-                exit;
                 break;
 
         }

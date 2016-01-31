@@ -325,85 +325,18 @@ class GcHelpers extends \System
      * @param integer
      * @return string
      */
-    public static function generateUploader($intAlbumId, $uploader = 'be_gc_jumploader')
+    public static function generateUploader($intAlbumId, $uploader = 'be_gc_html5_uploader')
     {
 
         //create the template object
         $objTemplate = new \BackendTemplate($uploader);
-        $objUser = \BackendUser::getInstance();
 
-        //upload url
-        $objTemplate->uploadUrl = ampersand(sprintf('%scontao/main.php?do=gallery_creator&act=edit&table=tl_gallery_creator_albums&id=%s&mode=fileupload&rt=%s', \Environment::get('base'), $intAlbumId, REQUEST_TOKEN));
-
-        //security tokens
-        $objTemplate->securityTokens = sprintf('PHPSESSID=%s; path=/; %s_USER_AUTH=%s; path=/;', session_id(), TL_MODE,
-            $_COOKIE[TL_MODE . '_USER_AUTH']);
-
-        //request token
-        $objTemplate->requestToken = REQUEST_TOKEN;
-
-        // user auth token
-        if (TL_MODE == 'BE')
-        {
-            $objTemplate->beUserAuth = $_COOKIE['BE_USER_AUTH'];
-        }
-        else
-        {
-            $objTemplate->feUserAuth = $_COOKIE['FE_USER_AUTH'];
-        }
-
-        //get the domain
-        $search = array('http%3A', 'https%3A');
-        $replace = array('http:', 'https:');
-        $url = \System::urlEncode(\Environment::get('base'));
-        $domain = str_replace($search, $replace, $url);
 
         // maxFileSize
         $objTemplate->maxFileSize = $GLOBALS['TL_CONFIG']['maxFileSize'];
 
         // $_FILES['file']
         $objTemplate->strName = 'file';
-
-        // Load jar-files from jumploader project website
-        $pathToArchive = 'http://jumploader.com/jar';
-        // $pathToArchive = $domain . 'system/modules/gallery_creator/vendor/jumploader/jar';
-
-        // Load language-files from jumploader project page
-        $language = strlen($objUser->language) ? $objUser->language : 'en';
-        $objTemplate->jumploaderLanguageFiles = 'http://jumploader.com/i18n/messages_' . $language . '.zip';
-        // $objTemplate->jumploaderLanguageFiles = $domain . 'system/modules/gallery_creator/vendor/jumploader/languages/messages_' . $language . '.zip';
-
-        $arrJumploaderArchive = array(
-            sprintf('%s/mediautil_z.jar', $pathToArchive),
-            sprintf('%s/sanselan_z.jar', $pathToArchive),
-            sprintf('%s/jumploader_z.jar', $pathToArchive),
-            sprintf('%s/xfiledialog.jar', $pathToArchive),
-        );
-        $objTemplate->jumploaderArchive = implode(',', $arrJumploaderArchive);
-
-        //resize images in browser before loading them up
-        $objTemplate->imageRes = $objUser->gc_img_resolution . 'x' . $objUser->gc_img_resolution;
-        $objTemplate->imageQuality = $objUser->gc_img_quality * 10;
-
-        //optional jumploader adds a watermark to each uploaded image
-        if (strlen($GLOBALS['TL_CONFIG']['gc_watermark_path']))
-        {
-            $fileUuid = base64_decode($GLOBALS['TL_CONFIG']['gc_watermark_path']);
-            $objFileModel = \FilesModel::findByUuid($fileUuid);
-            if ($objFileModel !== null)
-            {
-                $objTemplate->watermarkHalign = $GLOBALS['TL_CONFIG']['gc_watermark_halign'];
-                $objTemplate->watermarkValign = $GLOBALS['TL_CONFIG']['gc_watermark_valign'];
-                $objTemplate->watermarkOpacity = $GLOBALS['TL_CONFIG']['gc_watermark_opacity'];
-                $objTemplate->watermarkSource = \Environment::get('base') . $objFileModel->path;
-            }
-        }
-
-        // check if images should be scaled during the upload process
-        if ($objUser->gc_img_resolution != 'no_scaling')
-        {
-            $objTemplate->scaleImages = true;
-        }
 
         // parse the jumloader view and return it
         return $objTemplate->parse();
@@ -437,15 +370,11 @@ class GcHelpers extends \System
         $arrSize = unserialize($objThis->gc_size_albumlisting);
 
         $href = null;
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             //generate the url as a formated string
-            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/##albumAlias####ceId##' : '/items/##albumAlias####ceId##'), $objPage->language);
+            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/##albumAlias##' : '/items/##albumAlias##'), $objPage->language);
             // add albumAlias
             $href = str_replace('##albumAlias##', $objAlbum->alias, $href);
-
-            //add the content-element-id if necessary
-            $href = $objThis->moduleType == 'cte' && $objThis->countGcContentElementsOnPage() > 1 ? str_replace('##ceId##', '/ce/' . $objThis->id, $href) : str_replace('##ceId##', '', $href);
         }
 
         $arrPreviewThumb = $objThis->getAlbumPreviewThumb($objAlbum->id);
@@ -499,8 +428,8 @@ class GcHelpers extends \System
             //[string] Albumalias (=Verzeichnisname)
             'alias'               => $objAlbum->alias,
             //[string] Albumkommentar
-            'comment'             => $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment),
-            'caption'             => $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment),
+            'comment'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment),
+            'caption'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment),
             //[int] Albumbesucher (Anzahl Klicks)
             'visitors'            => $objAlbum->visitors,
             //[string] Link zur Detailansicht
@@ -654,7 +583,7 @@ class GcHelpers extends \System
         }
 
         $picture['alt'] = $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']);
-        $picture['title'] = $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']);
+        $picture['title'] = $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']);
 
 
         $objFileThumb = new \File(rawurldecode($thumbSrc));
@@ -752,8 +681,8 @@ class GcHelpers extends \System
             //[string] title-attribut
             'title'            => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
             //[string] Bildkommentar oder Bildbeschreibung
-            'comment'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
-            'caption'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\String::toXhtml($objPicture->comment)) : specialchars(\String::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'comment'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'caption'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
             //[string] path to media (video, picture, sound...)
             'href'             => TL_FILES_URL . $href,
             // single image url
@@ -834,6 +763,17 @@ class GcHelpers extends \System
         $arrSubalbums = array();
         while ($objSubAlbums->next())
         {
+            // If it is a content element only
+            if($objThis->gc_publish_albums != '')
+            {
+                if(!$objThis->gc_publish_all_albums){
+                    if(!in_array($objSubAlbums->id, deserialize($objThis->gc_publish_albums)))
+                    {
+                        continue;
+                    }
+                }
+            }
+
             $arrSubalbum = self::getAlbumInformationArray($objSubAlbums->id, $objThis);
             array_push($arrSubalbums, $arrSubalbum);
         }
@@ -1203,5 +1143,33 @@ class GcHelpers extends \System
             \Database::getInstance()->prepare('UPDATE tl_content SET gc_publish_albums=? WHERE id=?')
                 ->execute(serialize($newArr), $objCont->id);
         }
+    }
+
+    /**
+     * return the level of an album or subalbum (level_0, level_1, level_2,...)
+     * @param integer
+     * @return integer
+     */
+    public static function getAlbumLevel($pid)
+    {
+
+        $level = 0;
+        if ($pid == '0')
+        {
+            return $level;
+        }
+        $hasParent = true;
+        while ($hasParent)
+        {
+            $level++;
+            $objAlbum = \GalleryCreatorAlbumsModel::findByPk($pid);
+            if ($objAlbum->pid < 1)
+            {
+                $hasParent = false;
+            }
+            $pid = $objAlbum->pid;
+        }
+
+        return $level;
     }
 }

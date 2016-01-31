@@ -27,6 +27,7 @@ $GLOBALS['TL_LANG']['tl_content']['gc_rows'] = array('Thumbnails per row', 'Sele
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums'] = array('Publish these albums only', 'Selected albums will be displayed in the frontend.');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album'] = array('Publish this album', 'The selected album will be displayed in the frontend.');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums'] = array('Publish all given albums in the frontend');
+$GLOBALS['TL_LANG']['tl_content']['gc_hierarchicalOutput'] = array('Hierarchically Frontend-Album-Output', 'Hierarchically Frontend-Album-Output (Albums and Subalbums)');
 $GLOBALS['TL_LANG']['tl_content']['gc_template'] = array('Gallery template', 'Select a personal gallery template.');
 $GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider'] = array('Activate Ajax-Thumb-Slider', 'Activate Ajax-Thumb-Slider on mouseover in the album listing?');
 $GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'] = array('Redirection in case of a single album', 'Should be automatically redirected to the detail-view, in case of single-album-choice?');

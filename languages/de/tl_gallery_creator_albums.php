@@ -27,7 +27,6 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['0'] = "Albumalias";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['1'] = "Der Albumalias ist zugleich auch Verzeichnisnamen der Bilder eines Albums";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published']['0'] = "Album veröffentlichen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date']['0'] = "Erstellungsdatum";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['displ_alb_in_this_ce']['0'] = "Dieses Album in folgenden \"gallery_creator\" Inhaltselementen anzeigen lassen:";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner']['0'] = "Besitzer/Ersteller";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location']['0'] = "Veranstaltungsort";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description']['0'] = "Meta-Beschreibung der Seite";
@@ -86,7 +85,6 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['0'] = "Einfügen
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Einfügen nach Album mit ID %s";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Einfügen in";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Einfügen in Album mit ID %s";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'] = "Inhaltselement mit id=%s in Artikel \"%s\" auf Seite \"%s\"";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = "Bilder vor dem Upload nicht skalieren.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_asc'] = "Dateiname (aufsteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_desc'] = "Dateiname (absteigend)";

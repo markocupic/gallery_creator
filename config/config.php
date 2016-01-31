@@ -58,6 +58,9 @@ if (TL_MODE == 'BE')
         )
     );
 
+    $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be.js';
+
+
     // check tables script
     if (count($_GET) <= 2 && $_GET['do'] == 'gallery_creator' && $_GET['mode'] != 'revise_tables')
     {

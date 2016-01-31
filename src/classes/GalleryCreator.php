@@ -71,7 +71,7 @@ abstract class GalleryCreator extends \Module
     {
 
         // Get the module type 'cte' or 'fmd'
-        $this->moduleType = strpos(strtolower(get_class($this)), 'content') !== false ? 'cte' : 'fmd';
+        $this->moduleType = 'cte';
 
         // Ajax Requests
         if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
@@ -82,14 +82,7 @@ abstract class GalleryCreator extends \Module
         if (TL_MODE == 'BE')
         {
             $objTemplate = new \BackendTemplate('be_wildcard');
-            if ($this->moduleType == 'cte')
-            {
-                $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce'][0] . ' ###';
-            }
-            else
-            {
-                $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd'][0] . ' ###';
-            }
+            $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce'][0] . ' ###';
 
             $objTemplate->title = $this->headline;
 
@@ -121,7 +114,6 @@ abstract class GalleryCreator extends \Module
         $this->Template = new \FrontendTemplate($this->strTemplate);
 
         //do some default-settings for the thumb-size if no settings are done in the module-/content-settings
-        $this->checkThumbSizeSettings();
 
         // store the pagination variable page in the current session
         if (!\Input::get('items'))
@@ -157,125 +149,6 @@ abstract class GalleryCreator extends \Module
         return $objModule->Template;
     }
 
-    /**
-     * do some default-settings for the thumb-size if no settings are done in the module-/content-settings
-     */
-    protected function checkThumbSizeSettings()
-    {
-
-        if ($this->gc_size_albumlisting == "")
-        {
-            $this->gc_size_albumlisting = serialize(array("110", "110", "crop"));
-        }
-        if ($this->gc_size_detailview == "")
-        {
-            $this->gc_size_detailview = serialize(array("110", "110", "crop"));
-        }
-    }
-
-    /**
-     * Hilfsmethode
-     * Gibt die Anzahl der Gallery_Creator Inhaltselemente auf einer Seite zurück
-     *
-     * @param integer
-     * @return integer
-     */
-    public function countGcContentElementsOnPage($intPageId = null)
-    {
-        if ($intPageId)
-        {
-            $objPage = $this->Database->prepare('SELECT * FROM tl_page WHERE id=?')->execute($intPageId);
-        }
-        else
-        {
-            global $objPage;
-        }
-        $objArticle = \ArticleModel::findByPk($this->pid);
-        if ($objArticle === null)
-        {
-            return 0;
-        }
-        if ($objArticle->showatdevice != '')
-        {
-            // If extension "mobilecontent" is installed
-            $query = "SELECT id FROM tl_article WHERE pid=? AND published=? AND showatdevice='%s'";
-            $query = sprintf($query, $objArticle->showatdevice);
-        }
-        else
-        {
-            $query = "SELECT id FROM tl_article WHERE pid=? AND published=?";
-        }
-        //kontrollieren, ob Weiterleitung zu detailview  moeglich ist
-        //Keine Weiterleitung moeglich, bei mehreren aktivierten GALLERY_CREATOR Inhaltselementen im selben Artikel
-
-        $objArticlesOfCurrentPage = $this->Database->prepare($query)->execute($objPage->id, 1);
-
-        $arrArticlesOfCurrentPage = $objArticlesOfCurrentPage->fetchEach('id');
-
-        $gcElementCounter = 0;
-
-        if ($this->showatdevice != '')
-        {
-            // If extension "mobilecontent" is installed
-            $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=? AND showatdevice='%s'";
-            $query = sprintf($query, $this->showatdevice);
-        }
-        else
-        {
-            $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=?";
-        }
-        $objCE = $this->Database->prepare($query)->execute('gallery_creator_ce', 0);
-        while ($objCE->next())
-        {
-            if (in_array($objCE->pid, $arrArticlesOfCurrentPage))
-            {
-                $gcElementCounter++;
-            }
-        }
-
-        return $gcElementCounter;
-    }
-
-    /**
-     * Hilfsmethode
-     * Ueberprueft, ob bei nur einem ausgewaehlten Album direkt zur Thumnailuebersicht des Albums weitergeleitet werden soll.
-     *
-     * @return bool
-     */
-    protected function doRedirectOnSingleAlbum()
-    {
-
-        if (TL_MODE == 'BE')
-        {
-            return false;
-        }
-        //if all albums are published
-        $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')
-            ->execute('1');
-        $countPublishedAlbums = $objAlb->numRows;
-        if ($this->gc_publish_all_albums && $countPublishedAlbums == 1)
-        {
-            $singleAlbum = true;
-        }
-        if ($this->gc_publish_all_albums && $countPublishedAlbums > 1)
-        {
-            return false;
-        }
-        //wahr, wenn im gc-Inhaltselement nur 1 Album selektiert wurde
-        $arrAlbId = deserialize($this->gc_publish_albums);
-        if (count($arrAlbId) == 1)
-        {
-            $singleAlbum = true;
-        }
-
-        //wahr wenn: weniger als zwei gc Inhaltselemente auf aktueller Seite && Galerie enthaelt nur 1 Album && Weiterleitung in den Elementeinstellungen aktiviert ist
-        if ($this->countGcContentElementsOnPage() == 1 && $singleAlbum && $this->gc_redirectSingleAlb)
-        {
-            return true;
-        }
-
-        return false;
-    }
 
     /**
      * evaluate the url data
@@ -284,7 +157,7 @@ abstract class GalleryCreator extends \Module
     public function getUrlParams()
     {
 
-        if ($this->gc_publish_all_albums != 1)
+        if (!$this->gc_publish_all_albums)
         {
             if (!unserialize($this->gc_publish_albums))
             {
@@ -300,39 +173,6 @@ abstract class GalleryCreator extends \Module
             //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
             $this->authenticate($this->strAlbumalias);
 
-            //fuer jw_imagerotator ajax-requests
-            if (\Input::get('jw_imagerotator'))
-            {
-                return;
-            }
-        }
-
-        //wenn nur ein Album ausgewaehlt wurde und Weiterleitung in den Inhaltselementeinstellungen aktiviert wurde, wird weitergeleitet
-        if ($this->doRedirectOnSingleAlbum())
-        {
-            $arrAlbId = unserialize($this->gc_publish_albums);
-            if ($this->gc_publish_all_albums)
-            {
-                //if all albums are selected
-                $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE published=?')
-                    ->execute('1');
-            }
-            else
-            {
-                $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')
-                    ->execute($arrAlbId[0]);
-            }
-
-            //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->authenticate($objAlbum->alias);
-
-            \Input::setGet('items', $objAlbum->alias);
-            $this->strAlbumalias = $objAlbum->alias;
-        }
-
-        // Get the Album Id
-        if (\Input::get('items'))
-        {
             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
             if ($objAlbum !== null)
             {
@@ -367,9 +207,6 @@ abstract class GalleryCreator extends \Module
 
                 if (!FE_USER_LOGGED_IN || !is_array($groups) || count($groups) < 1 || !array_intersect($groups, $this->User->groups))
                 {
-                    // abort script and display authentification error
-                    //$strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
-                    //die($strContent);
                     return false;
                 }
             }
@@ -395,136 +232,8 @@ abstract class GalleryCreator extends \Module
             return json_encode($arrPicture);
             exit;
         }
-
-        //thumbslider der Albenübersicht
-        if (\Input::get('isAjax') && \Input::get('thumbSlider'))
-        {
-            $this->checkThumbSizeSettings();
-            $arrSize = unserialize($this->gc_size_albumlisting);
-
-            $objAlbum = $this->Database->prepare('SELECT thumb,alias FROM tl_gallery_creator_albums WHERE id=?')
-                ->execute(\Input::get('AlbumId'));
-
-            //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->authenticate($objAlbum->alias);
-            if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
-            {
-                return false;
-            }
-
-            $objPictures = $this->Database->prepare('SELECT count(id) AS Anzahl FROM tl_gallery_creator_pictures WHERE published=? AND pid=? AND id!=?')
-                ->execute(1, \Input::get('AlbumId'), $objAlbum->thumb);
-            if ($objPictures->Anzahl < 2)
-            {
-                return json_encode(array('thumbPath' => ''));
-            }
-
-            $limit = \Input::get('limit');
-            $objPicture = $this->Database->prepare('SELECT name, uuid FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY id')
-                ->limit(1, $limit)
-                ->execute(1, \Input::get('AlbumId'), $objAlbum->thumb);
-
-            $objFile = \FilesModel::findByUuid($objPicture->uuid);
-            if ($objFile !== null)
-            {
-                $jsonUrl = array(
-                    'thumbPath' => \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]),
-                    'eventId' => \Input::get('eventId')
-                );
-            }
-
-
-            echo json_encode($jsonUrl);
-            exit;
-        }
-
-        //Detailansicht nur mit Lightbox, für ce_gc_mediabox template
-        if (\Input::get('isAjax') && \Input::get('LightboxSlideshow') && \Input::get('albumId'))
-        {
-            //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')
-                ->execute(\Input::get('albumId'));
-
-            $this->authenticate($objAlbum->alias);
-            if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
-            {
-                return false;
-            }
-
-            // Init Album Visit Counter
-            $this->initCounter(\Input::get('albumId'));
-
-            $json = "";
-
-            // sorting direction
-            $ceType = \Input::get('action');
-            if ($ceType == 'cte')
-            {
-                $sorting = $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
-            }
-            else
-            {
-                $sorting = 'sorting ASC';
-            }
-
-            $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)
-                ->execute(1, \Input::get('albumId'));
-
-            while ($objPicture->next())
-            {
-                $objFile = \FilesModel::findByUuid($objPicture->uuid);
-                if ($objFile !== null)
-                {
-                    $href = $objFile->path;
-                    $href = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : $href;
-                    $href = trim($objPicture->localMediaSRC) != "" ? trim($objPicture->localMediaSRC) : $href;
-
-                    $json .= specialchars($href) . "###";
-                    $json .= specialchars($objPicture->comment) . "###";
-                    $json .= specialchars($objPicture->id) . " ***";
-                }
-            }
-            $jsonUrl = array('arrImage' => $json);
-            echo json_encode($jsonUrl);
-            exit;
-        }
-
     }
 
-    /**
-     * Generate the xml-output for jwImagerotator
-     *
-     * @param string
-     * @return string
-     */
-    protected function getJwImagerotatorXml($strAlbumalias)
-    {
-
-        $objAlbum = $this->Database->prepare('SELECT id, owners_name FROM tl_gallery_creator_albums WHERE alias=? and published=1')
-            ->execute($strAlbumalias);
-        $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY sorting')
-            ->execute('1', $objAlbum->id);
-
-        //playlist xml output
-        $xml = "<playlist version='1' xmlns='http://xspf.org/ns/0/'>\n";
-        $xml .= "<trackList>\n";
-        while ($objPicture->next())
-        {
-            $objFile = \FilesModel::findByUuid($objPicture->uuid);
-            if ($objFile !== null)
-            {
-                $caption = trim($objPicture->comment) != "" ? $objPicture->comment : basename($objFile->path);
-                $xml .= "\t<track>\n";
-                $xml .= "\t\t<title>" . specialchars($caption) . "</title>\n";
-                $xml .= "\t\t<location>" . $objFile->path . "</location>\n";
-                $xml .= "\t</track>\n";
-            }
-        }
-        $xml .= "</trackList>\n";
-        $xml .= "</playlist>\n";
-
-        return $xml;
-    }
 
     /**
      * Returns the path to the preview-thumbnail of an album
@@ -624,7 +333,7 @@ abstract class GalleryCreator extends \Module
         // Albumbesucher (Anzahl Klicks)
         $this->Template->visitors = $objAlbum->vistors;
         //Der Kommentar zum gewaehlten Album
-        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment);
+        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment);
         // In der Detailansicht kann optional ein Artikel vor dem Album hinzugefuegt werden
         $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
         // In der Detailansicht kann optional ein Artikel nach dem Album hinzugefuegt werden
@@ -637,17 +346,6 @@ abstract class GalleryCreator extends \Module
         $this->Template->imagemargin = $this->DETAIL_VIEW ? $this->generateMargin(deserialize($this->gc_imagemargin_detailview), 'margin') : $this->generateMargin(deserialize($this->gc_imagemargin_albumlisting), 'margin');
         //Anzahl Spalten pro Reihe
         $this->Template->colsPerRow = $this->gc_rows == "" ? 4 : $this->gc_rows;
-        //Pfad zur xml-Ausgabe fuer jw_imagerotator
-        $this->Template->jw_imagerotator_path = TL_MODE == 'FE' ? $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . $objAlbum->alias . '/jw_imagerotator/true') : null;
-        //Inhaltselement Id anhaengen wenn es sich um ein Inhaltselement handelt
-        if ($this->moduleType == 'cte')
-        {
-            //Pfad zur xml-Ausgabe fuer jw_imagerotator
-            if ($this->countGcContentElementsOnPage() > 1)
-            {
-                $this->Template->jw_imagerotator_path = TL_MODE == 'FE' ? $this->Template->jw_imagerotator_path . '/ce/' . $this->id : null;
-            }
-        }
 
         $this->Template->objElement = $this;
     }
@@ -668,15 +366,6 @@ abstract class GalleryCreator extends \Module
         if (TL_MODE == 'BE')
         {
             return false;
-        }
-
-        if ($this->moduleType == 'cte')
-        {
-            //Nur, wenn nicht automatisch zu overview weitergeleitet wurde, wird der back Link angezeigt
-            if ($this->doRedirectOnSingleAlbum())
-            {
-                return null;
-            }
         }
 
         // Get the page model

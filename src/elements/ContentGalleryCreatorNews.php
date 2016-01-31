@@ -215,7 +215,7 @@ class ContentGalleryCreatorNews extends \ContentElement
         // Album visitors
         $this->Template->visitors = $objAlbum->vistors;
         // Album caption
-        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment);
+        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment);
         // Insert article pre
         $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
         // Insert article after
