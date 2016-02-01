@@ -15,7 +15,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
        <ul class="list_albums">
 <?php foreach ($this->arrAlbums as $Album): ?> 
-              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+              <li class="level_1 <?= $Album['cssClass'] ?> block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Album['event_date']; ?>]</p></div>
                      <div class="col_1">
                             <figure class="image_container" onmouseover="<?php echo $Album['thumbMouseover']; ?>">
@@ -84,7 +84,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
        <ul class="list_albums">
 <?php foreach ($this->subalbums as $Subalbum): ?>
-              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+              <li class="level_1 <?= $Subalbum['cssClass'] ?> block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Subalbum['event_date']; ?>]</p></div>
                      <div class="col_1">
                             <figure class="image_container" onmouseover="<?php echo  $Subalbum['thumbMouseover']; ?>">

@@ -26,13 +26,6 @@ namespace MCupic\GalleryCreator;
 class ContentGalleryCreator extends \ContentElement
 {
     /**
-     * Album-id
-     *
-     * @var integer
-     */
-    protected $intAlbumId;
-
-    /**
      * Template
      *
      * @var string
@@ -52,6 +45,13 @@ class ContentGalleryCreator extends \ContentElement
      * @var boolean
      */
     protected $DETAIL_VIEW = false;
+
+    /**
+     * Album-id
+     *
+     * @var integer
+     */
+    protected $intAlbumId;
 
     /**
      * Albumalias
@@ -171,7 +171,7 @@ class ContentGalleryCreator extends \ContentElement
             $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE (SELECT COUNT(id) FROM tl_gallery_creator_pictures WHERE pid = ? AND published=?) > 0 AND id=? AND published=?')->execute($albumId, '1', $albumId, '1');
 
             // if the album doesn't exist
-            if (!$objAlbum->numRows)
+            if (!$objAlbum->numRows && !\GalleryCreatorAlbumsModel::hasChildAlbums($objAlbum->id) && !$this->gc_hierarchicalOutput)
             {
                 unset($arrSelectedAlb[$key]);
                 continue;
@@ -265,8 +265,8 @@ class ContentGalleryCreator extends \ContentElement
                 // Add css classes
                 if(count($arrAlbums) > 0)
                 {
-                    $arrAlbums[0]['cssClass'] = 'first';
-                    $arrAlbums[count($arrAlbums)-1]['cssClass'] = 'last';
+                    $arrAlbums[0]['cssClass'] .= ' first';
+                    $arrAlbums[count($arrAlbums)-1]['cssClass'] .= ' last';
                 }
 
                 $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));

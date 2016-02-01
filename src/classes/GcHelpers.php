@@ -402,6 +402,10 @@ class GcHelpers extends \System
         $picture['alt'] = specialchars($objAlbum->name);
         $picture['title'] = specialchars($objAlbum->name);
 
+        // CSS class
+        $strCSSClass = \GalleryCreatorAlbumsModel::hasChildAlbums($objAlbum->id) ? 'has-child-album' : '';
+        $strCSSClass .= $objPics->numRows < 1 ? ' empty-album' : '';
+
         $arrAlbum = array(
             'id'                  => $objAlbum->id,
             //[int] pid parent Album-Id
@@ -457,7 +461,9 @@ class GcHelpers extends \System
             //[string] javascript-Aufruf
             'thumbMouseover'      => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
             //[array] picture
-            'picture'            => $picture
+            'picture'             => $picture,
+            //[string] cssClass
+            'cssClass'            => trim($strCSSClass)
         );
 
         //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
