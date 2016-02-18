@@ -23,6 +23,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID']['0'] = "Dateisystem
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info']['0'] = "Bildinformationen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published']['0'] = "Bild veröffentlichen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date']['0'] = "Erstellungsdatum";
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture']['0'] ='Bild';
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner']['0'] = "Besitzer/Ersteller";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['name']['0'] = "Dateiname";
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb']['0'] = "Alternatives Vorschaubild";

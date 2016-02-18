@@ -164,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'picture'        => array(
                      'label'                => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture'],
                      'input_field_callback' => array('tl_gallery_creator_pictures', 'inputFieldCbGenerateImage'),
-                     'eval'                 => array('doNotShow' => true)
+                     'eval'                 => array('tl_class' => 'clr', 'doNotShow' => false)
               ),
               'date'           => array(
                      'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'],
@@ -540,25 +540,22 @@ class tl_gallery_creator_pictures extends Backend
         *
         * @return string
         */
-       public function inputFieldCbGenerateImage()
+       public function inputFieldCbGenerateImage(DataContainer $dc)
        {
-
-              $objImg = GalleryCreatorPicturesModel::findByPk(Input::get('id'));
+              $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
               $oFile = FilesModel::findByUuid($objImg->uuid);
-              $src = '';
-              $basename = '';
               if ($oFile !== null)
               {
                      $src = $oFile->path;
                      $basename = basename($oFile->path);
+                     return '
+                     <div style="height:auto;">
+                         <h3><label for="ctrl_picture">' . $basename . '</label></h3>
+                         <img src="' . Image::get($src, '180', '180', 'crop') . '" width="100">
+                     </div>
+		             ';
               }
-
-              return '
-<div class="w50 easyExclude easyExcludeFN_picture" style="height:auto;">
-	<h3><label for="ctrl_picture">' . $basename . '</label></h3>
-	<img src="' . Image::get($src, '180', '180', 'crop') . '" width="100">
-</div>
-		';
+              return '';
        }
 
        /**
@@ -579,10 +576,12 @@ class tl_gallery_creator_pictures extends Backend
 			<div class="album_infos">
 			<br><br>
 			<table cellpadding="0" cellspacing="0" width="100%" summary="">
+
 				<tr class="odd">
 					<td style="width:20%"><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'][0] . ': </strong></td>
 					<td>' . $objImg->id . '</td>
 				</tr>
+
 
 				<tr>
 					<td><strong>' . $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['path'][0] . ': </strong></td>

@@ -25,6 +25,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'] = array('File ID');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'] = array('image-informations');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'] = array('publish image');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'] = array('date of creation');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture'] = array('image');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'] = array('image-owner');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['name'] = array('filename');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb'] = array('add a custom thumbnail');
