@@ -305,10 +305,12 @@ class tl_gallery_creator_pictures extends Backend
                             break;
 
                      case 'select' :
-                            if (!$this->User->isAdmin)
-                            {
+                            if (!$this->User->isAdmin) {
                                    // only list pictures where user is owner
-                                   $GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['list']['sorting']['filter'] = array(array('owner=?', $this->User->id));
+                                   if (!$GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                                   {
+                                          $GLOBALS['TL_DCA']['tl_gallery_creator_pictures']['list']['sorting']['filter'] = array(array('owner=?', $this->User->id));
+                                   }
                             }
 
                             break;
