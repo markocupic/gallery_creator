@@ -185,16 +185,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_ThumbsPerPage'] = array(
     'eval'      => array('rgxp' => 'digit', 'tl_class' => 'clr'),
     'sql'       => "smallint(5) unsigned NOT NULL default '0'",
 );
-/*
-$GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
-    'label'            => &$GLOBALS['TL_LANG']['tl_content']['gc_publish_albums'],
-    'inputType'        => 'checkbox',
-    'exclude'          => true,
-    'options_callback' => array('ce_gallery_creator', 'optionsCallbackListAlbums'),
-    'eval'             => array('multiple' => true, 'tl_class' => 'clr'),
-    'sql'              => "blob NULL"
-);
-*/
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
     'label'                => &$GLOBALS['TL_LANG']['tl_content']['gc_publish_albums'],
     'inputType'            => 'checkbox',
@@ -203,7 +194,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
     'eval'                 => array('multiple' => true, 'tl_class' => 'clr'),
     'sql'                  => "blob NULL",
 );
-
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_single_album'] = array(
     'label'            => &$GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album'],
