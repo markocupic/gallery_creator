@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_sorting_direction'] = array(
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_picture_sorting'] = array(
     'label'     => &$GLOBALS['TL_LANG']['tl_content']['gc_picture_sorting'],
     'exclude'   => true,
-    'options'   => explode(',', 'sorting,id,tstamp,name,owner,comment,title'),
+    'options'   => explode(',', 'sorting,id,date,name,owner,comment,title'),
     'default'   => 'date',
     'inputType' => 'select',
     'eval'      => array('tl_class' => 'w50', 'submitOnChange' => false),
