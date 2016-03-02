@@ -59,8 +59,8 @@
 /** Clearfix **/
 .gallery_creator .clearfix:before,
 .gallery_creator .clearfix:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
+    content: " ";
+    display: table;
 }
 
 .gallery_creator .clearfix:after {
