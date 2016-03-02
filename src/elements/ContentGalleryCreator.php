@@ -215,7 +215,7 @@ class ContentGalleryCreator extends \ContentElement
                             unset($arrAllowedAlbums[$key]);
                         }
                     }
-                    array_values($arrAllowedAlbums);
+                    $arrAllowedAlbums = array_values($arrAllowedAlbums);
                 }
 
                 // pagination settings
@@ -523,7 +523,7 @@ class ContentGalleryCreator extends \ContentElement
             //aktueller Albumalias
             $this->strAlbumalias = \Input::get('items');
 
-            //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
+            //Authentifizierung bei vor Zugriff geschï¿½tzten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
             $this->authenticate($this->strAlbumalias);
 
             $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
@@ -577,7 +577,7 @@ class ContentGalleryCreator extends \ContentElement
     public function generateAjax()
     {
 
-        //gibt ein Array mit allen Bildinformationen des Bildes mit der id imageId zurück
+        //gibt ein Array mit allen Bildinformationen des Bildes mit der id imageId zurï¿½ck
         if (\Input::get('isAjax') && \Input::get('getImage') && strlen(\Input::get('imageId')))
         {
             $arrPicture = $this->getPictureInformationArray(\Input::get('imageId'), null, \Input::get('action'));
