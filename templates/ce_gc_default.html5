@@ -118,7 +118,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
 
 <?php if ($this->albumComment): ?>
-<div class="albumComment">
+<div class="album_comment">
        <p><?php echo $this->albumComment; ?></p>
 </div>
 <?php endif; ?>
