@@ -39,7 +39,7 @@
     <p class="count_pics"><?php echo $Album['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
     <?php endif; ?>
     <?php if ($Album['comment']): ?>
-    <p class="album_comment"><?php echo $Album['comment']; ?></p>
+    <div class="album_comment"><?php echo $Album['comment']; ?></div>
     <?php endif; ?>
 </div>
 </li>
@@ -107,7 +107,7 @@
         <p class="count_pics"><?php echo $Subalbum['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
         <?php endif; ?>
         <?php if ($Subalbum['comment']): ?>
-        <p class="album_comment"><?php echo $Subalbum['comment']; ?></p>
+        <div class="album_comment"><?php echo $Subalbum['comment']; ?></div>
         <?php endif; ?>
     </div>
 </li>
@@ -119,7 +119,7 @@
 
         <?php if ($this->albumComment): ?>
 <div class="album_comment">
-<p><?php echo $this->albumComment; ?></p>
+<?php echo $this->albumComment; ?>
 </div>
         <?php endif; ?>
 
