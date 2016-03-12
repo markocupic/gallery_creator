@@ -686,7 +686,7 @@ class ContentGalleryCreator extends \ContentElement
         // Albumbesucher (Anzahl Klicks)
         $this->Template->visitors = $objAlbum->vistors;
         //Der Kommentar zum gewaehlten Album
-        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment);
+        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment));
         // In der Detailansicht kann optional ein Artikel vor dem Album hinzugefuegt werden
         $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
         // In der Detailansicht kann optional ein Artikel nach dem Album hinzugefuegt werden
