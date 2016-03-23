@@ -577,12 +577,55 @@ class ContentGalleryCreator extends \ContentElement
     public function generateAjax()
     {
 
-        //gibt ein Array mit allen Bildinformationen des Bildes mit der id imageId zur�ck
+        //gibt ein Array mit allen Bildinformationen des Bildes mit der id imageId zurueck
         if (\Input::get('isAjax') && \Input::get('getImage') && strlen(\Input::get('imageId')))
         {
             $arrPicture = $this->getPictureInformationArray(\Input::get('imageId'), null, \Input::get('action'));
 
             return json_encode($arrPicture);
+            exit;
+        }
+
+        //Detailansicht nur mit Lightbox, für ce_gc_mediabox template
+        if (\Input::get('isAjax') && \Input::get('LightboxSlideshow') && \Input::get('albumId'))
+        {
+            //Authentifizierung bei vor Zugriff geschützten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
+            $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')
+                ->execute(\Input::get('albumId'));
+
+            $this->authenticate($objAlbum->alias);
+            if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
+            {
+                return false;
+            }
+
+            // Init Album Visit Counter
+            $this->initCounter(\Input::get('albumId'));
+
+
+            // sorting direction
+            $sorting = $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
+
+            $objPicture = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $sorting)
+                ->execute(1, \Input::get('albumId'));
+
+            $json = "";
+
+            while ($objPicture->next())
+            {
+                $objFile = \FilesModel::findByUuid($objPicture->uuid);
+                if ($objFile !== null)
+                {
+                    $href = $objFile->path;
+                    $href = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : $href;
+                    $href = trim($objPicture->localMediaSRC) != "" ? trim($objPicture->localMediaSRC) : $href;
+
+                    $json .= specialchars($href) . "###";
+                    $json .= specialchars($objPicture->comment) . "###";
+                    $json .= specialchars($objPicture->id) . " ***";
+                }
+            }
+            echo json_encode(array('arrImage' => $json));
             exit;
         }
     }
