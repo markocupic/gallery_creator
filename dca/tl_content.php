@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
     'inputType'            => 'checkbox',
     'exclude'              => true,
     'input_field_callback' => array('ce_gallery_creator', 'inputFieldCallbackListAlbums'),
-    'eval'                 => array('multiple' => true, 'tl_class' => 'clr'),
+    'eval'                 => array('multiple' => true, 'mandatory' => false, 'tl_class' => 'clr'),
     'sql'                  => "blob NULL",
 );
 
@@ -271,16 +271,21 @@ class ce_gallery_creator extends Backend
      */
     public function inputFieldCallbackListAlbums()
     {
+        if(\Input::post('FORM_SUBMIT') == 'tl_content'){
 
-        if ($_POST['gc_publish_albums']) {
-            //die(print_r($_POST['gc_publish_albums'],true));
-            $albums = array();
-            foreach ($this->Input->post('gc_publish_albums') as $album) {
-                $albums[] = $album;
+            if(!\Input::post('gc_publish_all_albums'))
+            {
+                $albums = array();
+                if (\Input::post('gc_publish_albums')) {
+                    foreach (deserialize(\Input::post('gc_publish_albums'),true) as $album) {
+                        $albums[] = $album;
+                    }
+                }
+                $set = array('gc_publish_albums' => serialize($albums));
+                $this->Database->prepare('UPDATE tl_content %s WHERE id=? ')->set($set)->execute(\Input::get('id'));
             }
-            $set = array('gc_publish_albums' => serialize($albums));
-            $this->Database->prepare('UPDATE tl_content %s WHERE id=? ')->set($set)->execute($this->Input->get('id'));
         }
+
         $html = '
 <div class="clr">
   <fieldset id="ctrl_gc_publish_albums" class="tl_checkbox_container">

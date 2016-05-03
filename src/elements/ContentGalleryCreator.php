@@ -19,7 +19,7 @@ namespace MCupic\GalleryCreator;
  * Class ContentGalleryCreator
  *
  * Provide methods regarding gallery_creator albums.
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2016
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
@@ -40,25 +40,28 @@ class ContentGalleryCreator extends \ContentElement
     public $defaultThumb = 'system/modules/gallery_creator/assets/images/image_not_found.jpg';
 
     /**
-     * true if page displays the detailview of an album
-     *
-     * @var boolean
+     * list_view, detail_view, single_image
+     * @var
      */
-    protected $DETAIL_VIEW = false;
+    protected $viewMode;
 
     /**
-     * Album-id
-     *
+     * Album-ID
      * @var integer
      */
     protected $intAlbumId;
 
     /**
      * Albumalias
-     *
      * @var string
      */
     protected $strAlbumalias;
+
+    /**
+     * Selected albums as array e.g. : [2,4,5,9]
+     * @var
+     */
+    protected $arrSelectedAlbums;
 
 
     /**
@@ -67,26 +70,6 @@ class ContentGalleryCreator extends \ContentElement
      */
     public function generate()
     {
-        if($_SESSION['GcRedirectToAlbum'])
-        {
-            \Input::setGet('items', $_SESSION['GcRedirectToAlbum']);
-            unset($_SESSION['GcRedirectToAlbum']);
-        }
-
-        if (\Input::get('items'))
-        {
-            // get the content element id from the $_GET - variable if multiple gallery_creator content elements are embeded on the current page
-            $this->ContentElementId = $this->id;
-        }
-
-        // Get the module type 'cte' or 'fmd'
-        $this->moduleType = 'cte';
-
-        // Ajax Requests
-        if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
-        {
-            $this->generateAjax();
-        }
 
         if (TL_MODE == 'BE')
         {
@@ -103,9 +86,22 @@ class ContentGalleryCreator extends \ContentElement
             return $objTemplate->parse();
         }
 
-
         // unset the Session
         unset($_SESSION['gallery_creator']['CURRENT_ALBUM']);
+
+
+        if ($_SESSION['GcRedirectToAlbum'])
+        {
+            \Input::setGet('items', $_SESSION['GcRedirectToAlbum']);
+            unset($_SESSION['GcRedirectToAlbum']);
+        }
+
+        // Ajax Requests
+        if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
+        {
+            $this->generateAjax();
+        }
+
 
         // set the item from the auto_item parameter
         if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
@@ -115,24 +111,131 @@ class ContentGalleryCreator extends \ContentElement
 
         if (strlen(\Input::get('items')))
         {
-            $this->DETAIL_VIEW = true;
+            $this->viewMode = 'detail_view';
         }
-
-        //assigning the frontend template
-        $this->strTemplate = $this->gc_template != "" ? $this->gc_template : $this->strTemplate;
-        $this->Template = new \FrontendTemplate($this->strTemplate);
-
-        //do some default-settings for the thumb-size if no settings are done in the module-/content-settings
 
         // store the pagination variable page in the current session
         if (!\Input::get('items'))
         {
             unset($_SESSION['gallery_creator']['PAGINATION']);
         }
-        if (\Input::get('page') && !$this->DETAIL_VIEW)
+        if (\Input::get('page') && $this->viewMode != 'detail_view')
         {
             $_SESSION['gallery_creator']['PAGINATION'] = \Input::get('page');
         }
+
+
+        if ($this->gc_publish_all_albums)
+        {
+            // if all albums should be shown
+            $this->arrSelectedAlbums = $this->listAllAlbums();
+        } else
+        {
+            // if only selected albums should be shown
+            $this->arrSelectedAlbums = deserialize($this->gc_publish_albums, true);
+        }
+
+        // clean array from unpublished or empty or protected albums
+        foreach ($this->arrSelectedAlbums as $key => $albumId)
+        {
+            // Get all not empty albums
+            $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE (SELECT COUNT(id) FROM tl_gallery_creator_pictures WHERE pid = ? AND published=?) > 0 AND id=? AND published=?')->execute($albumId, 1, $albumId, 1);
+
+            // if the album doesn't exist
+            if (!$objAlbum->numRows && !\GalleryCreatorAlbumsModel::hasChildAlbums($objAlbum->id) && !$this->gc_hierarchicalOutput)
+            {
+                unset($this->arrSelectedAlbums[$key]);
+                continue;
+            }
+
+            // remove id from $this->arrSelectedAlbums if user is not allowed
+            if (TL_MODE == 'FE' && $objAlbum->protected == true)
+            {
+                if (!$this->authenticate($objAlbum->alias))
+                {
+                    unset($this->arrSelectedAlbums[$key]);
+                    continue;
+                }
+            }
+        }
+        // build up the new array
+        $this->arrSelectedAlbums = array_values($this->arrSelectedAlbums);
+
+        // abort if no album is selected
+        if (empty($this->arrSelectedAlbums))
+        {
+            return '';
+        }
+
+
+        // Detail view:
+        // Authenticate and get album alias and album id
+        if (\Input::get('items'))
+        {
+
+            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias(\Input::get('items'));
+            if ($objAlbum !== null)
+            {
+                $this->intAlbumId = $objAlbum->id;
+                $this->strAlbumalias = $objAlbum->alias;
+                $this->viewMode = 'detail_view';
+            } else
+            {
+                return '';
+            }
+
+            //Authentifizierung bei vor Zugriff geschuetzten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
+            if (!$this->authenticate($this->strAlbumalias))
+            {
+                return '';
+            }
+        }
+
+        $this->viewMode = $this->viewMode ? $this->viewMode : 'list_view';
+        $this->viewMode = strlen(\Input::get('img')) ? 'single_image' : $this->viewMode;
+
+
+        if ($this->viewMode == 'list_view')
+        {
+            // Redirect to detailview if there is only one album
+            if (count($this->arrSelectedAlbums) == 1 && $this->gc_redirectSingleAlb)
+            {
+                $_SESSION['GcRedirectToAlbum'] = \GalleryCreatorAlbumsModel::findByPk($this->arrSelectedAlbums[0])->alias;
+                $this->reload();
+            }
+
+            //Hierarchische Ausgabe
+            if ($this->gc_hierarchicalOutput)
+            {
+                foreach ($this->arrSelectedAlbums as $k => $albumId)
+                {
+                    $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
+                    if ($objAlbum->pid > 0)
+                    {
+                        unset($this->arrSelectedAlbums[$k]);
+                    }
+                }
+                $this->arrSelectedAlbums = array_values($this->arrSelectedAlbums);
+                if (empty($this->arrSelectedAlbums))
+                {
+                    return '';
+                }
+            }
+        }
+
+        if ($this->viewMode == 'detail_view')
+        {
+            // for security reasons...
+            if (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $this->arrSelectedAlbums))
+            {
+                return '';
+            }
+        }
+
+        //assigning the frontend template
+        $this->strTemplate = $this->gc_template != "" ? $this->gc_template : $this->strTemplate;
+        $this->Template = new \FrontendTemplate($this->strTemplate);
+
 
         return parent::generate();
     }
@@ -145,78 +248,10 @@ class ContentGalleryCreator extends \ContentElement
 
         global $objPage;
 
-        // process request variables
-        $this->getUrlParams();
 
-        if (!is_array(deserialize($this->gc_publish_albums)) && !$this->gc_publish_all_albums)
+        switch ($this->viewMode)
         {
-            return;
-        }
-
-        if ($this->gc_publish_all_albums)
-        {
-            // if all albums should be shown
-            $arrSelectedAlb = $this->listAllAlbums();
-        }
-        else
-        {
-            // if only selected albums should be shown
-            $arrSelectedAlb = deserialize($this->gc_publish_albums);
-        }
-
-        // clean array from unpublished or empty or protected albums
-        foreach ($arrSelectedAlb as $key => $albumId)
-        {
-            // Get all not empty albums
-            $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE (SELECT COUNT(id) FROM tl_gallery_creator_pictures WHERE pid = ? AND published=?) > 0 AND id=? AND published=?')->execute($albumId, '1', $albumId, '1');
-
-            // if the album doesn't exist
-            if (!$objAlbum->numRows && !\GalleryCreatorAlbumsModel::hasChildAlbums($objAlbum->id) && !$this->gc_hierarchicalOutput)
-            {
-                unset($arrSelectedAlb[$key]);
-                continue;
-            }
-
-            // remove id from $arrSelectedAlb if user is not allowed
-            if (TL_MODE == 'FE' && $objAlbum->protected == true)
-            {
-               if(!$this->authenticate($objAlbum->alias))
-               {
-                    unset($arrSelectedAlb[$key]);
-                    continue;
-                }
-            }
-        }
-        // build up the new array
-        $arrAllowedAlbums = array_values($arrSelectedAlb);
-
-        $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
-        $switch = strlen(\Input::get('img')) ? 'single_image' : $switch;
-
-
-        switch ($switch)
-        {
-            case 'albumlisting' :
-
-                // abort if no album is selected
-                if (count($arrAllowedAlbums) < 1)
-                {
-                    return;
-                }
-
-                //Hierarchische Ausgabe
-                if($this->gc_hierarchicalOutput)
-                {
-                    foreach($arrAllowedAlbums as $key => $albumId)
-                    {
-                        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
-                        if ($objAlbum->pid > 0)
-                        {
-                            unset($arrAllowedAlbums[$key]);
-                        }
-                    }
-                    $arrAllowedAlbums = array_values($arrAllowedAlbums);
-                }
+            case 'list_view' :
 
                 // pagination settings
                 $limit = $this->gc_AlbumsPerPage;
@@ -225,70 +260,40 @@ class ContentGalleryCreator extends \ContentElement
                     $page = \Input::get('page') ? \Input::get('page') : 1;
                     $offset = ($page - 1) * $limit;
                     // count albums
-                    $itemsTotal = count($arrAllowedAlbums);
+                    $itemsTotal = count($this->arrSelectedAlbums);
                     // create pagination menu
                     $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
                     $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
                     $this->Template->pagination = $objPagination->generate("\n ");
                 }
 
-                if ($limit == '0')
+                if ($limit == 0 || $limit > count($this->arrSelectedAlbums))
                 {
-                    $limit = count($arrAllowedAlbums);
+                    $limit = count($this->arrSelectedAlbums);
                     $offset = 0;
                 }
-
                 $arrAlbums = array();
                 for ($i = $offset; $i < $offset + $limit; $i++)
                 {
-                    if (!$arrAllowedAlbums[$i])
-                    {
-                        continue;
-                    }
-
-                    $intAlbumId = $arrAllowedAlbums[$i];
-                    $objAlbum = $this->Database->prepare('SELECT id, alias FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
-                    if (false === $this->authenticate($objAlbum->alias))
-                    {
-                        continue;
-                    }
-                    $arrAlbums[] = GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
-                }
-
-                // Redirect to detailview if there is only one album
-                if(count($arrAlbums) == 1 && $this->gc_redirectSingleAlb)
-                {
-                    $_SESSION['GcRedirectToAlbum'] =  $arrAlbums[0]['alias'];
-                    $this->reload();
+                    $arrAlbums[] = GcHelpers::getAlbumInformationArray($this->arrSelectedAlbums[$i], $this);
                 }
 
                 // Add css classes
-                if(count($arrAlbums) > 0)
+                if (count($arrAlbums) > 0)
                 {
                     $arrAlbums[0]['cssClass'] .= ' first';
-                    $arrAlbums[count($arrAlbums)-1]['cssClass'] .= ' last';
+                    $arrAlbums[count($arrAlbums) - 1]['cssClass'] .= ' last';
                 }
 
                 $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                 $this->Template->arrAlbums = $arrAlbums;
 
-                $this->getAlbumTemplateVars($objAlbum->id);
 
                 // Call gcGenerateFrontendTemplateHook
                 $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
                 break;
 
-            case 'detailview':
-
-                $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
-                $published = $objAlbum->published ? true : false;
-
-                // for security reasons...
-                if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
-                {
-                    die("Gallery with alias " . $this->strAlbumalias . " is either not published or not available or you haven't got enough permission to watch it!!!");
-                }
-
+            case 'detail_view':
                 // generate the subalbum array
                 if ($this->gc_hierarchicalOutput)
                 {
@@ -304,8 +309,8 @@ class ContentGalleryCreator extends \ContentElement
                     $offset = ($page - 1) * $limit;
 
                     // count albums
-                    $objTotal = $this->Database->prepare('SELECT COUNT(id) as itemsTotal FROM tl_gallery_creator_pictures WHERE published=? AND pid=? GROUP BY ?')->execute('1', $this->intAlbumId, 'id');
-                    $itemsTotal = $objTotal->itemsTotal;
+                    $objTotal = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE published=? AND pid=? GROUP BY ?')->execute('1', $this->intAlbumId, 'id');
+                    $itemsTotal = $objTotal->numRows;
 
                     // create the pagination menu
                     $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
@@ -322,7 +327,7 @@ class ContentGalleryCreator extends \ContentElement
                 {
                     $objPictures->limit($limit, $offset);
                 }
-                $objPictures = $objPictures->execute('1', $this->intAlbumId);
+                $objPictures = $objPictures->execute(1, $this->intAlbumId);
 
                 // build up $arrPictures
                 $arrPictures = array();
@@ -345,8 +350,7 @@ class ContentGalleryCreator extends \ContentElement
                     if ($this->gc_picture_sorting_direction == 'ASC')
                     {
                         array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_ASC);
-                    }
-                    else
+                    } else
                     {
                         array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_DESC);
                     }
@@ -364,6 +368,7 @@ class ContentGalleryCreator extends \ContentElement
                 $this->initCounter($this->intAlbumId);
 
                 // Call gcGenerateFrontendTemplateHook
+                $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
                 $this->Template = $this->callGcGenerateFrontendTemplateHook($this, $objAlbum);
                 break;
 
@@ -385,7 +390,7 @@ class ContentGalleryCreator extends \ContentElement
                 $published = $objAlbum->published ? $published : false;
 
                 // for security reasons...
-                if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $arrAllowedAlbums)))
+                if (!$published || (!$this->gc_publish_all_albums && !in_array($this->intAlbumId, $this->arrSelectedAlbums)))
                 {
                     die("Picture with id " . $picId . " is either not published or not available or you haven't got enough permission to watch it!!!");
                 }
@@ -464,21 +469,16 @@ class ContentGalleryCreator extends \ContentElement
     }
 
     /**
-     * return a sorted array with all albums selected in the content element settings
+     * return a sorted array with all album ID's
+     * @param int $pid
      * @return array
      */
-    protected function listAllAlbums()
+    protected function listAllAlbums($pid = 0)
     {
 
-        $objContent = $this->Database->prepare('SELECT gc_sorting, gc_sorting_direction FROM tl_content WHERE id=?')->execute($this->id);
-        $strSorting = $objContent->gc_sorting == '' || $objContent->gc_sorting_direction == '' ? 'date DESC' : $objContent->gc_sorting . ' ' . $objContent->gc_sorting_direction;
-        $objAlbums = $this->Database->prepare('SELECT id, name FROM tl_gallery_creator_albums WHERE published=? ORDER BY ' . $strSorting)->execute('1');
-        $arrAlb = array();
-        while ($objAlbums->next())
-        {
-            $arrAlb[] = $objAlbums->id;
-        }
-        return $arrAlb;
+        $strSorting = $this->gc_sorting == '' || $this->gc_sorting_direction == '' ? 'date DESC' : $this->gc_sorting . ' ' . $this->gc_sorting_direction;
+        $objAlbums = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY ' . $strSorting)->execute($pid, 1);
+        return $objAlbums->fetchEach('id');
     }
 
 
@@ -502,38 +502,6 @@ class ContentGalleryCreator extends \ContentElement
         return $objModule->Template;
     }
 
-
-    /**
-     * evaluate the url data
-     * extracts the album-id, the content-element-id, etc.
-     */
-    public function getUrlParams()
-    {
-
-        if (!$this->gc_publish_all_albums)
-        {
-            if (!unserialize($this->gc_publish_albums))
-            {
-                return;
-            }
-        }
-
-        if (\Input::get('items'))
-        {
-            //aktueller Albumalias
-            $this->strAlbumalias = \Input::get('items');
-
-            //Authentifizierung bei vor Zugriff gesch�tzten Alben, dh. der Benutzer bekommt, wenn nicht berechtigt, nur das Albumvorschaubild zu sehen.
-            $this->authenticate($this->strAlbumalias);
-
-            $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($this->strAlbumalias);
-            if ($objAlbum !== null)
-            {
-                $this->intAlbumId = $objAlbum->id;
-                $this->DETAIL_VIEW = true;
-            }
-        }
-    }
 
     /**
      * Check if fe-user has access to a certain album
@@ -593,8 +561,7 @@ class ContentGalleryCreator extends \ContentElement
             $objAlbum = $this->Database->prepare('SELECT alias FROM tl_gallery_creator_albums WHERE id=?')
                 ->execute(\Input::get('albumId'));
 
-            $this->authenticate($objAlbum->alias);
-            if (GALLERY_CREATOR_ALBUM_AUTHENTIFICATION_ERROR === true)
+            if (!$this->authenticate($objAlbum->alias))
             {
                 return false;
             }
@@ -667,8 +634,7 @@ class ContentGalleryCreator extends \ContentElement
         if ($objAlb->thumb !== null)
         {
             $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
-        }
-        else
+        } else
         {
             $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
         }
@@ -709,7 +675,7 @@ class ContentGalleryCreator extends \ContentElement
             ->execute($intAlbumId);
 
         // add meta tags to the page object
-        if (TL_MODE == 'FE' && $this->DETAIL_VIEW === true && $objAlbum !== null)
+        if (TL_MODE == 'FE' && $this->viewMode == 'detail_view' && $objAlbum !== null)
         {
             $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;
             $GLOBALS['TL_KEYWORDS'] = ltrim($GLOBALS['TL_KEYWORDS'] . ',' . specialchars($objAlbum->keywords), ',');
@@ -739,7 +705,7 @@ class ContentGalleryCreator extends \ContentElement
         //Das Event-Datum des Albums formatiert
         $this->Template->eventDate = \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
         //Abstaende
-        $this->Template->imagemargin = $this->DETAIL_VIEW ? $this->generateMargin(deserialize($this->gc_imagemargin_detailview), 'margin') : $this->generateMargin(deserialize($this->gc_imagemargin_albumlisting), 'margin');
+        $this->Template->imagemargin = $this->viewMode == 'detail_view' ? $this->generateMargin(deserialize($this->gc_imagemargin_detailview), 'margin') : $this->generateMargin(deserialize($this->gc_imagemargin_albumlisting), 'margin');
         //Anzahl Spalten pro Reihe
         $this->Template->colsPerRow = $this->gc_rows == "" ? 4 : $this->gc_rows;
 
@@ -819,8 +785,7 @@ class ContentGalleryCreator extends \ContentElement
                     // slice the last position
                     $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
                 }
-            }
-            else
+            } else
             {
                 $set = array('visitors_details' => '');
                 \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
@@ -842,8 +807,7 @@ class ContentGalleryCreator extends \ContentElement
             {
                 // insert the element to the beginning of the array
                 array_unshift($arrVisitors, $newVisitor);
-            }
-            else
+            } else
             {
                 // create the new array
                 $arrVisitors = array();
@@ -855,10 +819,8 @@ class ContentGalleryCreator extends \ContentElement
                 'visitors' => $intCount,
                 'visitors_details' => serialize($arrVisitors)
             );
-            $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)
+            \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)
                 ->execute($intAlbumId);
         }
     }
-
 }
-

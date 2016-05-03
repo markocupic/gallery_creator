@@ -432,8 +432,8 @@ class GcHelpers extends \System
             //[string] Albumalias (=Verzeichnisname)
             'alias'               => $objAlbum->alias,
             //[string] Albumkommentar
-            'comment'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment),
-            'caption'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment),
+            'comment'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
+            'caption'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
             //[int] Albumbesucher (Anzahl Klicks)
             'visitors'            => $objAlbum->visitors,
             //[string] Link zur Detailansicht
