@@ -97,7 +97,7 @@ class ContentGalleryCreator extends \ContentElement
         }
 
         // Ajax Requests
-        if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
+        if (TL_MODE == 'FE' && \Environment::get('isAjaxRequest'))
         {
             $this->generateAjax();
         }
@@ -255,6 +255,7 @@ class ContentGalleryCreator extends \ContentElement
 
                 // pagination settings
                 $limit = $this->gc_AlbumsPerPage;
+                $offset = 0;
                 if ($limit > 0)
                 {
                     $page = \Input::get('page') ? \Input::get('page') : 1;
@@ -270,7 +271,6 @@ class ContentGalleryCreator extends \ContentElement
                 if ($limit == 0 || $limit > count($this->arrSelectedAlbums))
                 {
                     $limit = count($this->arrSelectedAlbums);
-                    $offset = 0;
                 }
                 $arrAlbums = array();
                 for ($i = $offset; $i < $offset + $limit; $i++)
@@ -303,6 +303,7 @@ class ContentGalleryCreator extends \ContentElement
 
                 // pagination settings
                 $limit = $this->gc_ThumbsPerPage;
+                $offset = 0;
                 if ($limit > 0)
                 {
                     $page = \Input::get('page') ? \Input::get('page') : 1;
@@ -483,9 +484,9 @@ class ContentGalleryCreator extends \ContentElement
 
 
     /**
-     * @param \Module $objModule
+     * @param ContentGalleryCreator $objModule
      * @param null $objAlbum
-     * @return mixed
+     * @return \BackendTemplate|\FrontendTemplate|object
      */
     protected function callGcGenerateFrontendTemplateHook(ContentGalleryCreator $objModule, $objAlbum = null)
     {
@@ -550,7 +551,7 @@ class ContentGalleryCreator extends \ContentElement
         {
             $arrPicture = $this->getPictureInformationArray(\Input::get('imageId'), null, \Input::get('action'));
 
-            return json_encode($arrPicture);
+            echo json_encode($arrPicture);
             exit;
         }
 
@@ -593,8 +594,8 @@ class ContentGalleryCreator extends \ContentElement
                 }
             }
             echo json_encode(array('arrImage' => $json));
-            exit;
         }
+        exit;
     }
 
 
@@ -666,9 +667,6 @@ class ContentGalleryCreator extends \ContentElement
     {
 
         global $objPage;
-
-        // Get the page model
-        $objPageModel = \PageModel::findByPk($objPage->id);
 
         // Load the current album from db
         $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')

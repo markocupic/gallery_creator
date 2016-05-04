@@ -93,8 +93,7 @@ class GalleryCreatorAlbumsModel extends \Model
         if ($strSorting == '')
         {
             $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY sorting';
-        }
-        else
+        } else
         {
             $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY ' . $strSorting;
         }
@@ -125,8 +124,7 @@ class GalleryCreatorAlbumsModel extends \Model
         if (count($arrChilds) >= 1)
         {
             return true;
-        }
-        else
+        } else
         {
             return false;
         }

@@ -338,6 +338,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
     )
 );
 
+
 /**
 * Class tl_gallery_creator_albums
 *
