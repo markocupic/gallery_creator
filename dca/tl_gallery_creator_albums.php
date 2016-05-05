@@ -729,7 +729,7 @@ class tl_gallery_creator_albums extends Backend
     public function inputFieldCbGenerateUploaderMarkup()
     {
 
-        return \GalleryCreator\GcHelpers::generateUploader(Input::get('id'), $this->User->gc_be_uploader_template);
+        return \GalleryCreator\GcHelpers::generateUploader($this->User->gc_be_uploader_template);
     }
 
     /**

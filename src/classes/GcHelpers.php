@@ -43,7 +43,7 @@ class GcHelpers extends \System
         }
 
         //get the album-object
-        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlbum = \GalleryCreatorAlbumsModel::findById($intAlbumId);
 
         // get the assigned album directory
         $objFolder = \FilesModel::findByUuid($objAlbum->assignedDir);
@@ -131,7 +131,7 @@ class GcHelpers extends \System
 
                 \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
                 //check for a valid preview-thumb for the album
-                $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
+                $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
                 if ($objAlbum !== null)
                 {
                     if ($objAlbum->thumb == "")
@@ -142,14 +142,12 @@ class GcHelpers extends \System
                 }
 
                 return true;
-            }
-            else
+            } else
             {
                 if ($blnExternalFile === true)
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file'], $strFilepath);
-                }
-                else
+                } else
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['uploadError'], $strFilepath);
                 }
@@ -205,11 +203,11 @@ class GcHelpers extends \System
         {
             $arrFile = array
             (
-                'name'     => $_FILES[$strName]['name'],
-                'type'     => $_FILES[$strName]['type'],
+                'name' => $_FILES[$strName]['name'],
+                'type' => $_FILES[$strName]['type'],
                 'tmp_name' => $_FILES[$strName]['tmp_name'],
-                'error'    => $_FILES[$strName]['error'],
-                'size'     => $_FILES[$strName]['size']
+                'error' => $_FILES[$strName]['error'],
+                'size' => $_FILES[$strName]['size']
             );
 
             unset($_FILES);
@@ -238,8 +236,7 @@ class GcHelpers extends \System
         {
             \Config::set('imageWidth', \Input::post('img_resolution'));
             \Config::set('jpgQuality', \Input::post('img_quality'));
-        }
-        else
+        } else
         {
             \Config::set('maxImageWidth', 999999999);
         }
@@ -260,9 +257,9 @@ class GcHelpers extends \System
 
     /**
      * generate a unique filepath for a new picture
-     *
-     * @param string
-     * @return string
+     * @param $strFilename
+     * @return bool|string
+     * @throws Exception
      */
     public static function generateUniqueFilename($strFilename)
     {
@@ -290,17 +287,13 @@ class GcHelpers extends \System
             if (!file_exists(TL_ROOT . '/' . $dirname . '/' . $basename . '.' . $extension))
             {
                 //exit loop when filename is unique
-                $isUnique = true;
-
                 return $dirname . '/' . $basename . '.' . $extension;
-            }
-            else
+            } else
             {
                 if ($i != 1)
                 {
                     $filename = substr($basename, 0, -5);
-                }
-                else
+                } else
                 {
                     $filename = $basename;
                 }
@@ -321,11 +314,10 @@ class GcHelpers extends \System
 
     /**
      * generate the jumploader applet
-     *
-     * @param integer
+     * @param string $uploader
      * @return string
      */
-    public static function generateUploader($intAlbumId, $uploader = 'be_gc_html5_uploader')
+    public static function generateUploader($uploader = 'be_gc_html5_uploader')
     {
 
         //create the template object
@@ -370,7 +362,8 @@ class GcHelpers extends \System
         $arrSize = unserialize($objThis->gc_size_albumlisting);
 
         $href = null;
-        if (TL_MODE == 'FE') {
+        if (TL_MODE == 'FE')
+        {
             //generate the url as a formated string
             $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/##albumAlias##' : '/items/##albumAlias##'), $objPage->language);
             // add albumAlias
@@ -388,15 +381,11 @@ class GcHelpers extends \System
 
             if ($thumbSrc !== $strImageSrc)
             {
-                $objFile = new \File(rawurldecode($thumbSrc), true);
+                new \File(rawurldecode($thumbSrc), true);
             }
-        }
-        catch (\Exception $e)
+        } catch (\Exception $e)
         {
             \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-
-            $thumbSrc = '';
-            $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
         }
 
         $picture['alt'] = specialchars($objAlbum->name);
@@ -407,63 +396,63 @@ class GcHelpers extends \System
         $strCSSClass .= $objPics->numRows < 1 ? ' empty-album' : '';
 
         $arrAlbum = array(
-            'id'                  => $objAlbum->id,
+            'id' => $objAlbum->id,
             //[int] pid parent Album-Id
-            'pid'                 => $objAlbum->pid,
+            'pid' => $objAlbum->pid,
             //[int] Sortierindex
-            'sorting'             => $objAlbum->sorting,
+            'sorting' => $objAlbum->sorting,
             //[boolean] veroeffentlicht (true/false)
-            'published'           => $objAlbum->published,
+            'published' => $objAlbum->published,
             //[int] id des Albumbesitzers
-            'owner'               => $objAlbum->owner,
+            'owner' => $objAlbum->owner,
             //[string] Benutzername des Albumbesitzers
-            'owners_name'         => $objAlbum->owners_name,
+            'owners_name' => $objAlbum->owners_name,
             //[int] Zeitstempel der letzten Aenderung
-            'tstamp'              => $objAlbum->tstamp,
+            'tstamp' => $objAlbum->tstamp,
             //[int] Event-Unix-timestamp (unformatiert)
-            'event_tstamp'        => $objAlbum->date,
-            'date'                => $objAlbum->date,
+            'event_tstamp' => $objAlbum->date,
+            'date' => $objAlbum->date,
             //[string] Event-Datum (formatiert)
-            'event_date'          => \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date),
+            'event_date' => \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date),
             //[string] Event-Location
-            'event_location'      => specialchars($objAlbum->event_location),
+            'event_location' => specialchars($objAlbum->event_location),
             //[string] Albumname
-            'name'                => specialchars($objAlbum->name),
+            'name' => specialchars($objAlbum->name),
             //[string] Albumalias (=Verzeichnisname)
-            'alias'               => $objAlbum->alias,
+            'alias' => $objAlbum->alias,
             //[string] Albumkommentar
-            'comment'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
-            'caption'             => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
+            'comment' => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
+            'caption' => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
             //[int] Albumbesucher (Anzahl Klicks)
-            'visitors'            => $objAlbum->visitors,
+            'visitors' => $objAlbum->visitors,
             //[string] Link zur Detailansicht
-            'href'                => $href,
+            'href' => $href,
             //[string] Inhalt fuer das title Attribut
-            'title'               => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objThis->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
+            'title' => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objThis->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
             //[int] Anzahl Bilder im Album
-            'count'               => $objPics->numRows,
+            'count' => $objPics->numRows,
             //[int] Anzahl Unteralben
-            'count_subalbums'     => count(\GalleryCreatorAlbumsModel::getChildAlbums($objAlbum->id)),
+            'count_subalbums' => count(\GalleryCreatorAlbumsModel::getChildAlbums($objAlbum->id)),
             //[string] alt Attribut fuer das Vorschaubild
-            'alt'                 => $arrPreviewThumb['name'],
+            'alt' => $arrPreviewThumb['name'],
             //[string] Pfad zum Originalbild
-            'src'                 => TL_FILES_URL . $arrPreviewThumb['path'],
+            'src' => TL_FILES_URL . $arrPreviewThumb['path'],
             //[string] Pfad zum Thumbnail
-            'thumb_src'           => TL_FILES_URL . \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
+            'thumb_src' => TL_FILES_URL . \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
             //[int] article id
-            'insert_article_pre'  => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
+            'insert_article_pre' => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
             //[int] article id
             'insert_article_post' => $objAlbum->insert_article_post ? $objAlbum->insert_article_post : null,
             //[string] css-Classname
-            'class'               => 'thumb',
+            'class' => 'thumb',
             //[int] Thumbnailgrösse
-            'size'                => $arrSize,
+            'size' => $arrSize,
             //[string] javascript-Aufruf
-            'thumbMouseover'      => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
+            'thumbMouseover' => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
             //[array] picture
-            'picture'             => $picture,
+            'picture' => $picture,
             //[string] cssClass
-            'cssClass'            => trim($strCSSClass)
+            'cssClass' => trim($strCSSClass)
         );
 
         //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
@@ -492,18 +481,18 @@ class GcHelpers extends \System
 
         if ($intPictureId < 1)
         {
-            return;
+            return null;
         }
         global $objPage;
 
         $hasCustomThumb = false;
 
 
-        $defaultThumbSRC =  $objThis->defaultThumb;
-        if(\Config::get('gc_error404_thumb') !== '')
+        $defaultThumbSRC = $objThis->defaultThumb;
+        if (\Config::get('gc_error404_thumb') !== '')
         {
             $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
-            if($objFile !== null)
+            if ($objFile !== null)
             {
                 if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
                 {
@@ -529,14 +518,12 @@ class GcHelpers extends \System
         //Bild-Besitzer
         $objOwner = \Database::getInstance()->prepare('SELECT name FROM tl_user WHERE id=?')
             ->execute($objPicture->owner);
-        $strImageSrc = '';
         $arrMeta = array();
         $objFileModel = \FilesModel::findByUuid($objPicture->uuid);
         if ($objFileModel == null)
         {
             $strImageSrc = $defaultThumbSRC;
-        }
-        else
+        } else
         {
             $strImageSrc = $objFileModel->path;
             if (!is_file(TL_ROOT . '/' . $strImageSrc))
@@ -563,14 +550,16 @@ class GcHelpers extends \System
         {
             $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
             // overwrite $thumbSrc if there is a valid custom thumb
-            if ($objPicture->addCustomThumb && !empty($objPicture->customThumb)){
+            if ($objPicture->addCustomThumb && !empty($objPicture->customThumb))
+            {
                 $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
                 if ($customThumbModel !== null)
                 {
                     if (is_file(TL_ROOT . '/' . $customThumbModel->path))
                     {
                         $objFileCustomThumb = new \File($customThumbModel->path, true);
-                        if ($objFileCustomThumb->isGdImage) {
+                        if ($objFileCustomThumb->isGdImage)
+                        {
                             $thumbSrc = \Image::create($objFileCustomThumb->path, $arrSize)->executeResize()->getResizedPath();
                             $hasCustomThumb = true;
                         }
@@ -580,12 +569,11 @@ class GcHelpers extends \System
             $thumbPath = $hasCustomThumb ? $objFileCustomThumb->path : $strImageSrc;
             $picture = \Picture::create($thumbPath, $arrSize)->getTemplateData();
 
-        }
-        catch (\Exception $e)
+        } catch (\Exception $e)
         {
             \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
             $thumbSrc = '';
-            $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
+            $picture = array('img' => array('src' => '', 'srcset' => ''), 'sources' => array());
         }
 
         $picture['alt'] = $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']);
@@ -614,8 +602,7 @@ class GcHelpers extends \System
             $arrFile["dirname"] = $objFileImage->dirname;
             $arrFile["image_width"] = $objFileImage->width;
             $arrFile["image_height"] = $objFileImage->height;
-        }
-        else
+        } else
         {
             return null;
         }
@@ -627,13 +614,11 @@ class GcHelpers extends \System
             try
             {
                 $exif = is_callable('exif_read_data') && TL_MODE == 'FE' ? exif_read_data($strImageSrc) : array('info' => "The function 'exif_read_data()' is not available on this server.");
-            }
-            catch (Exception $e)
+            } catch (Exception $e)
             {
                 $exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
             }
-        }
-        else
+        } else
         {
             $exif = array('info' => "The function 'exif_read_data()' has not been activated in the Contao backend settings.");
         }
@@ -657,84 +642,84 @@ class GcHelpers extends \System
 
         // build the array
         $arrPicture = array(
-            'id'               => $objPicture->id,
+            'id' => $objPicture->id,
             //[int] pid parent Album-Id
-            'pid'              => $objPicture->pid,
+            'pid' => $objPicture->pid,
             //[int] das Datum, welches fuer das Bild gesetzt werden soll (= in der Regel das Upload-Datum)
-            'date'             => $objPicture->date,
+            'date' => $objPicture->date,
             //[int] id des Albumbesitzers
-            'owner'            => $objPicture->owner,
+            'owner' => $objPicture->owner,
             //Name des Erstellers
-            'owners_name'      => $objOwner->name,
+            'owners_name' => $objOwner->name,
             //[int] album_id oder pid
-            'album_id'         => $objPicture->pid,
+            'album_id' => $objPicture->pid,
             //[string] name (basename/filename of the file)
-            'name'             => specialchars($arrFile["basename"]),
+            'name' => specialchars($arrFile["basename"]),
             //[string] filename without extension
-            'filename'         => $arrFile["filename"],
+            'filename' => $arrFile["filename"],
             //[string] Pfad zur Datei
-            'uuid'             => $objPicture->uuid,
+            'uuid' => $objPicture->uuid,
             // uuid of the image
-            'path'             => $arrFile["path"],
+            'path' => $arrFile["path"],
             //[string] basename similar to name
-            'basename'         => $arrFile["basename"],
+            'basename' => $arrFile["basename"],
             //[string] dirname
-            'dirname'          => $arrFile["dirname"],
+            'dirname' => $arrFile["dirname"],
             //[string] file-extension
-            'extension'        => $arrFile["extension"],
+            'extension' => $arrFile["extension"],
             //[string] alt-attribut
-            'alt'              => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
+            'alt' => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
             //[string] title-attribut
-            'title'            => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
+            'title' => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
             //[string] Bildkommentar oder Bildbeschreibung
-            'comment'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
-            'caption'          => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'comment' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'caption' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
             //[string] path to media (video, picture, sound...)
-            'href'             => TL_FILES_URL . $href,
+            'href' => TL_FILES_URL . $href,
             // single image url
             'single_image_url' => $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/') . \Input::get('items') . '/img/' . $arrFile["filename"], $objPage->language),
             //[string] path to the image,
-            'image_src'        => $arrFile["path"],
+            'image_src' => $arrFile["path"],
             //[string] path to the other selected media
-            'media_src'        => $strMediaSrc,
+            'media_src' => $strMediaSrc,
             //[string] path to a media on a social-media-plattform
-            'socialMediaSRC'   => $objPicture->socialMediaSRC,
+            'socialMediaSRC' => $objPicture->socialMediaSRC,
             //[string] path to a media stored on the webserver
-            'localMediaSRC'    => $objPicture->localMediaSRC,
+            'localMediaSRC' => $objPicture->localMediaSRC,
             //[string] Pfad zu einem benutzerdefinierten Thumbnail
-            'addCustomThumb'   => $objPicture->addCustomThumb,
+            'addCustomThumb' => $objPicture->addCustomThumb,
             //[string] Thumbnailquelle
-            'thumb_src'        => isset($thumbSrc) ? TL_FILES_URL . $thumbSrc : '',
+            'thumb_src' => isset($thumbSrc) ? TL_FILES_URL . $thumbSrc : '',
             //[array] Thumbnail-Ausmasse Array $arrSize[Breite, Hoehe, Methode]
-            'size'             => $arrSize,
+            'size' => $arrSize,
             //[int] thumb-width in px
-            'thumb_width'      => $arrFile["thumb_width"],
+            'thumb_width' => $arrFile["thumb_width"],
             //[int] thumb-height in px
-            'thumb_height'     => $arrFile["thumb_height"],
+            'thumb_height' => $arrFile["thumb_height"],
             //[int] image-width in px
-            'image_width'      => $arrFile["image_width"],
+            'image_width' => $arrFile["image_width"],
             //[int] image-height in px
-            'image_height'     => $arrFile["image_height"],
+            'image_height' => $arrFile["image_height"],
             //[int] das rel oder data-lightbox Attribut fuer das Anzeigen der Bilder in der Lightbox
-            'lightbox'         => $objPage->outputFormat == 'xhtml' ? 'rel="lightbox[lb' . $objPicture->pid . ']"' : 'data-lightbox="lb' . $objPicture->pid . '"',
+            'lightbox' => $objPage->outputFormat == 'xhtml' ? 'rel="lightbox[lb' . $objPicture->pid . ']"' : 'data-lightbox="lb' . $objPicture->pid . '"',
             //[int] Zeitstempel der letzten Aenderung
-            'tstamp'           => $objPicture->tstamp,
+            'tstamp' => $objPicture->tstamp,
             //[int] Sortierindex
-            'sorting'          => $objPicture->sorting,
+            'sorting' => $objPicture->sorting,
             //[boolean] veroeffentlicht (true/false)
-            'published'        => $objPicture->published,
+            'published' => $objPicture->published,
             //[array] Array mit exif metatags
-            'exif'             => $exif,
+            'exif' => $exif,
             //[array] Array mit allen Albuminformation (albumname, owners_name...)
-            'albuminfo'        => $arrAlbumInfo,
+            'albuminfo' => $arrAlbumInfo,
             //[array] Array mit Bildinfos aus den meta-Angaben der Datei, gespeichert in tl_files.meta
-            'metaData'         => $arrMeta,
+            'metaData' => $arrMeta,
             //[string] css-ID des Bildcontainers
-            'cssID'            => $cssID[0] != '' ? $cssID[0] : '',
+            'cssID' => $cssID[0] != '' ? $cssID[0] : '',
             //[string] css-Klasse des Bildcontainers
-            'cssClass'         => $cssID[1] != '' ? $cssID[1] : '',
+            'cssClass' => $cssID[1] != '' ? $cssID[1] : '',
             //[bool] true, wenn es sich um ein Bild handelt, das nicht in files/gallery_creator_albums/albumname gespeichert ist
-            'externalFile'     => $objPicture->externalFile,
+            'externalFile' => $objPicture->externalFile,
             // [array] picture
             'picture' => $picture
         );
@@ -770,10 +755,11 @@ class GcHelpers extends \System
         while ($objSubAlbums->next())
         {
             // If it is a content element only
-            if($objThis->gc_publish_albums != '')
+            if ($objThis->gc_publish_albums != '')
             {
-                if(!$objThis->gc_publish_all_albums){
-                    if(!in_array($objSubAlbums->id, deserialize($objThis->gc_publish_albums)))
+                if (!$objThis->gc_publish_all_albums)
+                {
+                    if (!in_array($objSubAlbums->id, deserialize($objThis->gc_publish_albums)))
                     {
                         continue;
                     }
@@ -796,7 +782,7 @@ class GcHelpers extends \System
      */
     public static function getAllSubalbums($parentId, $strSorting = '', $iterationDepth = null)
     {
-        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth);
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting, $iterationDepth);
     }
 
     /**
@@ -808,7 +794,7 @@ class GcHelpers extends \System
      */
     public static function getChildAlbums($parentId, $strSorting = '', $iterationDepth = null)
     {
-        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting = '', $iterationDepth);
+        return \GalleryCreatorAlbumsModel::getChildAlbums($parentId, $strSorting, $iterationDepth);
     }
 
     /**
@@ -857,8 +843,7 @@ class GcHelpers extends \System
         if (TL_MODE == 'BE')
         {
             $imgSrc = '../' . $imgPath;
-        }
-        else
+        } else
         {
             $imgSrc = $imgPath;
         }
@@ -910,8 +895,7 @@ class GcHelpers extends \System
                 {
                     $images[$objFile->path] = array('uuid' => $objFilesModel->uuid, 'basename' => $objFile->basename, 'path' => $objFile->path);
                 }
-            }
-            else
+            } else
             {
                 // If it is a directory, then store its files in the array
                 $objSubfilesModel = \FilesModel::findMultipleFilesByFolder($objFilesModel->path);
@@ -946,26 +930,25 @@ class GcHelpers extends \System
                 'basename' => array()
             );
 
-            $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
             $arrPictures['path'] = $objPictures->fetchEach('path');
-            foreach($arrPictures['path'] as $path)
+            foreach ($arrPictures['path'] as $path)
             {
                 $arrPictures['basename'][] = basename($path);
             }
 
-            $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
+            $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
                 // Prevent duplicate entries
-                if(in_array($image['uuid'], $arrPictures['uuid']))
+                if (in_array($image['uuid'], $arrPictures['uuid']))
                 {
                     continue;
                 }
 
                 // Prevent duplicate entries
-                if(in_array($image['basename'], $arrPictures['basename']))
+                if (in_array($image['basename'], $arrPictures['basename']))
                 {
                     continue;
                 }
@@ -987,7 +970,7 @@ class GcHelpers extends \System
                     {
                         die($errMsg);
                     }
-                    if(!is_dir(TL_ROOT . '/' . $objFolderModel->path))
+                    if (!is_dir(TL_ROOT . '/' . $objFolderModel->path))
                     {
                         die($errMsg);
                     }
@@ -1002,8 +985,7 @@ class GcHelpers extends \System
                     }
 
                     self::createNewImage($objAlb->id, $strDestination);
-                }
-                else
+                } else
                 {
                     self::createNewImage($objAlb->id, $image['path']);
                 }
@@ -1024,7 +1006,7 @@ class GcHelpers extends \System
         new \Folder(GALLERY_CREATOR_UPLOAD_PATH);
 
         // Get album model
-        $objAlbum = \MCupic\GalleryCreatorAlbumsModel::findByPk($albumId);
+        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($albumId);
         if ($objAlbum === null)
         {
             return;
@@ -1035,8 +1017,7 @@ class GcHelpers extends \System
         if ($objUser !== null)
         {
             $owner = $objUser->name;
-        }
-        else
+        } else
         {
             $owner = "no-name";
         }
@@ -1086,15 +1067,13 @@ class GcHelpers extends \System
                             $msg = ' Deleted Datarecord with ID ' . $objPictures->id . '.';
                             $_SESSION['GC_ERROR'][] = $msg;
                             $objPictures->delete();
-                        }
-                        else
+                        } else
                         {
                             //show the error-message
                             $path = $objPictures->path != '' ? $objPictures->path : 'unknown path';
                             $_SESSION['GC_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPictures->id, $path, $objAlbum->alias);
                         }
-                    }
-                    elseif (!is_file(TL_ROOT . '/' . $objFile->path))
+                    } elseif (!is_file(TL_ROOT . '/' . $objFile->path))
                     {
                         // If file has an entry in Dbafs, but doesn't exist on the server anymore
                         if ($blnCleanDb !== false)
@@ -1102,13 +1081,11 @@ class GcHelpers extends \System
                             $msg = 'Deleted Datarecord with ID ' . $objPictures->id . '.';
                             $_SESSION['GC_ERROR'][] = $msg;
                             $objPictures->delete();
-                        }
-                        else
+                        } else
                         {
                             $_SESSION['GC_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPictures->id, $objFile->path, $objAlbum->alias);
                         }
-                    }
-                    else
+                    } else
                     {
                         // Pfadangaben mit tl_files.path abgleichen (Redundanz)
                         if ($objPictures->path != $objFile->path)

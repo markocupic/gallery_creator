@@ -129,7 +129,8 @@ class ContentGalleryCreator extends \ContentElement
         {
             // if all albums should be shown
             $this->arrSelectedAlbums = $this->listAllAlbums();
-        } else
+        }
+        else
         {
             // if only selected albums should be shown
             $this->arrSelectedAlbums = deserialize($this->gc_publish_albums, true);
@@ -179,7 +180,8 @@ class ContentGalleryCreator extends \ContentElement
                 $this->intAlbumId = $objAlbum->id;
                 $this->strAlbumalias = $objAlbum->alias;
                 $this->viewMode = 'detail_view';
-            } else
+            }
+            else
             {
                 return '';
             }
@@ -351,7 +353,8 @@ class ContentGalleryCreator extends \ContentElement
                     if ($this->gc_picture_sorting_direction == 'ASC')
                     {
                         array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_ASC);
-                    } else
+                    }
+                    else
                     {
                         array_multisort($arrPictures, SORT_STRING, $auxBasename, SORT_DESC);
                     }
@@ -635,7 +638,8 @@ class ContentGalleryCreator extends \ContentElement
         if ($objAlb->thumb !== null)
         {
             $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
-        } else
+        }
+        else
         {
             $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
         }
@@ -660,8 +664,7 @@ class ContentGalleryCreator extends \ContentElement
 
     /**
      * Set the template-vars to the template object for the selected album
-     *
-     * @param integer
+     * @param $intAlbumId
      */
     protected function getAlbumTemplateVars($intAlbumId)
     {
@@ -669,23 +672,27 @@ class ContentGalleryCreator extends \ContentElement
         global $objPage;
 
         // Load the current album from db
-        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($intAlbumId);
+        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+        if ($objAlbum === null)
+        {
+            return;
+        }
 
         // add meta tags to the page object
-        if (TL_MODE == 'FE' && $this->viewMode == 'detail_view' && $objAlbum !== null)
+        if (TL_MODE == 'FE' && $this->viewMode == 'detail_view')
         {
             $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;
             $GLOBALS['TL_KEYWORDS'] = ltrim($GLOBALS['TL_KEYWORDS'] . ',' . specialchars($objAlbum->keywords), ',');
         }
 
         //store all album-data in the array
-        $objAlbum->reset();
-        $this->Template->arrAlbumdata = $objAlbum->fetchAssoc();
+        foreach ($objAlbum->row() as $k => $v)
+        {
+            $this->Template->arrAlbumdata = $objAlbum->row();
+        }
 
         // store the data of the current album in the session
         $_SESSION['gallery_creator']['CURRENT_ALBUM'] = $this->Template->arrAlbumdata;
-
         //der back-Link
         $this->Template->backLink = $this->generateBackLink($intAlbumId);
         //Der dem Bild uebergeordnete Albumname
@@ -762,33 +769,23 @@ class ContentGalleryCreator extends \ContentElement
 
         if (TL_MODE == 'FE')
         {
-            $objDb = \Database::getInstance()
-                ->prepare('SELECT visitors, visitors_details FROM tl_gallery_creator_albums WHERE id=?')
-                ->execute($intAlbumId);
-            if (strpos($objDb->visitors_details, $_SERVER['REMOTE_ADDR']))
+
+            $objAlbum = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+            if (strpos($objAlbum->visitors_details, $_SERVER['REMOTE_ADDR']))
             {
                 // return if the visitor is allready registered
                 return;
             }
 
-            // increase the number of visitors by one
-            $intCount = (int)$objDb->visitors + 1;
 
-            $arrVisitors = strlen($objDb->visitors_details) ? unserialize($objDb->visitors_details) : array();
-            if (is_array($arrVisitors))
+            $arrVisitors = deserialize($objAlbum->visitors_details, true);
+            // keep visiors data in the db unless 50 other users have visited the album
+            if (count($arrVisitors) == 50)
             {
-                // keep visiors data in the db unless 20 other users visited the album
-                if (count($arrVisitors) == 50)
-                {
-                    // slice the last position
-                    $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
-                }
-            } else
-            {
-                $set = array('visitors_details' => '');
-                \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
-                    ->set($set)->execute($intAlbumId);
+                // slice the last position
+                $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
             }
+
 
             //build up the array
             $newVisitor = array(
@@ -801,24 +798,21 @@ class ContentGalleryCreator extends \ContentElement
                 )
             );
 
-            if (count($arrVisitors))
+            if (!empty($arrVisitors))
             {
                 // insert the element to the beginning of the array
                 array_unshift($arrVisitors, $newVisitor);
-            } else
+            }
+            else
             {
-                // create the new array
-                $arrVisitors = array();
                 $arrVisitors[] = array($_SERVER['REMOTE_ADDR'] => $newVisitor);
             }
 
             // update database
-            $set = array(
-                'visitors' => $intCount,
-                'visitors_details' => serialize($arrVisitors)
-            );
-            \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)
-                ->execute($intAlbumId);
+            $objAlbum->visitors = $objAlbum->visitors += 1;
+            $objAlbum->visitors_details = serialize($arrVisitors);
+            $objAlbum->save();
+
         }
     }
 }
