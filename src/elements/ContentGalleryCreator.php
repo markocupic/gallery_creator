@@ -260,13 +260,17 @@ class ContentGalleryCreator extends \ContentElement
                 $offset = 0;
                 if ($limit > 0)
                 {
-                    $page = \Input::get('page') ? \Input::get('page') : 1;
+                    // Get the current page
+                    $id = 'page_g' . $this->id;
+                    $page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
                     $offset = ($page - 1) * $limit;
+
                     // count albums
                     $itemsTotal = count($this->arrSelectedAlbums);
+
                     // create pagination menu
                     $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
-                    $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
+                    $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks, $id);
                     $this->Template->pagination = $objPagination->generate("\n ");
                 }
 
@@ -290,7 +294,6 @@ class ContentGalleryCreator extends \ContentElement
                 $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
                 $this->Template->arrAlbums = $arrAlbums;
 
-
                 // Call gcGenerateFrontendTemplateHook
                 $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
                 break;
@@ -303,28 +306,41 @@ class ContentGalleryCreator extends \ContentElement
                     $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : null;
                 }
 
+                // count pictures
+                $objTotal = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE published=? AND pid=?')->execute('1', $this->intAlbumId);
+                $total = $objTotal->numRows;
+
                 // pagination settings
                 $limit = $this->gc_ThumbsPerPage;
                 $offset = 0;
                 if ($limit > 0)
                 {
-                    $page = \Input::get('page') ? \Input::get('page') : 1;
+                    // Get the current page
+                    $id = 'page_g' . $this->id;
+                    $page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
+
+                    // Do not index or cache the page if the page number is outside the range
+                    if ($page < 1 || $page > max(ceil($total/$limit), 1))
+                    {
+                        /** @var \PageError404 $objHandler */
+                        $objHandler = new $GLOBALS['TL_PTY']['error_404']();
+                        $objHandler->generate($objPage->id);
+                    }
                     $offset = ($page - 1) * $limit;
 
-                    // count albums
-                    $objTotal = $this->Database->prepare('SELECT id FROM tl_gallery_creator_pictures WHERE published=? AND pid=? GROUP BY ?')->execute('1', $this->intAlbumId, 'id');
-                    $itemsTotal = $objTotal->numRows;
 
                     // create the pagination menu
-                    $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
-                    $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
-                    $this->Template->pagination = $objPagination->generate("\n ");
+                    $numberOfLinks = $this->gc_PaginationNumberOfLinks ? $this->gc_PaginationNumberOfLinks : 7;
+                    $objPagination = new \Pagination($total, $limit, $numberOfLinks, $id);
+                    $this->Template->pagination = $objPagination->generate("\n  ");
                 }
 
                 // picture sorting
                 $str_sorting = $this->gc_picture_sorting == '' || $this->gc_picture_sorting_direction == '' ? 'sorting ASC' : $this->gc_picture_sorting . ' ' . $this->gc_picture_sorting_direction;
+
                 // sort by name is done below
                 $str_sorting = str_replace('name', 'id', $str_sorting);
+
                 $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $str_sorting);
                 if ($limit > 0)
                 {
