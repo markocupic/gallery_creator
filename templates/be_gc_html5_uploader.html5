@@ -11,8 +11,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/' . $GLOBALS['TL_ASSETS']['DROPZO
 ?>
 
 
-<br>
-<br>
+<br></br>
 <input type="hidden" name="action" value="fileupload">
 <div class="fallback">
     <input type="file" name="<?php echo $this->strName; ?>[]" multiple>
@@ -40,18 +39,3 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/' . $GLOBALS['TL_ASSETS']['DROPZO
 
 </script>
 <noscript>Javascript ist in Ihrem Browser deaktiviert.</noscript>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

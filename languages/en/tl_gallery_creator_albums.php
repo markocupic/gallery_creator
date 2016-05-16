@@ -28,27 +28,27 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] =
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['id'] = array('album-ID');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias'] = array('albumalias', 'The Albumalias defines although the album-foldername.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published'] = array('publish Album');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date'] = array('date of creation');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner'] = array('albumowner');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location'] = array('event-location');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['id'] = array('Album-ID');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias'] = array('Albumalias', 'The Albumalias defines although the album-foldername.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published'] = array('Publish Album');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date'] = array('Date of creation');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner'] = array('Albumowner');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location'] = array('Event-location');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description'] = array('Meta page description', 'Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords'] = array('Meta keywords', 'Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'] = array('albumname');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'] = array('albumowner');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'] = array('album-comment');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'] = array('preview-thumb & picture sorting', 'Which image should be displayed in the album preview?');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'] = array('protect album');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'] = array('allowed frontend-groups');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'] = array('insert an article optionally before the album','Insert the id of the article that you optionally like have displayed in the detail view.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'] = array('insert an article optionally after the album','Insert the id of the article that you optionally like have displayed in the detail view.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'] = array('Albumname');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'] = array('Albumowner');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'] = array('Album-comment');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'] = array('Select the thumbnail which represents the Album in the listview', 'Drag the items to re-order them.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'] = array('Protect album');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'] = array('Allowed frontend-groups');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'] = array('Insert article optionally before the album','Insert the id of the article that you optionally like have displayed in the detail view.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'] = array('Insert article optionally after the album','Insert the id of the article that you optionally like have displayed in the detail view.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'] = array('File Upload', 'Browse your local computer and select the files you want to upload to the server.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader'] = array('Uploader', 'Please choose the uploader.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_resolution'] = array('image width','During the upload process the image resolution will be scaled to the selected value.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'] = array('image quality/compression','During the upload process the image will be compressed. (100 = best quality)');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'] = array('preserve the original filename','Otherwise the filename will be automatically generated.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_resolution'] = array('Image width','During the upload process the image resolution will be scaled to the selected value.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['img_quality'] = array('Image quality/compression','During the upload process the image will be compressed. (100 = best quality)');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename'] = array('Preserve the original filename','Otherwise the filename will be automatically generated.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'] = array('Number of visitors');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'] = array('Visitors details (ip, browser type, etc.)');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'] = array('Order by', 'Please choose the sort order.');
