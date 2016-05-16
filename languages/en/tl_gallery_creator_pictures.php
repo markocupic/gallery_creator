@@ -15,6 +15,7 @@
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['media_integration'] = 'Embed a movie or a sound';
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['expert_legend'] = 'Expert Settings';
 
 /**
  * Fields

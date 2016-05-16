@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
        // Palettes
        'palettes'    => array(
               '__selector__'    => array('addCustomThumb'),
-              'default'         => 'published,picture,owner,date,image_info,addCustomThumb,title,comment;{media_integration:hide},socialMediaSRC,localMediaSRC;{id/class:hide},cssID',
+              'default'         => 'published,picture,owner,date,image_info,addCustomThumb,title,comment;{media_integration:hide},socialMediaSRC,localMediaSRC;{expert_legend:hide},cssID',
               'restricted_user' => 'image_info,picture'
        ),
        // Subpalettes
