@@ -142,12 +142,14 @@ class GcHelpers extends \System
                 }
 
                 return true;
-            } else
+            }
+            else
             {
                 if ($blnExternalFile === true)
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file'], $strFilepath);
-                } else
+                }
+                else
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['uploadError'], $strFilepath);
                 }
@@ -236,7 +238,8 @@ class GcHelpers extends \System
         {
             \Config::set('imageWidth', \Input::post('img_resolution'));
             \Config::set('jpgQuality', \Input::post('img_quality'));
-        } else
+        }
+        else
         {
             \Config::set('maxImageWidth', 999999999);
         }
@@ -288,12 +291,14 @@ class GcHelpers extends \System
             {
                 //exit loop when filename is unique
                 return $dirname . '/' . $basename . '.' . $extension;
-            } else
+            }
+            else
             {
                 if ($i != 1)
                 {
                     $filename = substr($basename, 0, -5);
-                } else
+                }
+                else
                 {
                     $filename = $basename;
                 }
@@ -523,7 +528,8 @@ class GcHelpers extends \System
         if ($objFileModel == null)
         {
             $strImageSrc = $defaultThumbSRC;
-        } else
+        }
+        else
         {
             $strImageSrc = $objFileModel->path;
             if (!is_file(TL_ROOT . '/' . $strImageSrc))
@@ -602,7 +608,8 @@ class GcHelpers extends \System
             $arrFile["dirname"] = $objFileImage->dirname;
             $arrFile["image_width"] = $objFileImage->width;
             $arrFile["image_height"] = $objFileImage->height;
-        } else
+        }
+        else
         {
             return null;
         }
@@ -618,7 +625,8 @@ class GcHelpers extends \System
             {
                 $exif = array('info' => "The function 'exif_read_data()' is not available on this server.");
             }
-        } else
+        }
+        else
         {
             $exif = array('info' => "The function 'exif_read_data()' has not been activated in the Contao backend settings.");
         }
@@ -725,14 +733,10 @@ class GcHelpers extends \System
         );
 
         //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_pictures erweitert wurde
-        $objPicture = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE id=?')
-            ->execute($intPictureId);
-        foreach ($objPicture->fetchAssoc() as $key => $value)
+        $objPicture = \GalleryCreatorPicturesModel::findByPk($intPictureId);
+        if ($objPicture !== null)
         {
-            if (!array_key_exists($key, $arrPicture))
-            {
-                $arrPicture[$key] = $value;
-            }
+            $arrPicture = array_merge($objPicture->row(), $arrPicture);
         }
 
         return $arrPicture;
@@ -843,7 +847,8 @@ class GcHelpers extends \System
         if (TL_MODE == 'BE')
         {
             $imgSrc = '../' . $imgPath;
-        } else
+        }
+        else
         {
             $imgSrc = $imgPath;
         }
@@ -895,7 +900,8 @@ class GcHelpers extends \System
                 {
                     $images[$objFile->path] = array('uuid' => $objFilesModel->uuid, 'basename' => $objFile->basename, 'path' => $objFile->path);
                 }
-            } else
+            }
+            else
             {
                 // If it is a directory, then store its files in the array
                 $objSubfilesModel = \FilesModel::findMultipleFilesByFolder($objFilesModel->path);
@@ -985,7 +991,8 @@ class GcHelpers extends \System
                     }
 
                     self::createNewImage($objAlb->id, $strDestination);
-                } else
+                }
+                else
                 {
                     self::createNewImage($objAlb->id, $image['path']);
                 }
@@ -1017,7 +1024,8 @@ class GcHelpers extends \System
         if ($objUser !== null)
         {
             $owner = $objUser->name;
-        } else
+        }
+        else
         {
             $owner = "no-name";
         }
@@ -1067,13 +1075,15 @@ class GcHelpers extends \System
                             $msg = ' Deleted Datarecord with ID ' . $objPictures->id . '.';
                             $_SESSION['GC_ERROR'][] = $msg;
                             $objPictures->delete();
-                        } else
+                        }
+                        else
                         {
                             //show the error-message
                             $path = $objPictures->path != '' ? $objPictures->path : 'unknown path';
                             $_SESSION['GC_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPictures->id, $path, $objAlbum->alias);
                         }
-                    } elseif (!is_file(TL_ROOT . '/' . $objFile->path))
+                    }
+                    elseif (!is_file(TL_ROOT . '/' . $objFile->path))
                     {
                         // If file has an entry in Dbafs, but doesn't exist on the server anymore
                         if ($blnCleanDb !== false)
@@ -1081,11 +1091,13 @@ class GcHelpers extends \System
                             $msg = 'Deleted Datarecord with ID ' . $objPictures->id . '.';
                             $_SESSION['GC_ERROR'][] = $msg;
                             $objPictures->delete();
-                        } else
+                        }
+                        else
                         {
                             $_SESSION['GC_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['link_to_not_existing_file_1'], $objPictures->id, $objFile->path, $objAlbum->alias);
                         }
-                    } else
+                    }
+                    else
                     {
                         // Pfadangaben mit tl_files.path abgleichen (Redundanz)
                         if ($objPictures->path != $objFile->path)
