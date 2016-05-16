@@ -92,5 +92,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = "Datum (aufsteige
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = "Datum (absteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = "Individuelle Reihenfolge";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = "Datenbank bereinigen: Beschädigte/ungültige/verwaiste Datenbankeinträge entfernen ";
- 
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'][0] = 'Dateitypen';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'][1] = 'Akzeptierte Dateiendungen: %s.';
+
 ?>

@@ -54,6 +54,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'] = array('Vi
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'] = array('Order by', 'Please choose the sort order.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'] = array('Assigned directory', 'New images will be uploaded to this directory.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix'] = array('Rename all pictures using a file prefix', 'Enter a valid file prefix to rename all pictures of this album (e.g. "me-in-paris-2012").');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'] = array('Accepted files', 'Accepted files: %s.');
 
 
 /**
