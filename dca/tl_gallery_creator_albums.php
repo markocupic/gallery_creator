@@ -322,9 +322,9 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
             'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbSortAlbum')),
             'inputType'     => 'select',
             'default'       => 'custom',
-            'options'       => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc'),
+            'options'       => array('----', 'name_asc', 'name_desc', 'date_asc', 'date_desc'),
             'reference'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums'],
-            'eval'          => array('tl_class' => 'w50'),
+            'eval'          => array('submitOnChange'=>true, 'tl_class' => 'w50'),
             'sql'           => "varchar(32) NOT NULL default ''"
         ),
         'filePrefix'          => array(
@@ -1358,7 +1358,7 @@ class tl_gallery_creator_albums extends Backend
     public function saveCbSortAlbum($varValue, \Contao\DataContainer $dc)
     {
 
-        if ($varValue == 'custom')
+        if ($varValue == '----')
         {
             return $varValue;
         }
@@ -1366,7 +1366,7 @@ class tl_gallery_creator_albums extends Backend
         $objPictures = GalleryCreatorPicturesModel::findByPid($dc->id);
         if ($objPictures === null)
         {
-            return 'custom';
+            return '----';
         }
 
         $files = array();
@@ -1384,7 +1384,7 @@ class tl_gallery_creator_albums extends Backend
 
         switch ($varValue)
         {
-            case 'custom':
+            case '----':
                 break;
             case 'name_asc':
                 uksort($files, 'basename_natcasecmp');
@@ -1411,7 +1411,7 @@ class tl_gallery_creator_albums extends Backend
         }
 
         // return default value
-        return 'custom';
+        return '----';
     }
 
     /**
