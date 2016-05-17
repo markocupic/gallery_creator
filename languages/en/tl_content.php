@@ -44,3 +44,16 @@ $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting'] = array('Albumlist: Th
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting'] = array('Image margin albumlisting', 'Here you can enter the top, right, bottom and left margin.');
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize'] = array('Full-size view/new window', 'Open the full-size image in a lightbox or the link in a new browser window.');
 
+// References
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingDirection']['DESC'] = "Ascending";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingDirection']['ASC'] = "Descending";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['sorting'] = "Backend-module sorting (sorting)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['id'] = "ID";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['date'] = "Date of creation (date)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['name'] = "Name (name)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['owner'] = "Owner (owner)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['comment'] = "Comment/Caption (comment)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['title'] = "Image-title (title)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['tstamp'] = "Revision date (tstamp)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['alias'] = "Albumalias (alias)";
+$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['visitors'] = "Number of visitors (visitors)";
