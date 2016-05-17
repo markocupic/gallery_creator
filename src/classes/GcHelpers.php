@@ -92,17 +92,6 @@ class GcHelpers extends \System
                 $objFile->renameTo($newFilepath);
             }
 
-            // GalleryCreatorImagePostInsert - HOOK
-            // übergibt die id des neu erstellten db-Eintrages ($lastInsertId)
-            if (isset($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']) && is_array($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']))
-            {
-                foreach ($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert'] as $callback)
-                {
-                    $objClass = self::importStatic($callback[0]);
-                    $objClass->$callback[1]($insertId);
-                }
-            }
-
 
             if (is_file(TL_ROOT . '/' . $objFile->path))
             {
@@ -130,6 +119,7 @@ class GcHelpers extends \System
                 $objPicture->save();
 
                 \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created', __METHOD__, TL_GENERAL);
+
                 //check for a valid preview-thumb for the album
                 $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
                 if ($objAlbum !== null)
@@ -138,6 +128,17 @@ class GcHelpers extends \System
                     {
                         $objAlbum->thumb = $insertId;
                         $objAlbum->save();
+                    }
+                }
+
+                // GalleryCreatorImagePostInsert - HOOK
+                // übergibt die id des neu erstellten db-Eintrages ($lastInsertId)
+                if (isset($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']) && is_array($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert']))
+                {
+                    foreach ($GLOBALS['TL_HOOKS']['galleryCreatorImagePostInsert'] as $callback)
+                    {
+                        $objClass = self::importStatic($callback[0]);
+                        $objClass->$callback[1]($insertId);
                     }
                 }
 
@@ -155,6 +156,7 @@ class GcHelpers extends \System
                 }
                 \System::log('Unable to create the new image in: ' . $strFilepath . '!', __METHOD__, TL_ERROR);
             }
+
         }
 
         return false;
