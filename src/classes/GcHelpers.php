@@ -462,17 +462,12 @@ class GcHelpers extends \System
             'cssClass' => trim($strCSSClass)
         );
 
-        //Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
-        $objAlbum = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($intAlbumId);
-        foreach ($objAlbum->fetchAssoc() as $key => $value)
+        // Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
+        $objAlbum = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+        if($objAlbum !== null)
         {
-            if (!array_key_exists($key, $arrAlbum))
-            {
-                $arrAlbum[$key] = $value;
-            }
+            $arrAlbum = array_merge($objAlbum->row(), $arrAlbum);
         }
-
         return $arrAlbum;
     }
 
