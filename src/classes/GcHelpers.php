@@ -345,10 +345,10 @@ class GcHelpers extends \System
      * Returns the information-array about an album
      *
      * @param $intAlbumId
-     * @param $objThis
+     * @param $objContentElement
      * @return array
      */
-    public static function getAlbumInformationArray($intAlbumId, $objThis)
+    public static function getAlbumInformationArray($intAlbumId, $objContentElement)
     {
         global $objPage;
         // Get the page model
@@ -366,7 +366,7 @@ class GcHelpers extends \System
             ->execute($objAlbum->id, '1');
 
         //Array Thumbnailbreite
-        $arrSize = unserialize($objThis->gc_size_albumlisting);
+        $arrSize = unserialize($objContentElement->gc_size_albumlisting);
 
         $href = null;
         if (TL_MODE == 'FE')
@@ -377,7 +377,7 @@ class GcHelpers extends \System
             $href = str_replace('##albumAlias##', $objAlbum->alias, $href);
         }
 
-        $arrPreviewThumb = $objThis->getAlbumPreviewThumb($objAlbum->id);
+        $arrPreviewThumb = $objContentElement->getAlbumPreviewThumb($objAlbum->id);
         $strImageSrc = $arrPreviewThumb['path'];
 
         //Generate the thumbnails and the picture element
@@ -435,7 +435,7 @@ class GcHelpers extends \System
             //[string] Link zur Detailansicht
             'href' => $href,
             //[string] Inhalt fuer das title Attribut
-            'title' => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objThis->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
+            'title' => $objAlbum->name . ' [' . ($objPics->numRows ? $objPics->numRows . ' ' . $GLOBALS['TL_LANG']['gallery_creator']['pictures'] : '') . ($objContentElement->gc_hierarchicalOutput && $objSubAlbums->countSubalbums > 0 ? ' ' . $GLOBALS['TL_LANG']['gallery_creator']['contains'] . ' ' . $objSubAlbums->countSubalbums . '  ' . $GLOBALS['TL_LANG']['gallery_creator']['subalbums'] . ']' : ']'),
             //[int] Anzahl Bilder im Album
             'count' => $objPics->numRows,
             //[int] Anzahl Unteralben
@@ -455,7 +455,7 @@ class GcHelpers extends \System
             //[int] Thumbnailgrösse
             'size' => $arrSize,
             //[string] javascript-Aufruf
-            'thumbMouseover' => $objThis->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
+            'thumbMouseover' => $objContentElement->gc_activateThumbSlider ? "objGalleryCreator.initThumbSlide(this," . $objAlbum->id . "," . $objPics->numRows . ");" : "",
             //[array] picture
             'picture' => $picture,
             //[string] cssClass
@@ -475,10 +475,10 @@ class GcHelpers extends \System
      * Returns the information-array about an album
      *
      * @param null $intPictureId
-     * @param $objThis
+     * @param $objContentElement
      * @return array|null
      */
-    public static function getPictureInformationArray($intPictureId = null, $objThis)
+    public static function getPictureInformationArray($intPictureId = null, $objContentElement)
     {
 
         if ($intPictureId < 1)
@@ -490,7 +490,7 @@ class GcHelpers extends \System
         $hasCustomThumb = false;
 
 
-        $defaultThumbSRC = $objThis->defaultThumb;
+        $defaultThumbSRC = $objContentElement->defaultThumb;
         if (\Config::get('gc_error404_thumb') !== '')
         {
             $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
@@ -536,7 +536,7 @@ class GcHelpers extends \System
             }
 
             //meta
-            $arrMeta = $objThis->getMetaData($objFileModel->meta, $objPage->language);
+            $arrMeta = $objContentElement->getMetaData($objFileModel->meta, $objPage->language);
             // Use the file name as title if none is given
             if ($arrMeta['title'] == '')
             {
@@ -546,7 +546,7 @@ class GcHelpers extends \System
 
 
         // get thumb dimensions
-        $arrSize = unserialize($objThis->gc_size_detailview);
+        $arrSize = unserialize($objContentElement->gc_size_detailview);
 
         //Generate the thumbnails and the picture element
         try
@@ -637,7 +637,7 @@ class GcHelpers extends \System
             $strMediaSrc = $objMovieFile !== null ? $objMovieFile->path : $strMediaSrc;
         }
         $href = null;
-        if (TL_MODE == 'FE' && $objThis->gc_fullsize)
+        if (TL_MODE == 'FE' && $objContentElement->gc_fullsize)
         {
             $href = $strMediaSrc != "" ? $strMediaSrc : \System::urlEncode($strImageSrc);
         }
@@ -743,31 +743,32 @@ class GcHelpers extends \System
      * Returns the information-array about all subalbums ofd a certain parent album
      *
      * @param $intAlbumId
-     * @param $objThis
+     * @param $objContentElement
      * @return array
      */
-    public static function getSubalbumsInformationArray($intAlbumId, $objThis)
+    public static function getSubalbumsInformationArray($intAlbumId, $objContentElement)
     {
 
+        $strSorting = $objContentElement->gc_sorting . ' ' . $objContentElement->gc_sorting_direction;
         $objSubAlbums = \Database::getInstance()
-            ->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY sorting ASC')
+            ->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=? AND published=? ORDER BY ' . $strSorting)
             ->execute($intAlbumId, '1');
         $arrSubalbums = array();
         while ($objSubAlbums->next())
         {
             // If it is a content element only
-            if ($objThis->gc_publish_albums != '')
+            if ($objContentElement->gc_publish_albums != '')
             {
-                if (!$objThis->gc_publish_all_albums)
+                if (!$objContentElement->gc_publish_all_albums)
                 {
-                    if (!in_array($objSubAlbums->id, deserialize($objThis->gc_publish_albums)))
+                    if (!in_array($objSubAlbums->id, deserialize($objContentElement->gc_publish_albums)))
                     {
                         continue;
                     }
                 }
             }
 
-            $arrSubalbum = self::getAlbumInformationArray($objSubAlbums->id, $objThis);
+            $arrSubalbum = self::getAlbumInformationArray($objSubAlbums->id, $objContentElement);
             array_push($arrSubalbums, $arrSubalbum);
         }
 
