@@ -507,7 +507,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         // enable cutting albums to album-owners and admins only
-        return (($this->User->id == $row['owner'] || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? ' <a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : ' ' . Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ');
+        return (($this->User->id == $row['owner'] || $this->User->isAdmin || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? ' <a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : ' ' . Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ');
     }
 
     /**
@@ -525,7 +525,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         // enable deleting albums to album-owners and admins only
-        return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        return ($this->User->isAdmin || $this->User->id == $row['owner'] || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
     }
 
     /**
@@ -606,7 +606,7 @@ class tl_gallery_creator_albums extends Backend
     {
 
         $objAlbum = GalleryCreatorAlbumsModel::findByPk($albumId);
-        if ($this->User->isAdmin || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'] == true)
+        if ($this->User->isAdmin || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
         {
             $this->restrictedUser = false;
             return;
@@ -951,7 +951,7 @@ class tl_gallery_creator_albums extends Backend
             {
                 $objAlbumModel = GalleryCreatorAlbumsModel::findByPk($idDelAlbum);
                 if($objAlbumModel === null)continue;
-                if ($this->User->isAdmin || $objAlbumModel->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                if ($this->User->isAdmin || $objAlbumModel->owner == $this->User->id || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                 {
                     // remove all pictures from tl_gallery_creator_pictures
                     $objPicturesModel = GalleryCreatorPicturesModel::findByPid($idDelAlbum);

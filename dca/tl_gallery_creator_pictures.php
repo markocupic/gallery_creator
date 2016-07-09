@@ -346,7 +346,7 @@ class tl_gallery_creator_pictures extends Backend
        {
 
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
-              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+              return ($this->User->isAdmin || $this->User->id == $objImg->owner || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
        }
 
        /**
@@ -364,7 +364,7 @@ class tl_gallery_creator_pictures extends Backend
        {
 
               $objImg = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute($row['id']);
-              return ($this->User->isAdmin || $this->User->id == $objImg->owner || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id'], true) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+              return ($this->User->isAdmin || $this->User->id == $objImg->owner || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&id=' . $row['id'], true) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
        }
 
        /**
@@ -398,7 +398,7 @@ class tl_gallery_creator_pictures extends Backend
        public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
        {
 
-              return ($this->User->isAdmin || $this->User->id == $row['owner'] || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml($icon, $label);
+              return ($this->User->isAdmin || $this->User->id == $row['owner'] || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection']) ? '<a href="' . $this->addToUrl($href . '&imgId=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml($icon, $label);
        }
 
        /**
@@ -683,7 +683,7 @@ class tl_gallery_creator_pictures extends Backend
 
               $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
               $pid = $objImg->pid;
-              if ($objImg->owner == $this->User->id || $this->User->isAdmin || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+              if ($objImg->owner == $this->User->id || $this->User->isAdmin || $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
               {
                   // Datensatz löschen
                   $uuid = $objImg->uuid;
@@ -741,7 +741,7 @@ class tl_gallery_creator_pictures extends Backend
               {
                      $objUser = $this->Database->prepare('SELECT owner FROM tl_gallery_creator_pictures WHERE id=?')->execute(Input::get('id'));
 
-                     if (true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                     if ($GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                      {
                             return;
                      }
