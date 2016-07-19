@@ -281,7 +281,10 @@ class ContentGalleryCreator extends \ContentElement
                 $arrAlbums = array();
                 for ($i = $offset; $i < $offset + $limit; $i++)
                 {
-                    $arrAlbums[] = GcHelpers::getAlbumInformationArray($this->arrSelectedAlbums[$i], $this);
+                    if(isset($this->arrSelectedAlbums[$i]))
+                    {
+                        $arrAlbums[] = GcHelpers::getAlbumInformationArray($this->arrSelectedAlbums[$i], $this);
+                    }
                 }
 
                 // Add css classes
