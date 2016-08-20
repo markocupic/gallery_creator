@@ -616,8 +616,8 @@ class ContentGalleryCreator extends \ContentElement
                 }
             }
             echo json_encode(array('arrImage' => $json));
+            exit;
         }
-        exit;
     }
 
 
