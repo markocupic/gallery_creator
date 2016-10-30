@@ -110,7 +110,7 @@ class ContentGalleryCreatorNews extends \ContentElement
         $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
 
         // Init the counter
-        GalleryCreator::initCounter($this->intAlbumId);
+        ContentGalleryCreator::initCounter($this->intAlbumId);
 
         // Pagination settings
         $limit = $this->gc_ThumbsPerPage;
@@ -199,8 +199,7 @@ class ContentGalleryCreatorNews extends \ContentElement
         global $objPage;
 
         // Load the current album from db
-        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($intAlbumId);
+        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
 
 
         $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;

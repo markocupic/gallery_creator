@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -24,12 +24,11 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	// Src
+	'MCupic\GalleryCreator\ContentGalleryCreator'     => 'system/modules/gallery_creator/src/elements/ContentGalleryCreator.php',
+	'MCupic\GalleryCreator\ContentGalleryCreatorNews' => 'system/modules/gallery_creator/src/elements/ContentGalleryCreatorNews.php',
 	'MCupic\GalleryCreator\GcHelpers'                 => 'system/modules/gallery_creator/src/classes/GcHelpers.php',
 	'MCupic\GalleryCreatorPicturesModel'              => 'system/modules/gallery_creator/src/models/GalleryCreatorPicturesModel.php',
 	'MCupic\GalleryCreatorAlbumsModel'                => 'system/modules/gallery_creator/src/models/GalleryCreatorAlbumsModel.php',
-	'MCupic\GalleryCreator\ModuleGalleryCreator'      => 'system/modules/gallery_creator/src/modules/ModuleGalleryCreator.php',
-	'MCupic\GalleryCreator\ContentGalleryCreatorNews' => 'system/modules/gallery_creator/src/elements/ContentGalleryCreatorNews.php',
-	'MCupic\GalleryCreator\ContentGalleryCreator'     => 'system/modules/gallery_creator/src/elements/ContentGalleryCreator.php',
 ));
 
 
@@ -38,7 +37,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
+	'ce_gc_news_default'   => 'system/modules/gallery_creator/templates',
 	'ce_gc_default'        => 'system/modules/gallery_creator/templates',
 	'be_gc_html5_uploader' => 'system/modules/gallery_creator/templates',
-	'ce_gc_news_default'   => 'system/modules/gallery_creator/templates',
 ));
