@@ -372,9 +372,9 @@ class GcHelpers extends \System
         if (TL_MODE == 'FE')
         {
             //generate the url as a formated string
-            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/##albumAlias##' : '/items/##albumAlias##'), $objPage->language);
+            $href = $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/%s' : '/items/%s'), $objPage->language);
             // add albumAlias
-            $href = str_replace('##albumAlias##', $objAlbum->alias, $href);
+            $href = sprintf($href, $objAlbum->alias);
         }
 
         $arrPreviewThumb = $objContentElement->getAlbumPreviewThumb($objAlbum->id);

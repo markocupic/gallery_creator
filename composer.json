@@ -19,8 +19,8 @@
     },
     "require":{
         "php":">=5.3.2",
-        "contao/core":">=3.5.1,<4",
-        "contao-community-alliance/composer-plugin": "*"
+        "contao/core":">=3.5.1,<5",
+        "contao-community-alliance/composer-plugin": "*" 
     },
     "replace": {
         "contao-legacy/gallery_creator":"*"
