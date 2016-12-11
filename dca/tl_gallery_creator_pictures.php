@@ -471,6 +471,7 @@ class tl_gallery_creator_pictures extends Backend
        public function onCutCb(DC_Table $dc)
        {
 
+
               if (!isset($_SESSION['gallery_creator']['SOURCE_ALBUM_ID']))
               {
                      return;

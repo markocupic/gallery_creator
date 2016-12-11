@@ -1343,6 +1343,9 @@ class tl_gallery_creator_albums extends Backend
                         }
                     }
                 }
+                // Purge Image Cache to
+                $objAutomator = new \Automator();
+                $objAutomator->purgeImageCache();
             }
         }
         return '';
