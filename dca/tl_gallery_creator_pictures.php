@@ -164,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
               'picture'        => array(
                      'label'                => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture'],
                      'input_field_callback' => array('tl_gallery_creator_pictures', 'inputFieldCbGenerateImage'),
-                     'eval'                 => array('tl_class' => 'clr', 'doNotShow' => false)
+                     'eval'                 => array('tl_class' => 'clr')
               ),
               'date'           => array(
                      'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'],
@@ -553,7 +553,7 @@ class tl_gallery_creator_pictures extends Backend
                      return '
                      <div style="height:auto;">
                          <h3><label for="ctrl_picture">' . $basename . '</label></h3>
-                         <img src="' . Image::get($src, '180', '180', 'crop') . '" width="100">
+                         <img src="' . Image::get($src, '380', '', 'proportional') . '" style="max-width:100%; max-height:300px;">
                      </div>
 		             ';
               }
