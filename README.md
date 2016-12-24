@@ -4,7 +4,7 @@ https://github.com/markocupic/gallery-creator-bundle
 
 # Gallery Creator
 
-## Frontend Modul für Contao 4.
+## Frontend Modul für Contao 3.
 
 Mit dem Modul lassen sich Alben verwalten und erstellen. Das Modul ist sehr flexibel und bietet eine Albenübersicht und eine Detailansicht.
 
