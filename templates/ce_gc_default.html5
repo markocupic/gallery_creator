@@ -1,6 +1,9 @@
 <?php
 /* CSS for the frontend-output */
 $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_fe.css';
+
+/* javascript for the frontend-output */
+$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_fe.js';
 ?>
 
 <?php if (!\Input::get('items')): ?>
@@ -15,7 +18,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
        <ul class="list_albums">
 <?php foreach ($this->arrAlbums as $Album): ?> 
-              <li class="level_1 <?= $Album['cssClass'] ?> clearfix block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Album['event_date']; ?>]</p></div>
                      <div class="col_1">
                             <figure class="image_container" onmouseover="<?php echo $Album['thumbMouseover']; ?>">
@@ -39,7 +42,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
                             <p class="count_pics"><?php echo $Album['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
 <?php endif; ?>		
 <?php if ($Album['comment']): ?>
-                            <div class="album_comment"><?php echo $Album['comment']; ?></div>
+                            <p class="album_comment"><?php echo $Album['comment']; ?></p>
 <?php endif; ?>
                      </div>
               </li>
@@ -84,7 +87,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
        <ul class="list_albums">
 <?php foreach ($this->subalbums as $Subalbum): ?>
-              <li class="level_1 <?= $Subalbum['cssClass'] ?> clearfix block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
+              <li class="level_1 block"<?php echo $this->imagemargin ? 'style="'.$this->imagemargin.'"' : ''; ?>>
                      <div class="tstamp block"><p>[<?php echo $Subalbum['event_date']; ?>]</p></div>
                      <div class="col_1">
                             <figure class="image_container" onmouseover="<?php echo  $Subalbum['thumbMouseover']; ?>">
@@ -107,7 +110,7 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
                             <p class="count_pics"><?php echo $Subalbum['count_subalbums']; ?> <?php echo $GLOBALS['TL_LANG']['gallery_creator']['subalbums']; ?></p>
 <?php endif; ?>		
 <?php if ($Subalbum['comment']): ?>
-                            <div class="album_comment"><?php echo $Subalbum['comment']; ?></div>
+                            <p class="album_comment"><?php echo $Subalbum['comment']; ?></p>
 <?php endif; ?>
                      </div>
               </li>
@@ -118,8 +121,8 @@ $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creato
 
 
 <?php if ($this->albumComment): ?>
-<div class="album_comment">
-       <?php echo $this->albumComment; ?>
+<div class="albumComment">
+       <p><?php echo $this->albumComment; ?></p>
 </div>
 <?php endif; ?>
 

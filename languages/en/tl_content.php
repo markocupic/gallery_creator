@@ -27,7 +27,6 @@ $GLOBALS['TL_LANG']['tl_content']['gc_rows'] = array('Thumbnails per row', 'Sele
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_albums'] = array('Publish these albums only', 'Selected albums will be displayed in the frontend.');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album'] = array('Publish this album', 'The selected album will be displayed in the frontend.');
 $GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums'] = array('Publish all given albums in the frontend');
-$GLOBALS['TL_LANG']['tl_content']['gc_hierarchicalOutput'] = array('Hierarchically Frontend-Album-Output', 'Hierarchically Frontend-Album-Output (Albums and Subalbums)');
 $GLOBALS['TL_LANG']['tl_content']['gc_template'] = array('Gallery template', 'Select a personal gallery template.');
 $GLOBALS['TL_LANG']['tl_content']['gc_activateThumbSlider'] = array('Activate Ajax-Thumb-Slider', 'Activate Ajax-Thumb-Slider on mouseover in the album listing?');
 $GLOBALS['TL_LANG']['tl_content']['gc_redirectSingleAlb'] = array('Redirection in case of a single album', 'Should be automatically redirected to the detail-view, in case of single-album-choice?');
@@ -44,16 +43,3 @@ $GLOBALS['TL_LANG']['tl_content']['gc_size_albumlisting'] = array('Albumlist: Th
 $GLOBALS['TL_LANG']['tl_content']['gc_imagemargin_albumlisting'] = array('Image margin albumlisting', 'Here you can enter the top, right, bottom and left margin.');
 $GLOBALS['TL_LANG']['tl_content']['gc_fullsize'] = array('Full-size view/new window', 'Open the full-size image in a lightbox or the link in a new browser window.');
 
-// References
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingDirection']['DESC'] = "Ascending";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingDirection']['ASC'] = "Descending";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['sorting'] = "Backend-module sorting (sorting)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['id'] = "ID";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['date'] = "Date of creation (date)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['name'] = "Name (name)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['owner'] = "Owner (owner)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['comment'] = "Comment/Caption (comment)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['title'] = "Image-title (title)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['tstamp'] = "Revision date (tstamp)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['alias'] = "Albumalias (alias)";
-$GLOBALS['TL_LANG']['tl_content']['gc_sortingField']['visitors'] = "Number of visitors (visitors)";

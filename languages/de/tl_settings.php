@@ -2,10 +2,10 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_settings.php 
  * 
- * Contao extension: gallery_creator 5.0.0 
+ * Contao extension: gallery_creator 4.9.0
  * Deutsch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic 
+ * Copyright : &copy; 2015 Marko Cupic
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
@@ -16,6 +16,10 @@
  */
  
 $GLOBALS['TL_LANG']['tl_settings']['gallery_creator_legend'] = "Gallery-Creator-Einstellungen";
+$GLOBALS['TL_LANG']['tl_settings']['gc_watermark_opacity']['0'] = "Wasserzeichen-Opacity";
+$GLOBALS['TL_LANG']['tl_settings']['gc_watermark_valign']['0'] = "Wasserzeichen: vertikale Position";
+$GLOBALS['TL_LANG']['tl_settings']['gc_watermark_halign']['0'] = "Wasserzeichen: horizontale Position";
+$GLOBALS['TL_LANG']['tl_settings']['gc_watermark_path']['0'] = "Wasserzeichen hinzufügen";
 $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['0'] = "Backend-Album-Protection aufheben";
 $GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection']['1'] = "Backend-Album-Protection aufheben, damit auch Nichtbesitzer von Alben oder Bildern diese bearbeiten und löschen können.";
 $GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files']['0'] = "Beim Import von Bildern eine Kopie jeder Bilddatei im Verzeichnis \"tl_files/gallery_creator_albums\" erstellen";

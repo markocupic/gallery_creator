@@ -15,7 +15,6 @@
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['media_integration'] = 'Embed a movie or a sound';
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['expert_legend'] = 'Expert Settings';
 
 /**
  * Fields
@@ -23,19 +22,18 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['expert_legend'] = 'Expert Se
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['id'] = array('Image ID');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['pid'] = array('Album ID', 'Note that changing the album ID can break data integrity!');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['fileID'] = array('File ID');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'] = array('Image-informations');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'] = array('Publish image');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'] = array('Date of creation');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['picture'] = array('Image');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'] = array('Image-owner');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['name'] = array('Filename');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb'] = array('Add a custom thumbnail');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['customThumb'] = array('Custom thumbnail.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'] = array('Image title');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['comment'] = array('Image-comment');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['sorting'] = array('Sort sequence');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['filename'] = array('Filename');
-$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['path'] = array('Path');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['image_info'] = array('image-informations');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['published'] = array('publish image');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['date'] = array('date of creation');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'] = array('image-owner');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['name'] = array('filename');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['addCustomThumb'] = array('add a custom thumbnail');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['customThumb'] = array('custom thumbnail.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['title'] = array('image title');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['comment'] = array('image-comment');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['sorting'] = array('sort sequence');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['filename'] = array('filename');
+$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['path'] = array('path');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['socialMediaSRC'] = array('Embed movies/sounds located on a social-media-plattform', 'Add the full path to the source:  http://www.youtube.com/watch?v=kVdVTVR-j0Q');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['localMediaSRC'] = array('Embed movies/sounds located on the contao-file-system');
 $GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['cssID'] = array('CSS ID/class', 'Here you can set an ID and one or more classes for this picture.');

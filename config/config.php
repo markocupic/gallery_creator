@@ -17,6 +17,7 @@ define('GALLERY_CREATOR_UPLOAD_PATH', $GLOBALS['TL_CONFIG']['uploadPath'] . '/ga
 /**
  * Front end content element
  */
+
 // Display a single album within the news module
 array_insert($GLOBALS['TL_CTE'], 2, array('ce_type_gallery_creator' => array('gallery_creator_ce_news' => 'GalleryCreator\ContentGalleryCreatorNews')));
 array_insert($GLOBALS['TL_CTE'], 2, array('ce_type_gallery_creator' => array('gallery_creator_ce' => 'GalleryCreator\ContentGalleryCreator')));
@@ -32,12 +33,22 @@ if (TL_MODE == 'BE' && Input::get('do') != 'news')
 }
 
 
+/**
+ * Front end module
+ */
+array_insert($GLOBALS['FE_MOD'], 2, array('fmd_type_gallery_creator' => array('gallery_creator_fmd' => 'GalleryCreator\ModuleGalleryCreator')));
 
 /**
  * Back end module
  */
 if (TL_MODE == 'BE')
 {
+    // Jumploader bypass
+    if ($_GET['mode'] == 'fileupload' && isset($_FILES['file']) && $_GET['rt'] != '')
+    {
+        $_POST['REQUEST_TOKEN'] = $_GET['rt'];
+        $_POST['FORM_SUBMIT'] = $_GET['tl_upload'];
+    }
 
     $GLOBALS['BE_MOD']['content']['gallery_creator'] = array(
         'icon' => 'system/modules/gallery_creator/assets/images/picture.png',
@@ -46,8 +57,6 @@ if (TL_MODE == 'BE')
             'tl_gallery_creator_pictures'
         )
     );
-
-
 
     // check tables script
     if (count($_GET) <= 2 && $_GET['do'] == 'gallery_creator' && $_GET['mode'] != 'revise_tables')
@@ -61,6 +70,5 @@ if (TL_MODE == 'BE')
         $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be_revise_tables.js';
     }
 
-    $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/gallery_creator/assets/js/gallery_creator_be.js';
     $GLOBALS['TL_CSS'][] = 'system/modules/gallery_creator/assets/css/gallery_creator_be.css';
 }

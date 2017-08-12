@@ -1,0 +1,231 @@
+<?php
+
+/**
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2015 Leo Feyer
+ * @package Gallery Creator
+ * @link    http://www.contao.org
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace MCupic\GalleryCreator;
+
+/**
+ * Class ModuleGalleryCreator
+ * Provide methods regarding gallery_creator albums.
+ * @copyright  Marko Cupic 2015
+ * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
+ * @package    Gallery Creator
+ */
+class ModuleGalleryCreator extends GalleryCreator
+{
+
+    /**
+     * Parse the template
+     * @return string
+     */
+    public function generate()
+    {
+
+        // set the item from the auto_item parameter
+        if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
+        {
+            \Input::setGet('items', \Input::get('auto_item'));
+        }
+
+        return parent::generate();
+    }
+
+
+    /**
+     * Generate module
+     */
+    protected function compile()
+    {
+
+        // use a private template
+        if (TL_MODE == 'FE' && $this->gc_template != '')
+        {
+            $this->Template->style = count($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
+            $this->Template->cssID = strlen($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
+            $this->Template->class = trim('mod_' . $this->type . ' ' . $this->cssID[1]);
+        }
+
+        // check for excluded albums in the module settings
+        $arrExcludedAlbums = deserialize($this->gc_excludedAlbums);
+        $strExcludedAlbums = is_array($arrExcludedAlbums) && !empty($arrExcludedAlbums) ? implode(',', $arrExcludedAlbums) : '0';
+
+        // redirect to the detailview if there is only 1 album
+        if (!\Input::get('items') && $this->gc_redirectSingleAlb)
+        {
+            $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1');
+            if ($objAlbum->numRows === 1)
+            {
+                \Input::setGet('items', $objAlbum->alias);
+            }
+        }
+
+        if (\Input::get('items'))
+        {
+            $this->strAlbumalias = \Input::get('items');
+            // authenticate user if album is protected
+            $this->authenticate($this->strAlbumalias);
+
+            // get the album id from the album alias
+            $objAlbum = $this->Database->prepare('SELECT id FROM tl_gallery_creator_albums WHERE alias=?')->execute($this->strAlbumalias);
+            $this->intAlbumId = $objAlbum->id;
+        }
+
+        $switch = strlen(\Input::get('items')) ? 'detailview' : 'albumlisting';
+        $switch = strlen(\Input::get('jw_imagerotator')) ? 'jw_imagerotator' : $switch;
+
+        switch ($switch)
+        {
+
+            case 'albumlisting' :
+
+                // get all published albums
+                $arrAllowedAlbums = array();
+                if ($this->gc_hierarchicalOutput)
+                {
+                    $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND pid=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1', '0');
+                }
+                else
+                {
+                    $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=? AND id NOT IN (' . $strExcludedAlbums . ')')->execute('1');
+                }
+
+                while ($objAlbum->next())
+                {
+                    if (TL_MODE == 'FE' && $objAlbum->protected == true)
+                    {
+                        $this->import('FrontendUser', 'User');
+                        // check if the frontend user is allowed
+                        if (FE_USER_LOGGED_IN && is_array(unserialize($this->User->allGroups)))
+                        {
+                            if (array_intersect(unserialize($this->User->allGroups), unserialize($objAlbum->groups)))
+                            {
+                                // user is allowed
+                                $arrAllowedAlbums[] = $objAlbum->id;
+                            }
+                        }
+                        continue;
+                    }
+                    // album is not protected
+                    $arrAllowedAlbums[] = $objAlbum->id;
+                }
+
+                // pagination settings
+                $limit = $this->gc_AlbumsPerPage;
+                if ($limit > 0)
+                {
+                    $page = \Input::get('page') ? \Input::get('page') : 1;
+                    $offset = ($page - 1) * $limit;
+                    $itemsTotal = count($arrAllowedAlbums);
+
+                    // add pagination menu
+                    $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
+                    $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
+                    $this->Template->pagination = $objPagination->generate("\n ");
+                }
+
+                // get all published albums
+                $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id IN(' . implode(",", $arrAllowedAlbums) . ') ORDER BY sorting ASC');
+                if ($limit > 0)
+                {
+                    $objAlbum->limit($limit, $offset);
+                }
+                $objAlbum = $objAlbum->execute('1', '0');
+
+                // album array
+                $arrAlbums = array();
+                while ($objAlbum->next())
+                {
+                    $arrAlbums[$objAlbum->id] = GcHelpers::getAlbumInformationArray($objAlbum->id, $this);
+                }
+                $this->Template->imagemargin = $this->generateMargin(unserialize($this->gc_imagemargin_albumlisting));
+                $this->Template->arrAlbums = $arrAlbums;
+                $this->getAlbumTemplateVars($objAlbum->id);
+
+                // Call gcGenerateFrontendTemplateHook
+                $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
+                break;
+
+            case 'detailview' :
+                $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
+                $published = $objAlbum->published ? true : false;
+                if ($published)
+                {
+                    $published = in_array($this->intAlbumId, explode(',', $strExcludedAlbums)) ? false : true;
+                }
+
+                // for security reasons...
+                if (!$published)
+                {
+                    die("Gallery with alias " . \Input::get('items') . " is either not published or not available!!!");
+                }
+
+                // generate the subalbum array
+                if ($this->gc_hierarchicalOutput)
+                {
+                    $arrSubalbums = GcHelpers::getSubalbumsInformationArray($this->intAlbumId, $this);
+                    $this->Template->subalbums = count($arrSubalbums) ? $arrSubalbums : null;
+                }
+
+                // pagination settings
+                $limit = $this->gc_ThumbsPerPage;
+                if ($limit > 0)
+                {
+                    $page = \Input::get('page') ? \Input::get('page') : 1;
+                    $offset = ($page - 1) * $limit;
+
+                    // count albums
+                    $objTotal = $this->Database->prepare('SELECT COUNT(id) as itemsTotal FROM tl_gallery_creator_pictures WHERE published=? AND pid=?')->execute('1', $this->intAlbumId);
+                    $itemsTotal = $objTotal->itemsTotal;
+
+                    // add pagination menu
+                    $numberOfLinks = $this->gc_PaginationNumberOfLinks < 1 ? 7 : $this->gc_PaginationNumberOfLinks;
+                    $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks);
+                    $this->Template->pagination = $objPagination->generate("\n ");
+                }
+
+                $objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=?  AND pid=? ORDER BY sorting');
+                if ($limit > 0)
+                {
+                    $objPictures->limit($limit, $offset);
+                }
+
+                $objPictures = $objPictures->execute('1', $this->intAlbumId);
+                $arrPictures = array();
+
+                while ($objPictures->next())
+                {
+                    // picture array
+                    $arrPictures[$objPictures->id] = GcHelpers::getPictureInformationArray($objPictures->id, $this);
+                }
+
+                // add picture array to the template
+                $this->Template->arrPictures = $arrPictures;
+
+                // add some other useful template vars
+                $this->getAlbumTemplateVars($this->intAlbumId);
+
+                // init the counter
+                $this->initCounter($this->intAlbumId);
+
+                // Call gcGenerateFrontendTemplateHook
+                $this->Template = $this->callGcGenerateFrontendTemplateHook($this);
+                break;
+
+            case 'jw_imagerotator' :
+
+                header("content-type:text/xml;charset=utf-8");
+                echo $this->getJwImagerotatorXml($this->strAlbumalias);
+                exit;
+                break;
+        }
+        //end switch
+    }
+}

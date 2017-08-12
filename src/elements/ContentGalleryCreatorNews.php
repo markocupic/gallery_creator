@@ -110,7 +110,7 @@ class ContentGalleryCreatorNews extends \ContentElement
         $objAlbum = \GalleryCreatorAlbumsModel::findByPk($this->intAlbumId);
 
         // Init the counter
-        ContentGalleryCreator::initCounter($this->intAlbumId);
+        GalleryCreator::initCounter($this->intAlbumId);
 
         // Pagination settings
         $limit = $this->gc_ThumbsPerPage;
@@ -199,7 +199,8 @@ class ContentGalleryCreatorNews extends \ContentElement
         global $objPage;
 
         // Load the current album from db
-        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')->execute($intAlbumId);
+        $objAlbum = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
+            ->execute($intAlbumId);
 
 
         $objPage->description = $objAlbum->description != '' ? specialchars($objAlbum->description) : $objPage->description;
@@ -214,7 +215,7 @@ class ContentGalleryCreatorNews extends \ContentElement
         // Album visitors
         $this->Template->visitors = $objAlbum->vistors;
         // Album caption
-        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment);
+        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \String::toXhtml($objAlbum->comment) : \String::toHtml5($objAlbum->comment);
         // Insert article pre
         $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
         // Insert article after

@@ -17,6 +17,12 @@
 $GLOBALS['TL_LANG']['MOD']['gallery_creator'] = array('Gallery Creator', 'Create and edit album-galleries.');
 
 
+/**
+ * Front end modules
+ */
+$GLOBALS['TL_LANG']['FMD']['fmd_type_gallery_creator'] = 'Gallery Creator';
+$GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd'] = array('Gallery-Creator-Frontend-Module', 'Present gallery_creator albums as a frontend module.');
+
 
 /**
  * Front end content-element

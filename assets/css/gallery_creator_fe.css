@@ -49,28 +49,11 @@
 	margin-left:30px;
 }
 
-
 .gallery_creator .list_albums .level_1
 {
 	width:100%;
     padding:0;
 }
-
-/** Clearfix **/
-.gallery_creator .clearfix:before,
-.gallery_creator .clearfix:after {
-    content: " ";
-    display: table;
-}
-
-.gallery_creator .clearfix:after {
-    clear: both;
-}
-
-.gallery_creator .clearfix {
-    *zoom: 1;
-}
-
 
 
 /* album preview */

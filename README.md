@@ -1,7 +1,3 @@
-# Gallery Creator nun auch als Symphony bundle verfügbar.
-https://github.com/markocupic/gallery-creator-bundle
-
-
 # Gallery Creator
 
 ## Frontend Modul für Contao 3.

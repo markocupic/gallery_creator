@@ -38,9 +38,9 @@ class GalleryCreatorAlbumsModel extends \Model
     {
 
         $objAlbPid = \Database::getInstance()->prepare('SELECT pid FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($AlbumId);
+                                             ->execute($AlbumId);
         $parentAlb = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE id=?')
-            ->execute($objAlbPid->pid);
+                                             ->execute($objAlbPid->pid);
         if ($parentAlb->numRows == 0)
         {
             return null;
@@ -60,14 +60,12 @@ class GalleryCreatorAlbumsModel extends \Model
 
         $arrParentAlbums = array();
         $objAlb = \GalleryCreatorAlbumsModel::findByPk($AlbumId);
-        if ($objAlb !== null)
-        {
+        if($objAlb !== null){
             $pid = $objAlb->pid;
-            while ($pid > 0)
+            while($pid > 0)
             {
                 $parentAlb = \GalleryCreatorAlbumsModel::findByPk($pid);
-                if ($parentAlb !== null)
-                {
+                if ($parentAlb !== null){
                     $arrParentAlbums[] = $parentAlb->id;
                     $pid = $parentAlb->pid;
                 }
@@ -93,7 +91,8 @@ class GalleryCreatorAlbumsModel extends \Model
         if ($strSorting == '')
         {
             $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY sorting';
-        } else
+        }
+        else
         {
             $strSql = 'SELECT id FROM tl_gallery_creator_albums WHERE pid=? ORDER BY ' . $strSorting;
         }
@@ -114,19 +113,4 @@ class GalleryCreatorAlbumsModel extends \Model
         return $arrSubAlbums;
     }
 
-    /**
-     * @param $id
-     * @return bool
-     */
-    public static function hasChildAlbums($id)
-    {
-        $arrChilds = self::getChildAlbums($id);
-        if (count($arrChilds) >= 1)
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
 }

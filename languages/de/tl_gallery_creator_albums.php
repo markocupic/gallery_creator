@@ -2,10 +2,10 @@
 /**
  * TL_ROOT/system/modules/gallery_creator/languages/de/tl_gallery_creator_albums.php 
  * 
- * Contao extension: gallery_creator 5.0.0 
+ * Contao extension: gallery_creator 4.9.0
  * Deutsch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic 
+ * Copyright : &copy; 2015 Marko Cupic
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
@@ -27,6 +27,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['0'] = "Albumalias";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['alias']['1'] = "Der Albumalias ist zugleich auch Verzeichnisnamen der Bilder eines Albums";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['published']['0'] = "Album veröffentlichen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date']['0'] = "Erstellungsdatum";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['displ_alb_in_this_ce']['0'] = "Dieses Album in folgenden \"gallery_creator\" Inhaltselementen anzeigen lassen:";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owner']['0'] = "Besitzer/Ersteller";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['event_location']['0'] = "Veranstaltungsort";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['description']['0'] = "Meta-Beschreibung der Seite";
@@ -36,8 +37,8 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['keywords']['1'] = "Hier könne
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name']['0'] = "Albumname";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name']['0'] = "Albumbesitzer";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment']['0'] = "Albumkommentar";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb']['0'] = "Album-Vorschaubild per Radiobutton auswählen.";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb']['1'] = "Elemente können für individuelle Sortierung durch Ziehen umsortiert werden.";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb']['0'] = "Vorschau-Thumbnail und Sortierreihenfolge";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb']['1'] = "Welches Bild soll in der Vorschau/Albenübersicht gezeigt werden?";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected']['0'] = "Album schützen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups']['0'] = "Berechtigte Frontend-Gruppen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre']['0'] = "Optional einen Artikel vor dem Album einfügen";
@@ -56,12 +57,12 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename']['0'] = "Or
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['preserve_filename']['1'] = "Alternativ wird der Dateinamen vom System automatisch generiert.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors']['0'] = "Anzahl Albumzugriffe";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details']['0'] = "Besucher-Details (IP, Browserdetails, Zugriffszeit, etc.)";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['0'] = "Bilder neu durchsortieren nach";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['0'] = "Sortieren nach";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy']['1'] = "Bitte wählen Sie eine Sortierreihenfolge aus.";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['0'] = "Zugewiesenes Upload Verzeichnis";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['1'] = "Neue Bilder werden vom Uploader in das gewählte Verzeichnis hochgeladen.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['0'] = "Bilder mit Hilfe eines Dateipräfixes umbenennen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix']['1'] = "Geben Sie ein gültiges Präfix ein, um alle Bilder dieses Albums umzubenennen (z.B. \"me-in-paris-2012\").";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['0'] = "Zugewiesenes Upload Verzeichnis";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir']['1'] = "Neue Bilder werden vom Uploader in das gewählte Verzeichnis hochgeladen.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['0'] = "Datenbank bereinigen";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['1'] = "Alte/fehlerhafte Datenbankeinträge löschen";
@@ -85,6 +86,7 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['0'] = "Einfügen
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteafter']['1'] = "Einfügen nach Album mit ID %s";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['0'] = "Einfügen in";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['pasteinto']['1'] = "Einfügen in Album mit ID %s";
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['displ_alb_in_this_ce'] = "Inhaltselement mit id=%s in Artikel \"%s\" auf Seite \"%s\"";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reference']['no_scaling'] = "Bilder vor dem Upload nicht skalieren.";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_asc'] = "Dateiname (aufsteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name_desc'] = "Dateiname (absteigend)";
@@ -92,7 +94,5 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = "Datum (aufsteige
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = "Datum (absteigend)";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = "Individuelle Reihenfolge";
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = "Datenbank bereinigen: Beschädigte/ungültige/verwaiste Datenbankeinträge entfernen ";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'][0] = 'Dateitypen';
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'][1] = 'Akzeptierte Dateiendungen: %s.';
 
 ?>
