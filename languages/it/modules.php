@@ -5,7 +5,7 @@
  * Contao extension: gallery_creator 4.8.0-alpha1 
  * Italienisch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic
+ * Copyright : &copy; 2011 Marko Cupic 
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Andrea Bizioli (Abisem) 
@@ -17,9 +17,9 @@
  
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['0'] = "Gallery Creator";
 $GLOBALS['TL_LANG']['MOD']['gallery_creator']['1'] = "Crea ed edita gallerie di album";
-$GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd']['0'] = "Gallery Creator";
-$GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd']['1'] = "Presenta album gallery_creator come un modulo frontend.";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['0'] = "Gallery Creator";
-$GLOBALS['TL_LANG']['CTE']['gallery_creator_ce']['1'] = "Presenta album gallery_creator come un elemento di contenuto frontend.";
+$GLOBALS['TL_LANG']['FMD']['gallery_creator']['0'] = "Gallery Creator";
+$GLOBALS['TL_LANG']['FMD']['gallery_creator']['1'] = "Presenta album gallery_creator come un modulo frontend.";
+$GLOBALS['TL_LANG']['CTE']['gallery_creator']['0'] = "Gallery Creator";
+$GLOBALS['TL_LANG']['CTE']['gallery_creator']['1'] = "Presenta album gallery_creator come un elemento di contenuto frontend.";
  
 ?>

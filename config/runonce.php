@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contao Open Source CMS
  *
@@ -8,6 +9,8 @@
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
+
+
 /**
  * Run in a custom namespace, so the class can be replaced
  */
@@ -19,35 +22,16 @@ namespace MCupic\GalleryCreator;
  *
  * Provide methods regarding gallery_creator albums.
  *
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2012
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
 class GalleryCreatorRunonce
 {
+
     /**
-     * added in 4.9.0
+     * add uuids to tl_gallery_creator_pictures version added in 4.8.0
      */
-    public static function renameContentElementsOrFrontendModules()
-    {
-        // Rename CTE's
-        $objContent = \ContentModel::findByType('gallery_creator');
-        if ($objContent !== null)
-        {
-            $objContent->type = 'gallery_creator_ce';
-            $objContent->save();
-        }
-
-        // Rename FMD's
-        $objModule = \ModuleModel::findByType('gallery_creator');
-        if ($objModule !== null)
-        {
-            $objModule->type = 'gallery_creator_fmd';
-            $objModule->save();
-        }
-
-    }
-
     /**
      * add uuids to tl_gallery_creator_pictures version added in 4.8.0
      */
@@ -97,13 +81,9 @@ class GalleryCreatorRunonce
             {
                 continue;
             }
-
         }
     }
 }
 
-/** version 4.8.0 hack */
-GalleryCreatorRunonce::addUuids();
 
-/** version 4.9.0 hack */
-GalleryCreatorRunonce::renameContentElementsOrFrontendModules();
+GalleryCreatorRunonce::addUuids();

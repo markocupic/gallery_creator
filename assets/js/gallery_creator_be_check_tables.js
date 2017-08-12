@@ -39,17 +39,17 @@
             var objCookie = null;
 
             if (Cookie.read('ContaoGalleryCreatorBe')) {
-                objCookie = JSON.decode(atob(Cookie.read('ContaoGalleryCreatorBe')));
+                objCookie = JSON.decode(Cookie.read('ContaoGalleryCreatorBe'));
                 if (objCookie.tableCheck.lastCheck) {
                     if (now - objCookie.tableCheck.lastCheck < intervall) {
                         doCheck = false;
                     } else {
                         objCookie.tableCheck.lastCheck = now;
-                        Cookie.write('ContaoGalleryCreatorBe', btoa(JSON.encode(objCookie)), {path: Contao.path});
+                        Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
                     }
                 } else {
                     objCookie.tableCheck.lastCheck = now;
-                    Cookie.write('ContaoGalleryCreatorBe', btoa(JSON.encode(objCookie)), {path: Contao.path});
+                    Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
                 }
             } else {
                 objCookie = {
@@ -57,7 +57,7 @@
                         lastCheck: now
                     }
                 };
-                Cookie.write('ContaoGalleryCreatorBe', btoa(JSON.encode(objCookie)), {path: Contao.path});
+                Cookie.write('ContaoGalleryCreatorBe', JSON.encode(objCookie));
             }
 
             if (doCheck === true) {
@@ -73,6 +73,7 @@
             var myRequest = new Request.JSON({
 
                 url: document.URL + '&isAjaxRequest=true&checkTables=true&getAlbumIDS=true',
+
                 method: 'get',
 
                 onSuccess: function (responseText) {
@@ -101,11 +102,12 @@
             if (this.albumIDS === null) {
                 return;
             }
-            this.albumIDS.each(function (albumId) {
 
+            this.albumIDS.each(function (albumId) {
                 var myRequest = new Request.JSON({
 
                     url: document.URL + '&isAjaxRequest=true&checkTables=true&albumId=' + albumId,
+
                     method: 'get',
 
                     // Any calls made to start while the request is running will be chained up,

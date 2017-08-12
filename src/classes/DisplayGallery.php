@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -16,15 +16,15 @@
 namespace MCupic\GalleryCreator;
 
 /**
- * Class GalleryCreator
+ * Class DisplayGallery
  *
  * Provide methods regarding gallery_creator albums.
  *
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2012
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
-abstract class GalleryCreator extends \Module
+abstract class DisplayGallery extends \Module
 {
 
     /**
@@ -77,20 +77,13 @@ abstract class GalleryCreator extends \Module
         if (TL_MODE == 'FE' && $this->Environment->get('isAjaxRequest'))
         {
             $this->generateAjax();
+            exit;
         }
 
         if (TL_MODE == 'BE')
         {
             $objTemplate = new \BackendTemplate('be_wildcard');
-            if ($this->moduleType == 'cte')
-            {
-                $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['gallery_creator_ce'][0] . ' ###';
-            }
-            else
-            {
-                $objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['gallery_creator_fmd'][0] . ' ###';
-            }
-
+            $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG'][strtoupper($this->moduleType)]['gallery_creator'][0]) . ' ###';
             $objTemplate->title = $this->headline;
 
             // for module use only
@@ -191,11 +184,11 @@ abstract class GalleryCreator extends \Module
             global $objPage;
         }
         $objArticle = \ArticleModel::findByPk($this->pid);
-        if ($objArticle === null)
+        if($objArticle === null)
         {
             return 0;
         }
-        if ($objArticle->showatdevice != '')
+        if($objArticle->showatdevice != '')
         {
             // If extension "mobilecontent" is installed
             $query = "SELECT id FROM tl_article WHERE pid=? AND published=? AND showatdevice='%s'";
@@ -214,7 +207,7 @@ abstract class GalleryCreator extends \Module
 
         $gcElementCounter = 0;
 
-        if ($this->showatdevice != '')
+        if($this->showatdevice != '')
         {
             // If extension "mobilecontent" is installed
             $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=? AND showatdevice='%s'";
@@ -224,7 +217,7 @@ abstract class GalleryCreator extends \Module
         {
             $query = "SELECT pid FROM tl_content WHERE type=? AND invisible=?";
         }
-        $objCE = $this->Database->prepare($query)->execute('gallery_creator_ce', 0);
+        $objCE = $this->Database->prepare($query)->execute('gallery_creator', 0);
         while ($objCE->next())
         {
             if (in_array($objCE->pid, $arrArticlesOfCurrentPage))
@@ -250,14 +243,13 @@ abstract class GalleryCreator extends \Module
             return false;
         }
         //if all albums are published
-        $objAlb = $this->Database->prepare('SELECT * FROM tl_gallery_creator_albums WHERE published=?')
+        $objAlb = $this->Database->prepare('SELECT count(id) AS countPublishedAlbums FROM tl_gallery_creator_albums WHERE published=?')
             ->execute('1');
-        $countPublishedAlbums = $objAlb->numRows;
-        if ($this->gc_publish_all_albums && $countPublishedAlbums == 1)
+        if ($this->gc_publish_all_albums && $objAlb->countPublishedAlbums == 1)
         {
             $singleAlbum = true;
         }
-        if ($this->gc_publish_all_albums && $countPublishedAlbums > 1)
+        if ($this->gc_publish_all_albums && $objAlb->countPublishedAlbums > 1)
         {
             return false;
         }
@@ -368,9 +360,8 @@ abstract class GalleryCreator extends \Module
                 if (!FE_USER_LOGGED_IN || !is_array($groups) || count($groups) < 1 || !array_intersect($groups, $this->User->groups))
                 {
                     // abort script and display authentification error
-                    //$strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
-                    //die($strContent);
-                    return false;
+                    $strContent = sprintf("<div>\r\n<h1>%s</h1>\r\n<p>%s</p>\r\n</div>", $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][0], $GLOBALS['TL_LANG']['gallery_creator']['fe_authentification_error'][1]);
+                    die($strContent);
                 }
             }
         }
@@ -393,7 +384,6 @@ abstract class GalleryCreator extends \Module
             $arrPicture = $this->getPictureInformationArray(\Input::get('imageId'), null, \Input::get('action'));
 
             return json_encode($arrPicture);
-            exit;
         }
 
         //thumbslider der Albenübersicht
@@ -429,7 +419,7 @@ abstract class GalleryCreator extends \Module
             {
                 $jsonUrl = array(
                     'thumbPath' => \Image::get($objFile->path, $arrSize[0], $arrSize[1], $arrSize[2]),
-                    'eventId' => \Input::get('eventId')
+                    'eventId'   => \Input::get('eventId')
                 );
             }
 
@@ -489,6 +479,7 @@ abstract class GalleryCreator extends \Module
             exit;
         }
 
+        return null;
     }
 
     /**
@@ -537,10 +528,10 @@ abstract class GalleryCreator extends \Module
         $thumbSRC = $this->defaultThumb;
 
         // Check for an alternate thumbnail
-        if (\Config::get('gc_error404_thumb') !== '')
+        if(\Config::get('gc_error404_thumb') !== '')
         {
             $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
-            if ($objFile !== null)
+            if($objFile !== null)
             {
                 if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
                 {
@@ -573,7 +564,7 @@ abstract class GalleryCreator extends \Module
             $oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
             if ($oFile !== null)
             {
-                if (is_file(TL_ROOT . '/' . $oFile->path))
+                if(is_file(TL_ROOT . '/' . $oFile->path))
                 {
                     $arrThumb = array(
                         'name' => basename($oFile->path),
@@ -729,7 +720,7 @@ abstract class GalleryCreator extends \Module
             if (is_array($arrVisitors))
             {
                 // keep visiors data in the db unless 20 other users visited the album
-                if (count($arrVisitors) == 50)
+                if (count($arrVisitors) == 20)
                 {
                     // slice the last position
                     $arrVisitors = array_slice($arrVisitors, 0, count($arrVisitors) - 1);
@@ -738,18 +729,18 @@ abstract class GalleryCreator extends \Module
             else
             {
                 $set = array('visitors_details' => '');
-                \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
+                $objDbUpd = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')
                     ->set($set)->execute($intAlbumId);
             }
 
             //build up the array
             $newVisitor = array(
                 $_SERVER['REMOTE_ADDR'] => array(
-                    'ip' => $_SERVER['REMOTE_ADDR'],
-                    'pid' => $intAlbumId,
+                    'ip'         => $_SERVER['REMOTE_ADDR'],
+                    'pid'        => $intAlbumId,
                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-                    'tstamp' => time(),
-                    'url' => \Environment::get('request'),
+                    'tstamp'     => time(),
+                    'url'        => \Environment::get('request'),
                 )
             );
 
@@ -767,7 +758,7 @@ abstract class GalleryCreator extends \Module
 
             // update database
             $set = array(
-                'visitors' => $intCount,
+                'visitors'         => $intCount,
                 'visitors_details' => serialize($arrVisitors)
             );
             $objDb = \Database::getInstance()->prepare('UPDATE tl_gallery_creator_albums %s WHERE id=?')->set($set)

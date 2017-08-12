@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  * 
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  * 
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -54,8 +54,6 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors'] = array('Number of 
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['visitors_details'] = array('Visitors details (ip, browser type, etc.)');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'] = array('Order by', 'Please choose the sort order.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'] = array('Assigned directory', 'New images will be uploaded to this directory.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix'] = array('Rename all pictures using a file prefix', 'Enter a valid file prefix to rename all pictures of this album (e.g. "me-in-paris-2012").');
-
 
 /**
  * Buttons

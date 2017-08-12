@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -18,22 +18,15 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array(
     'onloadCbSetUpPalettes'
 );
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce'] = 'name,type,headline;
-{miscellaneous_legend},gc_publish_all_albums,gc_publish_albums,gc_redirectSingleAlb;
-{pagination_legend},gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
+$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = 'name,type,headline;
+{miscellaneous_legend},gc_publish_all_albums,gc_redirectSingleAlb;
+{pagination_legend},gc_publish_albums,gc_AlbumsPerPage,gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
 {album_listing_legend},gc_activateThumbSlider,gc_sorting,gc_sorting_direction,gc_size_albumlisting,gc_imagemargin_albumlisting;
 {picture_listing_legend},gc_rows,gc_fullsize,gc_picture_sorting,gc_picture_sorting_direction,gc_size_detailview,gc_imagemargin_detailview;
 {template_legend:hide},gc_template;
 {protected_legend:hide},protected;
 {expert_legend:hide},align,space,cssID';
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce_news'] = 'name,type,headline;
-{album_listing_legend},gc_publish_single_album;
-{pagination_legend},gc_ThumbsPerPage,gc_PaginationNumberOfLinks;
-{picture_listing_legend},gc_rows,gc_fullsize,gc_picture_sorting,gc_picture_sorting_direction,gc_size_detailview,gc_imagemargin_detailview;
-{template_legend:hide},gc_template;
-{protected_legend:hide},protected;
-{expert_legend:hide},align,space,cssID';
 
 /**
  * Add fields to tl_content
@@ -203,15 +196,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_albums'] = array(
     'sql'              => "blob NULL"
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_single_album'] = array(
-    'label'            => &$GLOBALS['TL_LANG']['tl_content']['gc_publish_single_album'],
-    'inputType'        => 'radio',
-    'exclude'          => true,
-    'options_callback' => array('ce_gallery_creator', 'optionsCallbackListAlbums'),
-    'eval'             => array('mandatory' => false, 'multiple' => false, 'tl_class' => 'clr'),
-    'sql'              => "blob NULL"
-);
-
 $GLOBALS['TL_DCA']['tl_content']['fields']['gc_publish_all_albums'] = array(
     'label'     => &$GLOBALS['TL_LANG']['tl_content']['gc_publish_all_albums'],
     'exclude'   => true,
@@ -284,7 +268,7 @@ class ce_gallery_creator extends Backend
         $objContent = $this->Database->prepare('SELECT gc_publish_all_albums FROM tl_content WHERE id=?')->execute(Input::get('id'));
         if ($objContent->gc_publish_all_albums)
         {
-            $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce'] = str_replace('gc_publish_albums,', '', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator_ce']);
+            $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator'] = str_replace('gc_publish_albums,', '', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery_creator']);
         }
     }
 

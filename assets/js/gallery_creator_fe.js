@@ -2,7 +2,7 @@
  * Class GalleryCreatorFe
  *
  * Provide methods to handle GalleryCreator-output.
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2011
  * @author     Marko Cupic <m.cupic@gmx.ch>
  */
 

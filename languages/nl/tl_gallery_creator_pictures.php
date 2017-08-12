@@ -5,7 +5,7 @@
  * Contao extension: gallery_creator 4.0.1 stable 
  * Niederländisch translation file 
  * 
- * Copyright : &copy; 2015 Marko Cupic
+ * Copyright : &copy; 2011 Marko Cupic 
  * License   : GNU Lesser Public License (LGPL) 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Just Schimmelpenninck (justs) 

@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -17,7 +17,7 @@ namespace MCupic\GalleryCreator;
  * Class GcHelpers
  * Provide methods for using the gallery_creator extension
  *
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2012
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
@@ -561,8 +561,6 @@ class GcHelpers extends \System
         }
         global $objPage;
 
-        $hasCustomThumb = false;
-
 
         $defaultThumbSRC =  $objThis->defaultThumb;
         if(\Config::get('gc_error404_thumb') !== '')
@@ -627,28 +625,17 @@ class GcHelpers extends \System
         try
         {
             $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
-            // overwrite $thumbSrc if there is a valid custom thumb
-            if ($objPicture->addCustomThumb && !empty($objPicture->customThumb)){
-                $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
-                if ($customThumbModel !== null)
-                {
-                    if (is_file(TL_ROOT . '/' . $customThumbModel->path))
-                    {
-                        $objFileCustomThumb = new \File($customThumbModel->path, true);
-                        if ($objFileCustomThumb->isGdImage) {
-                            $thumbSrc = \Image::create($objFileCustomThumb->path, $arrSize)->executeResize()->getResizedPath();
-                            $hasCustomThumb = true;
-                        }
-                    }
-                }
-            }
-            $thumbPath = $hasCustomThumb ? $objFileCustomThumb->path : $strImageSrc;
-            $picture = \Picture::create($thumbPath, $arrSize)->getTemplateData();
+            $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
 
+            if ($thumbSrc !== $strImageSrc)
+            {
+                $objFile = new \File(rawurldecode($thumbSrc), true);
+            }
         }
         catch (\Exception $e)
         {
             \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+
             $thumbSrc = '';
             $picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
         }
@@ -685,6 +672,29 @@ class GcHelpers extends \System
             return null;
         }
 
+
+        //check if there is a custom thumbnail selected
+        if ($objPicture->addCustomThumb && !empty($objPicture->customThumb))
+        {
+            $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
+            if ($customThumbModel !== null)
+            {
+                if (is_file(TL_ROOT . '/' . $customThumbModel->path))
+                {
+                    $objFileCustomThumb = new \File($customThumbModel->path, true);
+                    if ($objFileCustomThumb->isGdImage)
+                    {
+                        $arrSize = unserialize($objThis->gc_size_detailview);
+                        $thumbSrc = \Image::get($objFileCustomThumb->path, $arrSize[0], $arrSize[1], $arrSize[2]);
+                        $objFileCustomThumb = new \File(rawurldecode($thumbSrc));
+                        $arrSize[0] = $objFileCustomThumb->width;
+                        $arrSize[1] = $objFileCustomThumb->height;
+                        $arrFile["thumb_width"] = $objFileCustomThumb->width;
+                        $arrFile["thumb_height"] = $objFileCustomThumb->height;
+                    }
+                }
+            }
+        }
 
         //exif
         if ($GLOBALS['TL_CONFIG']['gc_read_exif'])
@@ -940,7 +950,6 @@ class GcHelpers extends \System
     {
 
         $images = array();
-
         $objFilesModel = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
         if ($objFilesModel === null)
         {
@@ -991,23 +1000,18 @@ class GcHelpers extends \System
                 }
             }
         }
-
         if (count($images))
         {
-            $arrPictures = array(
-                'uuid' => array(),
-                'path' => array(),
-                'basename' => array()
-            );
-
             $uploadPath = GALLERY_CREATOR_UPLOAD_PATH;
             $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
             $arrPictures['path'] = $objPictures->fetchEach('path');
+            $arrPictures['basename'] = array();
             foreach($arrPictures['path'] as $path)
             {
                 $arrPictures['basename'][] = basename($path);
             }
+
 
             $objAlb = \MCupic\GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)

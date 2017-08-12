@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  *
  * @package Gallery Creator
  * @link    http://www.contao.org
@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
     // Palettes
     'palettes'    => array(
         '__selector__'    => array('protected'),
-        'default'         => '{album_info},published,name,alias,description,keywords,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,filePrefix,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
+        'default'         => '{album_info},published,name,alias,description,keywords,assignedDir,album_info,displ_alb_in_this_ce,owner,date,event_location,sortBy,comment,visitors;{album_preview_thumb_legend},thumb;{insert_article},insert_article_pre,insert_article_post;{protection:hide},protected',
         'restricted_user' => '{album_info},link_edit_images,album_info',
         'fileupload'      => '{upload_settings},preserve_filename,img_resolution,img_quality;{uploader_legend},uploader,fileupload',
         'import_images'   => '{upload_settings},preserve_filename,multiSRC',
@@ -337,15 +337,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_albums'] = array(
             'reference'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums'],
             'eval'          => array('tl_class' => 'w50'),
             'sql'           => "varchar(32) NOT NULL default ''"
-        ),
-        'filePrefix'          => array(
-            'label'     => &$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix'],
-            'exclude'   => true,
-            'inputType' => 'text',
-            'save_callback' => array(array('tl_gallery_creator_albums', 'saveCbValidateFileprefix')),
-            'eval'      => array('mandatory' => false, 'tl_class' => 'clr', 'rgxp' => 'alnum', 'nospace' => true),
-            'sql'           => "varchar(32) NOT NULL default ''"
-        ),
+        )
     )
 );
 
@@ -971,6 +963,7 @@ class tl_gallery_creator_albums extends Backend
      */
     public function ondeleteCb()
     {
+
         if (Input::get('act') != 'deleteAll')
         {
             $this->checkUserRole(Input::get('id'));
@@ -986,7 +979,7 @@ class tl_gallery_creator_albums extends Backend
             {
                 $objAlbumModel = GalleryCreatorAlbumsModel::findByPk($idDelAlbum);
                 if($objAlbumModel === null)continue;
-                if ($this->User->isAdmin || $objAlbumModel->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
+                if ($this->User->isAdmin || $objAlb->owner == $this->User->id || true === $GLOBALS['TL_CONFIG']['gc_disable_backend_edit_protection'])
                 {
                     // remove all pictures from tl_gallery_creator_pictures
                     $objPicturesModel = GalleryCreatorPicturesModel::findByPid($idDelAlbum);
@@ -1383,59 +1376,6 @@ class tl_gallery_creator_albums extends Backend
 
         // Return html
         return $html . $script;
-    }
-
-    /**
-     * @param $strPrefix
-     * @param \Contao\DataContainer $dc
-     * @return string
-     */
-    public function saveCbValidateFilePrefix($strPrefix, \Contao\DataContainer $dc)
-    {
-        $i= 0;
-        if($strPrefix != '')
-        {
-            // >= php ver 5.4
-            $transliterator = Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', Transliterator::FORWARD);
-            $strPrefix = $transliterator->transliterate($strPrefix);
-            $strPrefix = str_replace('.', '_', $strPrefix);
-
-            $arrOptions = array(
-                'column' => array('tl_gallery_creator_pictures.pid=?'),
-                'value' => array($dc->id),
-                'order' => 'sorting ASC'
-            );
-            $objPicture = MCupic\GalleryCreatorPicturesModel::findAll($arrOptions);
-            if($objPicture !== null)
-            {
-                while($objPicture->next())
-                {
-                    $objFile = \FilesModel::findOneByUuid($objPicture->uuid);
-                    if($objFile !== null)
-                    {
-                        if(is_file(TL_ROOT . '/' . $objFile->path))
-                        {
-                            $oFile = new File($objFile->path);
-                            $i++;
-                            while(is_file($oFile->dirname . '/' . $strPrefix . '_' . $i . '.' . strtolower($oFile->extension)))
-                            {
-                                $i++;
-                            }
-                            $oldPath =  $oFile->dirname . '/' . $strPrefix . '_' . $i . '.' . strtolower($oFile->extension);
-                            $newPath = str_replace(TL_ROOT . '/', '', $oldPath);
-                            // rename file
-                            if($oFile->renameTo($newPath))
-                            {
-                                $objPicture->path = $oFile->path;
-                                $objPicture->save();
-                                \Message::addInfo(sprintf('Picture with ID %s has been renamed to %s.', $objPicture->id, $newPath));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return '';
     }
 
 

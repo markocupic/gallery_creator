@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2005-2012 Leo Feyer
  * @package Gallery Creator
  * @link    http://www.contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
@@ -13,13 +13,13 @@
 namespace MCupic\GalleryCreator;
 
 /**
- * Class ModuleGalleryCreator
+ * Class ModuleDisplayGallery
  * Provide methods regarding gallery_creator albums.
- * @copyright  Marko Cupic 2015
+ * @copyright  Marko Cupic 2012
  * @author     Marko Cupic, Oberkirch, Switzerland ->  mailto: m.cupic@gmx.ch
  * @package    Gallery Creator
  */
-class ModuleGalleryCreator extends GalleryCreator
+class ModuleDisplayGallery extends DisplayGallery
 {
 
     /**
