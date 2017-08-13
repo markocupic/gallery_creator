@@ -33,7 +33,7 @@ class MigrationKit
                 // Create parent gallery container
                 if ($pid == 0)
                 {
-                    $title = 'Auto-generated after migration (pid=0).';
+                    $title = 'Auto generated gallery container after migration.';
                 }
                 else
                 {
@@ -44,7 +44,7 @@ class MigrationKit
                     }
                     else
                     {
-                        $title = 'Auto-generated after migration (pid=' . $pid . ').';
+                        $title = 'Auto generated gallery container after migration.';
                     }
                 }
                 $objGallery = new GalleryCreatorGalleriesModel();
@@ -63,7 +63,7 @@ class MigrationKit
                         $objAlbumModel->pid = $currentGalleryId;
                         $objAlbumModel->source = 'default';
                         $objAlbumModel->save();
-                        Message::addInfo(sprintf("Gallery Creator Update: Stored Album '%s' into Gallery '%s'.", $objAlbum->name, $objGallery->title));
+                        Message::addInfo(sprintf("Gallery Creator Update: Stored album '%s' into gallery container '%s'.", $objAlbum->name, $objGallery->title));
                     }
                 }
             }
