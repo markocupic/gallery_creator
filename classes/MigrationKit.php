@@ -5,13 +5,21 @@ namespace Markocupic\GalleryCreator;
 
 use Contao\GalleryCreatorGalleriesModel;
 use Contao\GalleryCreatorAlbumsModel;
-use Contao\GalleryCreatorPicturesModel;
 use Contao\Database;
 
 class MigrationKit
 {
 
-    public function migrate()
+    /**
+     * Migrate from version 5.x to 6.x
+     * Store albums in galleries
+     * @param $table
+     * @param $new_records
+     * @param $parent_table
+     * @param $child_tables
+     * @return bool
+     */
+    public function migrate($table, $new_records, $parent_table, $child_tables)
     {
         $objGalleries = Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_galleries');
         if (!$objGalleries->numRows)
@@ -55,6 +63,8 @@ class MigrationKit
                    }
                 }
             }
+            // Reload the page (reviseTable hook)
+            return true;
         }
     }
 }

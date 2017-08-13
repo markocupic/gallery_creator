@@ -45,7 +45,7 @@ if (TL_MODE == 'BE')
 // Migrate from v.5.0.0 to new version with tl_gallery_creator_galleries
 if(TL_MODE == 'BE')
 {
-    Markocupic\GalleryCreator\MigrationKit::migrate();
+    $GLOBALS['TL_HOOKS']['reviseTable'][] = array('Markocupic\GalleryCreator\MigrationKit', 'migrate');
 }
 
 
