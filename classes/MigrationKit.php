@@ -22,8 +22,10 @@ class MigrationKit
      */
     public function migrate($table, $new_records, $parent_table, $child_tables)
     {
+        $objAlbums = Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_albums');
         $objGalleries = Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_galleries');
-        if (!$objGalleries->numRows)
+
+        if (!$objGalleries->numRows && $objAlbums->numRows)
         {
             $objDb = Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_albums');
             $arrPids = $objDb->fetchEach('pid');
