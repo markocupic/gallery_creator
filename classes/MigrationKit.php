@@ -6,6 +6,7 @@ namespace Markocupic\GalleryCreator;
 use Contao\GalleryCreatorGalleriesModel;
 use Contao\GalleryCreatorAlbumsModel;
 use Contao\Database;
+use Contao\Message;
 
 class MigrationKit
 {
@@ -30,37 +31,40 @@ class MigrationKit
             foreach ($arrPids as $pid)
             {
                 // Create parent gallery container
-                if($pid == 0)
+                if ($pid == 0)
                 {
-                    $title =  'Auto-generated after migration (pid=0).';
+                    $title = 'Auto-generated after migration (pid=0).';
                 }
                 else
                 {
                     $objParentAlbum = GalleryCreatorAlbumsModel::findByPk($pid);
-                    if($objParentAlbum !== null){
+                    if ($objParentAlbum !== null)
+                    {
                         $title = $objParentAlbum->name;
-                    }else{
-                        $title = 'Auto-generated after migration (pid=' . $pid .').';
+                    }
+                    else
+                    {
+                        $title = 'Auto-generated after migration (pid=' . $pid . ').';
                     }
                 }
                 $objGallery = new GalleryCreatorGalleriesModel();
                 $objGallery->title = $title;
                 $objGallery->tstamp = time();
                 $objGallery->save();
-                $currentGalleryId =  $objGallery->id;
+                $currentGalleryId = $objGallery->id;
 
 
-
-                $objAlbum = Database::getInstance()->execute('SELECT * FROM tl_gallery_creator_albums WHERE pid=?')->execute($pid);
+                $objAlbum = Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_albums WHERE pid=?')->execute($pid);
                 while ($objAlbum->next())
                 {
-                   $objAlbumModel = GalleryCreatorAlbumsModel::findByPid($pid);
-                   if($objAlbumModel !== null)
-                   {
-                       $objAlbumModel->pid = $currentGalleryId;
-                       $objAlbumModel->source = 'default';
-                       $objAlbumModel->save();
-                   }
+                    $objAlbumModel = GalleryCreatorAlbumsModel::findByPid($pid);
+                    if ($objAlbumModel !== null)
+                    {
+                        $objAlbumModel->pid = $currentGalleryId;
+                        $objAlbumModel->source = 'default';
+                        $objAlbumModel->save();
+                        Message::addInfo(sprintf("Gallery Creator Update: Stored Album '%s' into Gallery '%s'.", $objAlbum->name, $objGallery->title));
+                    }
                 }
             }
             // Reload the page (reviseTable hook)
