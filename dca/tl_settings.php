@@ -14,17 +14,11 @@
  * Add to palette
  */
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{gallery_creator_legend:hide},gc_error404_thumb,gc_disable_backend_edit_protection,gc_album_import_copy_files,gc_read_exif';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{gallery_creator_legend:hide},gc_error404_thumb,gc_album_import_copy_files,gc_read_exif';
 
 /**
  * Add fields
  */
-
-$GLOBALS['TL_DCA']['tl_settings']['fields']['gc_disable_backend_edit_protection'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['gc_disable_backend_edit_protection'],
-	'inputType' => 'checkbox',
-	'eval'      => array('fieldType' => 'checkbox', 'tl_class' => 'clr')
-);
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['gc_album_import_copy_files'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['gc_album_import_copy_files'],

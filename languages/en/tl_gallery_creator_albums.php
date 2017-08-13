@@ -16,12 +16,11 @@
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_info'] = 'albuminformations';
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protection'] = 'protect album';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['upload_settings'] = 'image settings';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article'] = 'insert articles before or after the album';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['uploader_legend'] = 'uploader';
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['maintenance'] = 'Revise tables';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['album_preview_thumb_legend'] = 'Album-preview-thumb-settings & picture sorting';
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['source_legend'] = 'Redirect target';
 
 
 
@@ -40,8 +39,6 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['name'] = array('Albumname');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['owners_name'] = array('Albumowner');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['comment'] = array('Album-comment');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['thumb'] = array('Select the thumbnail which represents the Album in the listview', 'Drag the items to re-order them.');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['protected'] = array('Protect album');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['groups'] = array('Allowed frontend-groups');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_pre'] = array('Insert article optionally before the album','Insert the id of the article that you optionally like have displayed in the detail view.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['insert_article_post'] = array('Insert article optionally after the album','Insert the id of the article that you optionally like have displayed in the detail view.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['fileupload'] = array('File Upload', 'Browse your local computer and select the files you want to upload to the server.');
@@ -55,15 +52,20 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['sortBy'] = array('Re-order ima
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['assignedDir'] = array('Assigned directory', 'New images will be uploaded to this directory.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['filePrefix'] = array('Rename all pictures using a file prefix', 'Enter a valid file prefix to rename all pictures of this album (e.g. "me-in-paris-2012").');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['acceptedFiles'] = array('Accepted files', 'Accepted files: %s.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['source'] = array('Redirect target', 'Here you can override the default redirect target.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['default'] = array('Use default', 'By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the news archive.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['internal'] = array('Page', 'By clicking the &quot;read more …&quot; button, visitors will be redirected to a page.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['article'] = array('Article', 'By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['external'] = array('External URL', 'By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['jumpTo'] = array('Redirect page', 'Please choose the page to which visitors will be redirected when clicking the album item.');
+$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['articleId'] = array('Article', 'Please choose the article to which visitors will be redirected when clicking the album item.');
+
 
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn'] = array('revise tables');
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['0'] = "Revise tables";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['revise_tables']['1'] = "Remove orphaned/incorrect entries";
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['reviseTablesBtn']['0'] = "Datenbank bereinigen";
+
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['new']    = array('new album', 'Create a new album.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['list_pictures']   = array('list pictures', 'List pictures of album with ID %s.');
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album'] = array('Edit album', 'Edit Album with ID %s.');
@@ -85,7 +87,3 @@ $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_asc'] = 'Date (ascending)
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['date_desc'] = 'Date (descending)';
 $GLOBALS['TL_LANG']['tl_gallery_creator_albums']['custom'] = 'Custom order';
 
-/**
- * Messages
- */
-$GLOBALS['TL_LANG']['tl_gallery_creator_albums']['messages']['revise_database'] = 'Revise tables: Clean the database from damaged/invalid/orphaned entries';

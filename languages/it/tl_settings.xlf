@@ -1,0 +1,27 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/tl_settings.php" source-language="en" target-language="it">
+        <body>
+            <trans-unit id="tl_settings.gallery_creator_legend">
+                <source>Gallery-Creator-settings</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_album_import_copy_files.0">
+                <source>Do a copy of each imported file in the &quot;gallery_creator_albums-directory&quot; when importing images</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_album_import_copy_files.1">
+                <source>If you choose this setting, the system will do copy of each image when importing images from the server.</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_read_exif.0">
+                <source>Read-out exif data</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_read_exif.1">
+                <source>Read-out the exif data (Requires memory!!!)</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_error404_thumb.0">
+                <source>Error 404 Thumbnail</source>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_error404_thumb.1">
+                <source>Please select an alternate thumbnail.</source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

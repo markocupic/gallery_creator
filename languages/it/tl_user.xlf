@@ -1,0 +1,21 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/tl_user.php" source-language="en" target-language="it">
+        <body>
+            <trans-unit id="tl_user.gallery_creator_legend">
+                <source>Gallery permissions (gallery_creator)</source>
+            </trans-unit>
+            <trans-unit id="tl_user.gallery_creator.0">
+                <source>Allowed galleries</source>
+            </trans-unit>
+            <trans-unit id="tl_user.gallery_creator.1">
+                <source>Here you can grant access to one or more galleries.</source>
+            </trans-unit>
+            <trans-unit id="tl_user.gallery_creatorp.0">
+                <source>Gallery permissions</source>
+            </trans-unit>
+            <trans-unit id="tl_user.gallery_creatorp.1">
+                <source>Here you can define the gallery permissions.</source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

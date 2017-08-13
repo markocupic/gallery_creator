@@ -1,0 +1,34 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/tl_settings.php" source-language="en" target-language="de">
+        <body>
+            <trans-unit id="tl_settings.gallery_creator_legend">
+                <source>Gallery-Creator-settings</source>
+                <target>Gallery-Creator-Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_album_import_copy_files.0">
+                <source>Do a copy of each imported file in the &quot;gallery_creator_albums-directory&quot; when importing images</source>
+                <target>Beim Import von Bildern eine Kopie jeder Bilddatei im Verzeichnis &quot;tl_files/gallery_creator_albums&quot; erstellen</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_album_import_copy_files.1">
+                <source>If you choose this setting, the system will do copy of each image when importing images from the server.</source>
+                <target>Wenn diese Einstellung gewählt wird, erstellt contao beim Importieren von Bildern in ein Album automatisch eine Kopie im Verzeichnis &quot;tl_files/gallery_creator_albums&quot;.</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_read_exif.0">
+                <source>Read-out exif data</source>
+                <target>Exif Kameradaten auslesen</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_read_exif.1">
+                <source>Read-out the exif data (Requires memory!!!)</source>
+                <target>Exif Kameradaten auslesen (Speicherintensiv!!!)</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_error404_thumb.0">
+                <source>Error 404 Thumbnail</source>
+                <target>Error 404 Thumbnail</target>
+            </trans-unit>
+            <trans-unit id="tl_settings.gc_error404_thumb.1">
+                <source>Please select an alternate thumbnail.</source>
+                <target>Bitte wählen Sie ein alternatives Thumbnail.</target>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

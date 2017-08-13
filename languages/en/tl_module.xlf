@@ -1,0 +1,177 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/tl_module.php" source-language="en" target-language="en">
+        <body>
+            <trans-unit id="tl_module.pagination_legend">
+                <source>Pagination settings</source>
+            </trans-unit>
+            <trans-unit id="tl_module.module_legend">
+                <source>Module configuration</source>
+            </trans-unit>
+            <trans-unit id="tl_module.album_listing_legend">
+                <source>Album listing legend</source>
+            </trans-unit>
+            <trans-unit id="tl_module.picture_listing_legend">
+                <source>Picture listing legend</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_readerModule.0">
+                <source>Reader Module</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_readerModule.1">
+                <source>Select the reader module.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_galleries.0">
+                <source>Galleries</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_galleries.1">
+                <source>Select the galleries.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_rows.0">
+                <source>Thumbnails per row</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_rows.1">
+                <source>Select the number of thumbnails per row. (0=As much as possible)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_publish_albums.0">
+                <source>Publish these albums only</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_publish_albums.1">
+                <source>Selected albums will be displayed in the frontend.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_publish_single_album.0">
+                <source>Publish this album</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_publish_single_album.1">
+                <source>The selected album will be displayed in the frontend.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_publish_all_albums.0">
+                <source>Publish all given albums in the frontend</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_hierarchicalOutput.0">
+                <source>Hierarchically Frontend-Album-Output</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_hierarchicalOutput.1">
+                <source>Hierarchically Frontend-Album-Output (Albums and Subalbums)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_template.0">
+                <source>Gallery template</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_template.1">
+                <source>Select a personal gallery template.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_activateThumbSlider.0">
+                <source>Activate Ajax-Thumb-Slider</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_activateThumbSlider.1">
+                <source>Activate Ajax-Thumb-Slider on mouseover in the album listing?</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_redirectSingleAlb.0">
+                <source>Redirection in case of a single album</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_redirectSingleAlb.1">
+                <source>Should be automatically redirected to the detail-view, in case of single-album-choice?</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_albumsPerPage.0">
+                <source>Items per page in the albumlisting</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_albumsPerPage.1">
+                <source>The number of items per page in the albumlisting. Set to 0 to disable pagination.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_thumbsPerPage.0">
+                <source>Thumbs per page in the detailview</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_thumbsPerPage.1">
+                <source>The number of thumbnails per page in the detailview. Set to 0 to disable pagination.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_paginationNumberOfLinks.0">
+                <source>Number of links in the pagination navigation</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_paginationNumberOfLinks.1">
+                <source>Set the number of links in the pagination navigation. Default to 7.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sorting.0">
+                <source>Album sorting</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sorting.1">
+                <source>According to which field the albums should be sorted?</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sorting_direction.0">
+                <source>Sort sequence</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sorting_direction.1">
+                <source>DESC: descending, ASC: ascending</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_picture_sorting.0">
+                <source>Picture sorting</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_picture_sorting.1">
+                <source>According to which field the pictures in a single album should be sorted?</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_picture_sorting_direction.0">
+                <source>Sort sequence</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_picture_sorting_direction.1">
+                <source>DESC: descending, ASC: ascending</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_size_detailview.0">
+                <source>Detailview: Thumbnail width and height</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_size_detailview.1">
+                <source>Here you can set the image dimensions and the resize mode.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_size_albumlisting.0">
+                <source>Albumlist: Thumbnail width and height</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_size_albumlisting.1">
+                <source>Here you can set the image dimensions and the resize mode.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_imagemargin.0">
+                <source>Image margin</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_imagemargin.1">
+                <source>Here you can enter the top, right, bottom and left margin.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_fullsize.0">
+                <source>Full-size view/new window</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_fullsize.1">
+                <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingDirection.DESC">
+                <source>Ascending</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingDirection.ASC">
+                <source>Descending</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.sorting">
+                <source>Backend-module sorting (sorting)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.id">
+                <source>ID</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.date">
+                <source>Date of creation (date)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.name">
+                <source>Name (name)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.owner">
+                <source>Owner (owner)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.comment">
+                <source>Comment/Caption (comment)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.title">
+                <source>Image-title (title)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.tstamp">
+                <source>Revision date (tstamp)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.alias">
+                <source>Albumalias (alias)</source>
+            </trans-unit>
+            <trans-unit id="tl_module.gc_sortingField.visitors">
+                <source>Number of visitors (visitors)</source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

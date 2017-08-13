@@ -1,0 +1,71 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/default.php" source-language="en" target-language="nl">
+        <body>
+            <trans-unit id="ERR.link_to_not_existing_file">
+                <source>The file &quot;%s&quot; doesn't exist on your server!</source>
+                <target>Het bestand &quot;%s&quot; staat niet op uw server!</target>
+            </trans-unit>
+            <trans-unit id="ERR.link_to_not_existing_file_1">
+                <source>The db-entry with ID %s in &quot;tl_gallery_pictures&quot; links to a not existing file. &lt;br&gt;Please clean up the database or check the existence of %s in the album with alias: %s!</source>
+            </trans-unit>
+            <trans-unit id="ERR.uploadError">
+                <source>The file &quot;%s&quot; could not been uploaded!</source>
+                <target>Het bestand &quot;%s&quot; kon niet worden geüpload!</target>
+            </trans-unit>
+            <trans-unit id="ERR.fileDontExist">
+                <source>The file &quot;%s&quot; does not exist!</source>
+                <target>Het bestand &quot;%s&quot; bestaat niet!</target>
+            </trans-unit>
+            <trans-unit id="ERR.fileNotReadable">
+                <source>The file &quot;%s&quot; ist not readable! Check access rights.</source>
+                <target>Het bestand &quot;%s&quot; is niet leesbaar! Controleer uw toegangsrechten.</target>
+            </trans-unit>
+            <trans-unit id="ERR.dirNotWriteable">
+                <source>The directory &quot;%s&quot; is not writeable! Check chmod settings!</source>
+                <target>De map &quot;%s&quot; is niet beschrijfbaar! Controleer de chmod instellingen!</target>
+            </trans-unit>
+            <trans-unit id="ERR.accept_jpg">
+                <source>Gallery Creator only supports jpeg/jpg files.</source>
+            </trans-unit>
+            <trans-unit id="ERR.upploadSuccessful">
+                <source>File successfully uploaded to the server.</source>
+            </trans-unit>
+            <trans-unit id="gallery_creator.back_to_general_view">
+                <source>back to general view</source>
+                <target>Terug naar het algemene scherm</target>
+            </trans-unit>
+            <trans-unit id="gallery_creator.subalbums">
+                <source>subalbums</source>
+                <target>subalbums</target>
+            </trans-unit>
+            <trans-unit id="gallery_creator.subalbums_of">
+                <source>Subalbums of</source>
+            </trans-unit>
+            <trans-unit id="gallery_creator.pictures">
+                <source>pictures</source>
+                <target>afbeeldingen</target>
+            </trans-unit>
+            <trans-unit id="gallery_creator.contains">
+                <source>contains</source>
+                <target>bevat</target>
+            </trans-unit>
+            <trans-unit id="gallery_creator.visitors">
+                <source>visitors</source>
+            </trans-unit>
+            <trans-unit id="gallery_creator.fe_authentification_error.0">
+                <source>Authentification error</source>
+                <target>Authentification error</target>
+            </trans-unit>
+            <trans-unit id="gallery_creator.fe_authentification_error.1">
+                <source>You tried to enter a protected album. Please log in as a frontend user or check your member-rights.</source>
+                <target>U probeerde een beschermd album binnen te gaan. Log-in als frontend gebruiker of check uw rechten.</target>
+            </trans-unit>
+            <trans-unit id="MSC.gcDeleteConfirmAlbum">
+                <source>Do you really want to delete album with ID %s? \r\nAttention! \nAll image-files in the assigned directory will be deleted too!!!</source>
+            </trans-unit>
+            <trans-unit id="MSC.gcDeleteConfirmPicture">
+                <source>Do you really want to delete picture with ID %s? \r\nAttention! \nThe image-file will be deleted too!!!</source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

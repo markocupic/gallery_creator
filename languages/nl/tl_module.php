@@ -1,6 +1,6 @@
 <?php
 /**
- * TL_ROOT/system/modules/gallery_creator/languages/nl/tl_module.php 
+ * TL_ROOT/system/modules/gallery_creator/languages/nl/tl_module.php
  * 
  * Contao extension: gallery_creator 4.0.1 stable 
  * Niederländisch translation file 
@@ -15,23 +15,32 @@
  * permanent text corrections which are update-safe. 
  */
  
+$GLOBALS['TL_LANG']['tl_module']['miscellaneous_legend'] = "Diverse instellingen";
+$GLOBALS['TL_LANG']['tl_module']['picture_sorting_legend'] = "Sorteer opties";
 $GLOBALS['TL_LANG']['tl_module']['thumb_legend'] = "Thumbnail instellingen";
-$GLOBALS['TL_LANG']['tl_module']['image_legend'] = "Overige instellingen";
 $GLOBALS['TL_LANG']['tl_module']['gc_rows']['0'] = "Thumbnails per rij";
 $GLOBALS['TL_LANG']['tl_module']['gc_rows']['1'] = "Kies het aantal thumbnails per rij (0=zoveel als mogelijk).";
+$GLOBALS['TL_LANG']['tl_module']['gc_publish_albums']['0'] = "Publiceer deze albums";
+$GLOBALS['TL_LANG']['tl_module']['gc_publish_albums']['1'] = "Geselecteerde albums worden weergegeven in het frontend.";
 $GLOBALS['TL_LANG']['tl_module']['gc_template']['0'] = "Galerij template";
-$GLOBALS['TL_LANG']['tl_module']['gc_template']['1'] = "Kies een galerij template";
-$GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider']['0'] = "Activeer Ajax Thumb Slider";
+$GLOBALS['TL_LANG']['tl_module']['gc_template']['1'] = "Kies een eigen galerij template";
+$GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider']['0'] = "Activeer Ajax-Thumb-Slider";
 $GLOBALS['TL_LANG']['tl_module']['gc_activateThumbSlider']['1'] = "Activeer Ajax-Thumb-Slider op mouseover in de albumlijst?";
-$GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage']['0'] = "Onderdelen per pagina in de albumlijst";
-$GLOBALS['TL_LANG']['tl_module']['gc_AlbumsPerPage']['1'] = "Aantal onderdelen op een pagina in de albumlijst (0=alles weergeven/geen paginering).";
-$GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage']['0'] = "Thumbnails per pagina in detailweergave";
-$GLOBALS['TL_LANG']['tl_module']['gc_ThumbsPerPage']['1'] = "Aantal thumbnails per pagina in de detailweergave (0=alles weergeven/geen paginering). ";
-$GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['0'] = "Hiërarchische albums frontend";
-$GLOBALS['TL_LANG']['tl_module']['gc_hierarchicalOutput']['1'] = "Hiërarchische weergave albums/subalbums in het frontend.";
+$GLOBALS['TL_LANG']['tl_module']['gc_redirectSingleAlb']['0'] = "Omleiden in het geval van een enkel album";
+$GLOBALS['TL_LANG']['tl_module']['gc_redirectSingleAlb']['1'] = "De bezoeker wordt automatisch omgeleid naar de detailweergave als er slechts één album is.";
+$GLOBALS['TL_LANG']['tl_module']['gc_albumsPerPage']['0'] = "Onderdelen per pagina in de albumlijst";
+$GLOBALS['TL_LANG']['tl_module']['gc_albumsPerPage']['1'] = "Aantal onderdelen op een pagina in de albumlijst (0=alles weergeven/geen paginering).";
+$GLOBALS['TL_LANG']['tl_module']['gc_thumbsPerPage']['0'] = "Thumbnails per pagina";
+$GLOBALS['TL_LANG']['tl_module']['gc_thumbsPerPage']['1'] = "Aantal thumbnails per pagina in de detailweergave (0=alles weergeven/geen paginering). ";
+$GLOBALS['TL_LANG']['tl_module']['gc_sorting']['0'] = "Sorteren";
+$GLOBALS['TL_LANG']['tl_module']['gc_sorting']['1'] = "Volgens welk veld moet de galerij gesorteerd worden?";
+$GLOBALS['TL_LANG']['tl_module']['gc_sorting_direction']['0'] = "Sorteervolgorde";
+$GLOBALS['TL_LANG']['tl_module']['gc_sorting_direction']['1'] = "DESC: aflopend (descending), ASC: oplopend (ascending)";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview']['0'] = "Detailweergave: thumbnail breedte en hoogte";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_detailview']['1'] = "Geef hier de thumbnail maten en de resize mode.";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['0'] = "Albumlijst: thumbnail breedte en hoogte";
 $GLOBALS['TL_LANG']['tl_module']['gc_size_albumlisting']['1'] = "Geef hier de thumbnail maten en de resize mode.";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['0'] = "Ware grootte/nieuw venster";
 $GLOBALS['TL_LANG']['tl_module']['gc_fullsize']['1'] = "Open de afbeelding op ware grootte in een lightbox of de link in een nieuw browser venster.";
+ 
+?>

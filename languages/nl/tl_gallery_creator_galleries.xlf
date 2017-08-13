@@ -1,0 +1,42 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/tl_gallery_creator_galleries.php" source-language="en" target-language="nl">
+        <body>
+            <trans-unit id="tl_gallery_creator_galleries.title_legend">
+                <source>Title and redirect</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.protected_legend">
+                <source>Protection</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.title.0">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.title.1">
+                <source>Add a title please.</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.jumpTo.0">
+                <source>Album reader</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.jumpTo.1">
+                <source>Select the album reader page.</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.protected.0">
+                <source>Protect gallery</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.protected.1">
+                <source>Do only show the albms to selected frontend users</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.groups.0">
+                <source>Frontend member groups</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.groups.1">
+                <source>Do only show the albums to members of the selected frontend groups</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.new.0">
+                <source>New Gallery</source>
+            </trans-unit>
+            <trans-unit id="tl_gallery_creator_galleries.new.1">
+                <source>Add a new Gallery</source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>

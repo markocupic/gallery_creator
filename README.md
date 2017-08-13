@@ -1,11 +1,11 @@
-# Gallery Creator nun auch als Symphony bundle verfügbar.
-https://github.com/markocupic/gallery-creator-bundle
+## Wichtig! Neukonzeptionierung von Gallery Creator
+### Was sind die Neuerungen?
+Grob gesagt gibt es zwei Neuerungen.
+1. Die Module für die Albenauflistung und Albumdetailseite sind getrennt. Das heisst, es ist nötig zwei Frontend-Module anzulegen. So wie bei Contao üblich z.B. im News-/Kalendermodul.
+2. Die hierarchische Anzeige wird aufgegeben. Hingegen kommt ein weiterer Container hinzu. Damit lassen sich 2 Hierarchiestufen abbilden. Galerie -> Album -> Bild
 
 
-# Gallery Creator
-
-## Frontend Modul für Contao 3.
-
+## Frontend Modul für Contao 3.5.x
 Mit dem Modul lassen sich Alben verwalten und erstellen. Das Modul ist sehr flexibel und bietet eine Albenübersicht und eine Detailansicht.
 
 ## "gc_generateFrontendTemplate"-Hook

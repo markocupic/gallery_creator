@@ -1,0 +1,29 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/gallery_creator/languages/en/modules.php" source-language="en" target-language="nl">
+        <body>
+            <trans-unit id="MOD.gallery_creator.0">
+                <source>Gallery Creator</source>
+                <target>Gallery Creator</target>
+            </trans-unit>
+            <trans-unit id="MOD.gallery_creator.1">
+                <source>Create and edit album-galleries.</source>
+                <target>Maak en verander albums/galerijen.</target>
+            </trans-unit>
+            <trans-unit id="FMD.gallery_creator">
+                <source>Gallery Creator Modules</source>
+            </trans-unit>
+            <trans-unit id="FMD.gallery_creator_list.0">
+                <source>Gallery Listing Module</source>
+            </trans-unit>
+            <trans-unit id="FMD.gallery_creator_list.1">
+                <source></source>
+            </trans-unit>
+            <trans-unit id="FMD.gallery_creator_reader.0">
+                <source>Gallery Creator Reader Module</source>
+            </trans-unit>
+            <trans-unit id="FMD.gallery_creator_reader.1">
+                <source></source>
+            </trans-unit>
+        </body>
+     </file>
+</xliff>
