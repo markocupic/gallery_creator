@@ -33,6 +33,7 @@ class ModuleGalleryCreatorReader extends Albums
 	 */
 	public function generate()
 	{
+		$this->start = microtime(true);
 		if (TL_MODE == 'BE')
 		{
 			/** @var \BackendTemplate|object $objTemplate */
@@ -50,6 +51,12 @@ class ModuleGalleryCreatorReader extends Albums
 		if (!isset($_GET['albums']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
 			\Input::setGet('albums', \Input::get('auto_item'));
+		}
+
+		// Set the item from the auto_item parameter
+		if (!isset($_GET['events']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		{
+			\Input::setGet('events', \Input::get('auto_item'));
 		}
 
 		// Do not index or cache the page if no event has been specified
@@ -92,7 +99,6 @@ class ModuleGalleryCreatorReader extends Albums
 
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-
 		// Get the current event
 		$objAlbum = \GalleryCreatorAlbumsModel::findPublishedByParentAndIdOrAlias(\Input::get('albums'), $this->gc_galleries);
 
@@ -102,7 +108,6 @@ class ModuleGalleryCreatorReader extends Albums
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 			$objHandler->generate($objPage->id);
 		}
-
 
 
 		// count pictures
@@ -119,7 +124,7 @@ class ModuleGalleryCreatorReader extends Albums
 			$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
 
 			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil($total/$limit), 1))
+			if ($page < 1 || $page > max(ceil($total / $limit), 1))
 			{
 				/** @var \PageError404 $objHandler */
 				$objHandler = new $GLOBALS['TL_PTY']['error_404']();
@@ -139,22 +144,27 @@ class ModuleGalleryCreatorReader extends Albums
 
 		// sort by name is done below
 		$str_sorting = str_replace('name', 'id', $str_sorting);
-
-		$objPictures = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE published=? AND pid=? ORDER BY ' . $str_sorting);
+		$arrOptions = array(
+			'column' => array('tl_gallery_creator_pictures.published=?', 'tl_gallery_creator_pictures.pid=?'),
+			'value' => array('1', $objAlbum->id),
+			'order' => $str_sorting
+		);
 		if ($limit > 0)
 		{
-			$objPictures->limit($limit, $offset);
+			$arrOptions['limit'] = $limit;
+			$arrOptions['offset'] = $offset;
 		}
-		$objPictures = $objPictures->execute(1, $objAlbum->id);
+		$objPictures = \GalleryCreatorPicturesModel::findAll($arrOptions);
+		if ($objPictures === null)
+		{
+			return;
+		}
 
 
 		$auxBasename = array();
 		while ($objPictures->next())
 		{
-			$objPicture = \GalleryCreatorPicturesModel::findByPk($objPictures->id);
-			if($objPicture === null){
-				continue;
-			}
+
 			$objFilesModel = \FilesModel::findByUuid($objPictures->uuid);
 			$basename = 'undefined';
 			if ($objFilesModel !== null)
@@ -162,10 +172,8 @@ class ModuleGalleryCreatorReader extends Albums
 				$basename = $objFilesModel->name;
 			}
 			$auxBasename[] = $basename;
-			$this->addPicture($objPicture, $objAlbum->getRelated('pid')->id);
+			$this->addPicture($objPictures, $objAlbum->getRelated('pid')->id);
 		}
-
-		//die(print_r($this->arrPictures,true));
 
 
 		// sort by basename
