@@ -22,7 +22,7 @@ use Contao\Environment;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleGalleryCreatorList extends Albums
+class ModuleGalleryCreatorList extends ModuleGalleryCreator
 {
 
 

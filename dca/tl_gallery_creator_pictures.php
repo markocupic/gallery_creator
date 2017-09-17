@@ -1,7 +1,7 @@
 <?php
 use Contao\GalleryCreatorAlbumsModel;
 use Contao\GalleryCreatorPicturesModel;
-use Markocupic\GalleryCreator\Albums;
+use Markocupic\GalleryCreator\ModuleGalleryCreator;
 use Contao\BackendUser;
 use Contao\Input;
 use Contao\Image;

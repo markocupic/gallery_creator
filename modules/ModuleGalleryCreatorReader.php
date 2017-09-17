@@ -23,7 +23,7 @@ use Contao\FilesModel;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleGalleryCreatorReader extends Albums
+class ModuleGalleryCreatorReader extends ModuleGalleryCreator
 {
 
     /**
