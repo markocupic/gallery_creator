@@ -32,7 +32,7 @@
         "classmap":[
             "classes/",
             "modules/",
-            "models"
+            "models/"
         ]
     },
     "extra":{
