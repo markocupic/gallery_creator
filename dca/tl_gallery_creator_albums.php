@@ -808,7 +808,7 @@ class tl_gallery_creator_albums extends Backend
     public function inputFieldCbGenerateUploaderMarkup()
     {
 
-        return Albums::generateUploader($this->User->gc_be_uploader_template);
+        return ModuleGalleryCreator::generateUploader($this->User->gc_be_uploader_template);
     }
 
     /**
@@ -855,7 +855,7 @@ class tl_gallery_creator_albums extends Backend
         $href = sprintf("contao/main.php?do=gallery_creator&table=tl_gallery_creator_albums&id=%s&act=edit&rt=%s&ref=%s", $row['id'], REQUEST_TOKEN, TL_REFERER_ID);
         $label = str_replace('#href#', $href, $label);
         $label = str_replace('#title#', sprintf($GLOBALS['TL_LANG']['tl_gallery_creator_albums']['edit_album'][1], $row['id']), $label);
-        $level = Albums::getAlbumLevel($row["pid"]);
+        $level = ModuleGalleryCreator::getAlbumLevel($row["pid"]);
         $padding = '0';
         $label = str_replace('#padding-left#', 'padding-left:' . $padding . 'px;', $label);
 
@@ -1058,12 +1058,12 @@ class tl_gallery_creator_albums extends Backend
             return;
         }
         // Call the uploader script
-        $arrUpload = Albums::fileupload($intAlbumId, $strName);
+        $arrUpload = ModuleGalleryCreator::fileupload($intAlbumId, $strName);
 
         foreach ($arrUpload as $strFileSrc)
         {
             // Add  new datarecords into tl_gallery_creator_pictures
-            Albums::createNewImage($objAlb->id, $strFileSrc);
+            ModuleGalleryCreator::createNewImage($objAlb->id, $strFileSrc);
         }
 
         // Do not exit script if html5_uploader is selected and Javascript is disabled
@@ -1104,7 +1104,7 @@ class tl_gallery_creator_albums extends Backend
             {
                 $GLOBALS['TL_DCA']['tl_gallery_creator_albums']['fields']['preserve_filename']['eval']['submitOnChange'] = false;
                 // Import Images from filesystem and write entries to tl_gallery_creator_pictures
-                Albums::importFromFilesystem($intAlbumId, $strMultiSRC);
+                ModuleGalleryCreator::importFromFilesystem($intAlbumId, $strMultiSRC);
                 $this->redirect('contao/main.php?do=gallery_creator&table=tl_gallery_creator_pictures&id=' . $intAlbumId . '&ref=' . TL_REFERER_ID . '&filesImported=true');
             }
         }

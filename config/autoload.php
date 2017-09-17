@@ -24,11 +24,12 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
     // Modules
+    'Markocupic\GalleryCreator\ModuleGalleryCreator' => 'system/modules/gallery_creator/modules/ModuleGalleryCreator.php',
     'Markocupic\GalleryCreator\ModuleGalleryCreatorList' => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorList.php',
     'Markocupic\GalleryCreator\ModuleGalleryCreatorReader' => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorReader.php',
 
     // Classes
-    'Markocupic\GalleryCreator\Albums' => 'system/modules/gallery_creator/classes/Albums.php',
+    'Markocupic\GalleryCreator\GalleryCreator' => 'system/modules/gallery_creator/classes/GalleryCreator.php',
     'Markocupic\GalleryCreator\MigrationKit' => 'system/modules/gallery_creator/classes/MigrationKit.php',
 
     // Models

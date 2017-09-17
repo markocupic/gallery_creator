@@ -23,7 +23,7 @@ use Contao\FileUpload;
 use Contao\Message;
 use Contao\BackendUser;
 use Contao\Database;
-use Contao\Frontend;
+use Contao\Module;
 use Contao\PageModel;
 use Contao\Image;
 use Contao\Picture;
@@ -37,10 +37,10 @@ use Contao\ArticleModel;
 
 
 /**
- * Class Albums
- * @package GalleryCreator
+ * Class ModuleGalleryCreator
+ * @package Markocupic\GalleryCreator
  */
-class Albums extends Frontend
+abstract class ModuleGalleryCreator extends Module
 {
     /**
      * Current URL
