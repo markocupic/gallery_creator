@@ -12,15 +12,13 @@
 /**
  * Define Constants
  */
-define('GALLERY_CREATOR_UPLOAD_PATH', $GLOBALS['TL_CONFIG']['uploadPath'] . '/gallery_creator_albums');
-
+$GLOBALS['TL_CONFIG']['gallery_creator_upload_path'] = $GLOBALS['TL_CONFIG']['uploadPath'] . '/gallery_creator_albums';
 
 /**
  * Frontend modules
  */
-array_insert($GLOBALS['FE_MOD'], 2, array('gallery_creator' => array('gallery_creator_list' => 'GalleryCreator\ModuleGalleryCreatorList')));
-array_insert($GLOBALS['FE_MOD'], 2, array('gallery_creator' => array('gallery_creator_reader' => 'GalleryCreator\ModuleGalleryCreatorReader')));
-
+array_insert($GLOBALS['FE_MOD'], 2, array('gallery_creator' => array('gallery_creator_list' => 'Markocupic\GalleryCreator\ModuleGalleryCreatorList')));
+array_insert($GLOBALS['FE_MOD'], 2, array('gallery_creator' => array('gallery_creator_reader' => 'Markocupic\GalleryCreator\ModuleGalleryCreatorReader')));
 
 
 /**
@@ -43,9 +41,11 @@ if (TL_MODE == 'BE')
 
 
 // Migrate from v.5.0.0 to new version with tl_gallery_creator_galleries
-if(TL_MODE == 'BE')
+if (TL_MODE == 'BE')
 {
     $GLOBALS['TL_HOOKS']['reviseTable'][] = array('Markocupic\GalleryCreator\MigrationKit', 'migrate');
+    $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_albums', 'parseBackendTemplate');
+    $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_pictures', 'parseBackendTemplate');
 }
 
 
@@ -55,11 +55,10 @@ if(TL_MODE == 'BE')
 $GLOBALS['TL_AUTO_ITEM'][] = 'albums';
 
 
-
 /**
  * Register hook to add album items to the indexer
  */
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('GalleryCreator\Albums', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Markocupic\GalleryCreator\Albums', 'getSearchablePages');
 
 
 /**

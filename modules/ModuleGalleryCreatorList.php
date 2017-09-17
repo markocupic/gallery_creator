@@ -8,8 +8,14 @@
  * @license LGPL-3.0+
  */
 
-namespace GalleryCreator;
+namespace Markocupic\GalleryCreator;
 
+
+use Contao\Input;
+use Contao\BackendTemplate;
+use Contao\Config;
+use Contao\Pagination;
+use Contao\Environment;
 
 /**
  * Front end module "event list".
@@ -40,8 +46,8 @@ class ModuleGalleryCreatorList extends Albums
     {
         if (TL_MODE == 'BE')
         {
-            /** @var \BackendTemplate|object $objTemplate */
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            /** @var BackendTemplate|object $objTemplate */
+            $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD']['gallery_creator_list'][0]) . ' ###';
             $objTemplate->title = $this->headline;
@@ -53,7 +59,7 @@ class ModuleGalleryCreatorList extends Albums
         }
 
         // Ajax Requests
-        if (TL_MODE == 'FE' && \Environment::get('isAjaxRequest'))
+        if (TL_MODE == 'FE' && Environment::get('isAjaxRequest'))
         {
             $this->generateAjax();
         }
@@ -68,7 +74,7 @@ class ModuleGalleryCreatorList extends Albums
         }
 
         // Show the event reader if an item has been selected
-        if ($this->gc_readerModule > 0 && (isset($_GET['albums']) || (\Config::get('useAutoItem') && isset($_GET['auto_item']))))
+        if ($this->gc_readerModule > 0 && (isset($_GET['albums']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
         {
             return $this->getFrontendModule($this->gc_readerModule, $this->strColumn);
         }
@@ -93,7 +99,7 @@ class ModuleGalleryCreatorList extends Albums
         {
             // Get the current page
             $id = 'page_g' . $this->id;
-            $page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
+            $page = (Input::get($id) !== null) ? Input::get($id) : 1;
             $offset = ($page - 1) * $limit;
 
             // count albums
@@ -101,7 +107,7 @@ class ModuleGalleryCreatorList extends Albums
 
             // create pagination menu
             $numberOfLinks = $this->gc_paginationNumberOfLinks < 1 ? 7 : $this->gc_paginationNumberOfLinks;
-            $objPagination = new \Pagination($itemsTotal, $limit, $numberOfLinks, $id);
+            $objPagination = new Pagination($itemsTotal, $limit, $numberOfLinks, $id);
             $this->Template->pagination = $objPagination->generate("\n ");
         }
 

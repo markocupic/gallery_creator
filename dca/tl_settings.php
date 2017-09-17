@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
-
-/**
  * Add to palette
  */
 

@@ -14,8 +14,7 @@
  */
 ClassLoader::addNamespaces(array
 (
-	'GalleryCreator',
-	'Markocupic',
+    'Markocupic',
 ));
 
 
@@ -24,19 +23,18 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Modules
-	'GalleryCreator\ModuleGalleryCreatorList'   => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorList.php',
-	'GalleryCreator\ModuleGalleryCreatorReader' => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorReader.php',
+    // Modules
+    'Markocupic\GalleryCreator\ModuleGalleryCreatorList' => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorList.php',
+    'Markocupic\GalleryCreator\ModuleGalleryCreatorReader' => 'system/modules/gallery_creator/modules/ModuleGalleryCreatorReader.php',
 
-	// Classes
-	'GalleryCreator\Albums'                     => 'system/modules/gallery_creator/classes/Albums.php',
-	'Markocupic\GalleryCreator\MigrationKit'    => 'system/modules/gallery_creator/classes/MigrationKit.php',
-	'GalleryCreator\GalleryCreator'             => 'system/modules/gallery_creator/classes/GalleryCreator.php',
+    // Classes
+    'Markocupic\GalleryCreator\Albums' => 'system/modules/gallery_creator/classes/Albums.php',
+    'Markocupic\GalleryCreator\MigrationKit' => 'system/modules/gallery_creator/classes/MigrationKit.php',
 
-	// Models
-	'Contao\GalleryCreatorPicturesModel'        => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
-	'Contao\GalleryCreatorAlbumsModel'          => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
-	'Contao\GalleryCreatorGalleriesModel'       => 'system/modules/gallery_creator/models/GalleryCreatorGalleriesModel.php',
+    // Models
+    'Contao\GalleryCreatorPicturesModel' => 'system/modules/gallery_creator/models/GalleryCreatorPicturesModel.php',
+    'Contao\GalleryCreatorAlbumsModel' => 'system/modules/gallery_creator/models/GalleryCreatorAlbumsModel.php',
+    'Contao\GalleryCreatorGalleriesModel' => 'system/modules/gallery_creator/models/GalleryCreatorGalleriesModel.php',
 ));
 
 
@@ -45,7 +43,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'mod_gallery_creator_list'   => 'system/modules/gallery_creator/templates',
-	'be_gc_html5_uploader'       => 'system/modules/gallery_creator/templates',
-	'mod_gallery_creator_reader' => 'system/modules/gallery_creator/templates',
+    'mod_gallery_creator_list' => 'system/modules/gallery_creator/templates',
+    'be_gc_html5_uploader' => 'system/modules/gallery_creator/templates',
+    'mod_gallery_creator_reader' => 'system/modules/gallery_creator/templates',
 ));

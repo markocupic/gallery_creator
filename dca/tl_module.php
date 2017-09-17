@@ -1,20 +1,13 @@
 <?php
+use Contao\Input;
+use Contao\System;
 
-/**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
 
 /**
  * Add palettes to tl_module
  */
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array(
-    'mod_gallery_creator',
+    'tl_module_gallery_creator',
     'onloadCbSetUpPalettes',
 );
 
@@ -41,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_galleries'] = array(
     'label'            => &$GLOBALS['TL_LANG']['tl_module']['gc_galleries'],
     'exclude'          => true,
     'inputType'        => 'checkbox',
-    'options_callback' => array('mod_gallery_creator', 'getGalleries'),
+    'options_callback' => array('tl_module_gallery_creator', 'getGalleries'),
     'eval'             => array('mandatory' => true, 'multiple' => true, 'tl_class' => 'w50'),
     'sql'              => "blob NULL",
 );
@@ -49,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_readerModule'] = array(
     'label'            => &$GLOBALS['TL_LANG']['tl_module']['gc_readerModule'],
     'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('mod_gallery_creator', 'getReaderModules'),
+    'options_callback' => array('tl_module_gallery_creator', 'getReaderModules'),
     'reference'        => &$GLOBALS['TL_LANG']['tl_module'],
     'eval'             => array('includeBlankOption' => true, 'tl_class' => 'w50'),
     'sql'              => "int(10) unsigned NOT NULL default '0'",
@@ -175,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_publish_albums'] = array(
     'label'                => &$GLOBALS['TL_LANG']['tl_module']['gc_publish_albums'],
     'inputType'            => 'checkbox',
     'exclude'              => true,
-    'input_field_callback' => array('mod_gallery_creator', 'inputFieldCallbackListAlbums'),
+    'input_field_callback' => array('tl_module_gallery_creator', 'inputFieldCallbackListAlbums'),
     'eval'                 => array('multiple' => true, 'mandatory' => false, 'tl_class' => 'clr'),
     'sql'                  => "blob NULL",
 );
@@ -184,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_publish_single_album'] = array(
     'label'            => &$GLOBALS['TL_LANG']['tl_module']['gc_publish_single_album'],
     'inputType'        => 'radio',
     'exclude'          => true,
-    'options_callback' => array('mod_gallery_creator', 'optionsCallbackListAlbums'),
+    'options_callback' => array('tl_module_gallery_creator', 'optionsCallbackListAlbums'),
     'eval'             => array('mandatory' => false, 'multiple' => false, 'tl_class' => 'clr'),
     'sql'              => "blob NULL",
 );
@@ -198,16 +191,13 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_publish_all_albums'] = array(
 );
 
 /**
- * Class mod_gallery_creator
- *
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @copyright  Marko Cupic
- * @author     Marko Cupic
+ * Class tl_module_gallery_creator
  */
-class mod_gallery_creator extends Backend
+class tl_module_gallery_creator extends Backend
 {
-
+    /**
+     * tl_module_gallery_creator constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -216,8 +206,6 @@ class mod_gallery_creator extends Backend
 
 
     /**
-     * Get all galleries and return them as array
-     *
      * @return array
      */
     public function getGalleries()
@@ -243,8 +231,6 @@ class mod_gallery_creator extends Backend
 
 
     /**
-     * Get all event reader modules and return them as array
-     *
      * @return array
      */
     public function getReaderModules()
@@ -262,9 +248,7 @@ class mod_gallery_creator extends Backend
 
 
     /**
-     * options_callback fuer die Albumauflistung
-     *
-     * @return string
+     * @return array
      */
     public function optionsCallbackListAlbums()
     {
@@ -286,27 +270,25 @@ class mod_gallery_creator extends Backend
 
 
     /**
-     * input_field_callback fuer die Albumauflistung
-     *
      * @return string
      */
     public function inputFieldCallbackListAlbums()
     {
-        if (\Input::post('FORM_SUBMIT') == 'tl_module')
+        if (Input::post('FORM_SUBMIT') == 'tl_module')
         {
 
-            if (!\Input::post('gc_publish_all_albums'))
+            if (!Input::post('gc_publish_all_albums'))
             {
                 $albums = array();
-                if (\Input::post('gc_publish_albums'))
+                if (Input::post('gc_publish_albums'))
                 {
-                    foreach (deserialize(\Input::post('gc_publish_albums'), true) as $album)
+                    foreach (deserialize(Input::post('gc_publish_albums'), true) as $album)
                     {
                         $albums[] = $album;
                     }
                 }
                 $set = array('gc_publish_albums' => serialize($albums));
-                $this->Database->prepare('UPDATE tl_module %s WHERE id=? ')->set($set)->execute(\Input::get('id'));
+                $this->Database->prepare('UPDATE tl_module %s WHERE id=? ')->set($set)->execute(Input::get('id'));
             }
         }
 
@@ -328,9 +310,7 @@ class mod_gallery_creator extends Backend
 
 
     /**
-     * onload_callback onloadCbSetUpPalettes
      *
-     * @return string
      */
     public function onloadCbSetUpPalettes()
     {

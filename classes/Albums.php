@@ -8,14 +8,39 @@
  * @license LGPL-3.0+
  */
 
-namespace GalleryCreator;
+namespace Markocupic\GalleryCreator;
+
+
+use Contao\Input;
+use Contao\BackendTemplate;
+use Contao\Config;
+use Contao\GalleryCreatorGalleriesModel;
+use Contao\GalleryCreatorAlbumsModel;
+use Contao\GalleryCreatorPicturesModel;
+use Contao\FilesModel;
+use Contao\Dbafs;
+use Contao\FileUpload;
+use Contao\Message;
+use Contao\BackendUser;
+use Contao\Database;
+use Contao\Module;
+use Contao\PageModel;
+use Contao\Image;
+use Contao\Picture;
+use Contao\File;
+use Contao\System;
+use Contao\Date;
+use Contao\StringUtil;
+use Contao\Validator;
+use Contao\UserModel;
+use Contao\ArticleModel;
 
 
 /**
  * Class Albums
  * @package GalleryCreator
  */
-abstract class Albums extends \Module
+abstract class Albums extends Module
 {
     /**
      * Current URL
@@ -73,17 +98,17 @@ abstract class Albums extends \Module
         while ($objAlbums->next())
         {
 
-            $objAlbum = \GalleryCreatorAlbumsModel::findByPk($objAlbums->id);
+            $objAlbum = GalleryCreatorAlbumsModel::findByPk($objAlbums->id);
             if ($objAlbum !== null)
             {
                 $strUrl = $this->strUrl;
-                $objGallery = \GalleryCreatorGalleriesModel::findByPk($objAlbum->pid);
+                $objGallery = GalleryCreatorGalleriesModel::findByPk($objAlbum->pid);
 
                 // Get the current "jumpTo" page
                 if ($objGallery !== null && $objGallery->jumpTo && ($objTarget = $objGallery->getRelated('jumpTo')) !== null)
                 {
-                    /** @var \PageModel $objTarget */
-                    $strUrl = $objTarget->getFrontendUrl((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ? '/%s' : '/albums/%s');
+                    /** @var PageModel $objTarget */
+                    $strUrl = $objTarget->getFrontendUrl((Config::get('useAutoItem') && !Config::get('disableAlias')) ? '/%s' : '/albums/%s');
                 }
                 $this->addAlbum($objAlbum, $strUrl, $objAlbums->pid);
             }
@@ -113,7 +138,7 @@ abstract class Albums extends \Module
     {
         global $objPage;
         // Get the page model
-        $objPageModel = \PageModel::findByPk($objPage->id);
+        $objPageModel = PageModel::findByPk($objPage->id);
 
         $objPics = $this->Database->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=? AND published=?')->execute($objAlbum->id, '1');
 
@@ -133,16 +158,16 @@ abstract class Albums extends \Module
         //Generate the thumbnails and the picture element
         try
         {
-            $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
-            $picture = \Picture::create($strImageSrc, $arrSize)->getTemplateData();
+            $thumbSrc = Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
+            $picture = Picture::create($strImageSrc, $arrSize)->getTemplateData();
 
             if ($thumbSrc !== $strImageSrc)
             {
-                new \File(rawurldecode($thumbSrc), true);
+                new File(rawurldecode($thumbSrc), true);
             }
         } catch (\Exception $e)
         {
-            \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
         }
 
         $picture['alt'] = specialchars($objAlbum->name);
@@ -169,7 +194,7 @@ abstract class Albums extends \Module
             'event_tstamp' => $objAlbum->date,
             'date' => $objAlbum->date,
             //[string] Event-Datum (formatiert)
-            'event_date' => \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date),
+            'event_date' => Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date),
             //[string] Event-Location
             'event_location' => specialchars($objAlbum->event_location),
             //[string] Albumname
@@ -177,8 +202,8 @@ abstract class Albums extends \Module
             //[string] Albumalias (=Verzeichnisname)
             'alias' => $objAlbum->alias,
             //[string] Albumkommentar
-            'comment' => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
-            'caption' => $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : \StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
+            'comment' => $objPage->outputFormat == 'xhtml' ? StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
+            'caption' => $objPage->outputFormat == 'xhtml' ? StringUtil::toXhtml(nl2br_xhtml($objAlbum->comment)) : StringUtil::toHtml5(nl2br_html5($objAlbum->comment)),
             //[int] Albumbesucher (Anzahl Klicks)
             'visitors' => $objAlbum->visitors,
             //[string] Link zur Detailansicht
@@ -192,7 +217,7 @@ abstract class Albums extends \Module
 			//[string] Pfad zum Originalbild
 			'src' => TL_FILES_URL . $arrPreviewThumb['path'],
 			//[string] Pfad zum Thumbnail
-			'thumb_src' => TL_FILES_URL . \Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
+			'thumb_src' => TL_FILES_URL . Image::get($arrPreviewThumb['path'], $arrSize[0], $arrSize[1], $arrSize[2]),
 			//[int] article id
 			'insert_article_pre' => $objAlbum->insert_article_pre ? $objAlbum->insert_article_pre : null,
 			//[int] article id
@@ -210,7 +235,7 @@ abstract class Albums extends \Module
 		);
 
 		// Fuegt dem Array weitere Eintraege hinzu, falls tl_gallery_creator_albums erweitert wurde
-		$objAlbum = \GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
+		$objAlbum = GalleryCreatorAlbumsModel::findByPk($objAlbum->id);
 		if ($objAlbum !== null)
         {
             $arrAlbum = array_merge($objAlbum->row(), $arrAlbum);
@@ -232,12 +257,12 @@ abstract class Albums extends \Module
 
 
         $defaultThumbSRC = $this->defaultThumb;
-        if (\Config::get('gc_error404_thumb') !== '')
+        if (Config::get('gc_error404_thumb') !== '')
         {
-            $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
+            $objFile = FilesModel::findByUuid(Config::get('gc_error404_thumb'));
             if ($objFile !== null)
             {
-                if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
+                if (Validator::isUuid(Config::get('gc_error404_thumb')))
                 {
                     if (is_file(TL_ROOT . '/' . $objFile->path))
                     {
@@ -248,7 +273,7 @@ abstract class Albums extends \Module
         }
 
         // Get the page model
-        $objPageModel = \PageModel::findByPk($objPage->id);
+        $objPageModel = PageModel::findByPk($objPage->id);
 
 
         //Alle Informationen zum Album in ein array packen
@@ -261,7 +286,7 @@ abstract class Albums extends \Module
         $arrAlbumInfo = $objAlbum->row();
 
         //Bild-Besitzer
-        $objOwner = \UserModel::findByPk($objPicture->owner);
+        $objOwner = UserModel::findByPk($objPicture->owner);
         if ($objOwner === null)
         {
             $imageOwner = '';
@@ -271,7 +296,7 @@ abstract class Albums extends \Module
             $imageOwner = $objOwner->name;
         }
         $arrMeta = array();
-        $objFileModel = \FilesModel::findByUuid($objPicture->uuid);
+        $objFileModel = FilesModel::findByUuid($objPicture->uuid);
         if ($objFileModel == null)
         {
             $strImageSrc = $defaultThumbSRC;
@@ -301,39 +326,39 @@ abstract class Albums extends \Module
         //Generate the thumbnails and the picture element
         try
         {
-            $thumbSrc = \Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
+            $thumbSrc = Image::create($strImageSrc, $arrSize)->executeResize()->getResizedPath();
             // overwrite $thumbSrc if there is a valid custom thumb
             if ($objPicture->addCustomThumb && !empty($objPicture->customThumb))
             {
-                $customThumbModel = \FilesModel::findByUuid($objPicture->customThumb);
+                $customThumbModel = FilesModel::findByUuid($objPicture->customThumb);
                 if ($customThumbModel !== null)
                 {
                     if (is_file(TL_ROOT . '/' . $customThumbModel->path))
                     {
-                        $objFileCustomThumb = new \File($customThumbModel->path, true);
+                        $objFileCustomThumb = new File($customThumbModel->path, true);
                         if ($objFileCustomThumb->isGdImage)
                         {
-                            $thumbSrc = \Image::create($objFileCustomThumb->path, $arrSize)->executeResize()->getResizedPath();
+                            $thumbSrc = Image::create($objFileCustomThumb->path, $arrSize)->executeResize()->getResizedPath();
                             $hasCustomThumb = true;
                         }
                     }
                 }
             }
             $thumbPath = $hasCustomThumb ? $objFileCustomThumb->path : $strImageSrc;
-            $picture = \Picture::create($thumbPath, $arrSize)->getTemplateData();
+            $picture = Picture::create($thumbPath, $arrSize)->getTemplateData();
 
         } catch (\Exception $e)
         {
-            \System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+            System::log('Image "' . $strImageSrc . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
             $thumbSrc = '';
             $picture = array('img' => array('src' => '', 'srcset' => ''), 'sources' => array());
         }
 
         $picture['alt'] = $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']);
-        $picture['title'] = $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']);
+        $picture['title'] = $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(StringUtil::toXhtml($objPicture->comment)) : specialchars(StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']);
 
 
-        $objFileThumb = new \File(rawurldecode($thumbSrc));
+        $objFileThumb = new File(rawurldecode($thumbSrc));
         $arrSize[0] = $objFileThumb->width;
         $arrSize[1] = $objFileThumb->height;
         $arrFile["thumb_width"] = $objFileThumb->width;
@@ -342,7 +367,7 @@ abstract class Albums extends \Module
         // get some image params
         if (is_file(TL_ROOT . '/' . $strImageSrc))
         {
-            $objFileImage = new \File($strImageSrc);
+            $objFileImage = new File($strImageSrc);
             if (!$objFileImage->isGdImage)
             {
                 return null;
@@ -380,16 +405,16 @@ abstract class Albums extends \Module
 
         //video-integration
         $strMediaSrc = trim($objPicture->socialMediaSRC) != "" ? trim($objPicture->socialMediaSRC) : "";
-        if (\Validator::isUuid($objPicture->localMediaSRC))
+        if (Validator::isUuid($objPicture->localMediaSRC))
         {
             //get path of a local Media
-            $objMovieFile = \FilesModel::findById($objPicture->localMediaSRC);
+            $objMovieFile = FilesModel::findById($objPicture->localMediaSRC);
             $strMediaSrc = $objMovieFile !== null ? $objMovieFile->path : $strMediaSrc;
         }
         $href = null;
         if (TL_MODE == 'FE' && $this->gc_fullsize)
         {
-            $href = $strMediaSrc != "" ? $strMediaSrc : \System::urlEncode($strImageSrc);
+            $href = $strMediaSrc != "" ? $strMediaSrc : System::urlEncode($strImageSrc);
         }
 
         //cssID
@@ -427,12 +452,12 @@ abstract class Albums extends \Module
             //[string] title-attribut
             'title' => $objPicture->title != '' ? specialchars($objPicture->title) : specialchars($arrMeta['title']),
             //[string] Bildkommentar oder Bildbeschreibung
-            'comment' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
-            'caption' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(\StringUtil::toXhtml($objPicture->comment)) : specialchars(\StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'comment' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(StringUtil::toXhtml($objPicture->comment)) : specialchars(StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
+            'caption' => $objPicture->comment != '' ? ($objPage->outputFormat == 'xhtml' ? specialchars(StringUtil::toXhtml($objPicture->comment)) : specialchars(StringUtil::toHtml5($objPicture->comment))) : specialchars($arrMeta['caption']),
             //[string] path to media (video, picture, sound...)
             'href' => TL_FILES_URL . $href,
             // single image url
-            'single_image_url' => $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/albums/') . \Input::get('albums') . '/img/' . $arrFile["filename"], $objPage->language),
+            'single_image_url' => $objPageModel->getFrontendUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/albums/') . Input::get('albums') . '/img/' . $arrFile["filename"], $objPage->language),
             //[string] path to the image,
             'image_src' => $arrFile["path"],
             //[string] path to the other selected media
@@ -490,7 +515,7 @@ abstract class Albums extends \Module
     /**
      * Generate a URL and return it as string
      *
-     * @param \GalleryCreatorAlbumsModel $objEvent
+     * @param GalleryCreatorAlbumsModel $objEvent
      * @param string $strUrl
      *
      * @return string
@@ -503,7 +528,7 @@ abstract class Albums extends \Module
             case 'external':
                 if (substr($objAlbum->url, 0, 7) == 'mailto:')
                 {
-                    return \StringUtil::encodeEmail($objAlbum->url);
+                    return StringUtil::encodeEmail($objAlbum->url);
                 }
                 else
                 {
@@ -515,23 +540,23 @@ abstract class Albums extends \Module
             case 'internal':
                 if (($objTarget = $objAlbum->getRelated('jumpTo')) !== null)
                 {
-                    /** @var \PageModel $objTarget */
+                    /** @var PageModel $objTarget */
                     return ampersand($objTarget->getFrontendUrl());
                 }
                 break;
 
             // Link to an article
             case 'article':
-                if (($objArticle = \ArticleModel::findByPk($objAlbum->articleId, array('eager' => true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+                if (($objArticle = ArticleModel::findByPk($objAlbum->articleId, array('eager' => true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
                 {
-                    /** @var \PageModel $objPid */
-                    return ampersand($objPid->getFrontendUrl('/articles/' . ((!\Config::get('disableAlias') && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)));
+                    /** @var PageModel $objPid */
+                    return ampersand($objPid->getFrontendUrl('/articles/' . ((!Config::get('disableAlias') && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)));
                 }
                 break;
         }
 
         // Link to the default page
-        return ampersand(sprintf($strUrl, ((!\Config::get('disableAlias') && $objAlbum->alias != '') ? $objAlbum->alias : $objAlbum->id)));
+        return ampersand(sprintf($strUrl, ((!Config::get('disableAlias') && $objAlbum->alias != '') ? $objAlbum->alias : $objAlbum->id)));
     }
 
     /**
@@ -545,12 +570,12 @@ abstract class Albums extends \Module
         $thumbSRC = $this->defaultThumb;
 
         // Check for an alternate thumbnail
-        if (\Config::get('gc_error404_thumb') !== '')
+        if (Config::get('gc_error404_thumb') !== '')
         {
-            $objFile = \FilesModel::findByUuid(\Config::get('gc_error404_thumb'));
+            $objFile = FilesModel::findByUuid(Config::get('gc_error404_thumb'));
             if ($objFile !== null)
             {
-                if (\Validator::isUuid(\Config::get('gc_error404_thumb')))
+                if (Validator::isUuid(Config::get('gc_error404_thumb')))
                 {
                     if (is_file(TL_ROOT . '/' . $objFile->path))
                     {
@@ -566,19 +591,19 @@ abstract class Albums extends \Module
             'path' => $thumbSRC
         );
 
-        $objAlb = \GalleryCreatorAlbumsModel::findByPk($intAlbumId);
+        $objAlb = GalleryCreatorAlbumsModel::findByPk($intAlbumId);
         if ($objAlb->thumb !== null)
         {
-            $objPreviewThumb = \GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
+            $objPreviewThumb = GalleryCreatorPicturesModel::findByPk($objAlb->thumb);
         }
         else
         {
-            $objPreviewThumb = \GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
+            $objPreviewThumb = GalleryCreatorPicturesModel::findOneByPid($intAlbumId);
         }
 
         if ($objPreviewThumb !== null)
         {
-            $oFile = \FilesModel::findByUuid($objPreviewThumb->uuid);
+            $oFile = FilesModel::findByUuid($objPreviewThumb->uuid);
             if ($oFile !== null)
             {
                 if (is_file(TL_ROOT . '/' . $oFile->path))
@@ -609,7 +634,7 @@ abstract class Albums extends \Module
         }
 
         $this->import('FrontendUser', 'User');
-        $objGallery = \GalleryCreatorGalleriesModel::findMultipleByIds($arrGalleries);
+        $objGallery = GalleryCreatorGalleriesModel::findMultipleByIds($arrGalleries);
         $arrCalendars = array();
 
         if ($objGallery !== null)
@@ -669,7 +694,7 @@ abstract class Albums extends \Module
         // Albumbesucher (Anzahl Klicks)
         $this->Template->visitors = $objAlbum->vistors;
         //Der Kommentar zum gewaehlten Album
-        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? \StringUtil::toXhtml($objAlbum->comment) : \StringUtil::toHtml5($objAlbum->comment);
+        $this->Template->albumComment = $objPage->outputFormat == 'xhtml' ? StringUtil::toXhtml($objAlbum->comment) : StringUtil::toHtml5($objAlbum->comment);
         // In der Detailansicht kann optional ein Artikel vor dem Album hinzugefuegt werden
         $this->Template->insertArticlePre = $objAlbum->insert_article_pre ? sprintf('{{insert_article::%s}}', $objAlbum->insert_article_pre) : null;
         // In der Detailansicht kann optional ein Artikel nach dem Album hinzugefuegt werden
@@ -677,7 +702,7 @@ abstract class Albums extends \Module
         //Das Event-Datum des Albums als unix-timestamp
         $this->Template->eventTstamp = $objAlbum->date;
         //Das Event-Datum des Albums formatiert
-        $this->Template->eventDate = \Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
+        $this->Template->eventDate = Date::parse($GLOBALS['TL_CONFIG']['dateFormat'], $objAlbum->date);
         //Abstaende
         $this->Template->imagemargin = $this->generateMargin(deserialize($this->gc_imagemargin), 'margin');
         //Anzahl Spalten pro Reihe
@@ -727,7 +752,7 @@ abstract class Albums extends \Module
                     'pid' => $objAlbum->id,
                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
                     'tstamp' => time(),
-                    'url' => \Environment::get('request'),
+                    'url' => Environment::get('request'),
                 )
             );
 
@@ -761,17 +786,17 @@ abstract class Albums extends \Module
     public static function createNewImage($intAlbumId, $strFilepath)
     {
         // Get the file-object
-        $objFile = new \File($strFilepath);
+        $objFile = new File($strFilepath);
         if (!$objFile->isGdImage)
         {
             return false;
         }
 
         // Get the album-object
-        $objAlbum = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlbum = GalleryCreatorAlbumsModel::findById($intAlbumId);
 
         // Get the assigned album directory
-        $objFolder = \FilesModel::findByUuid($objAlbum->assignedDir);
+        $objFolder = FilesModel::findByUuid($objAlbum->assignedDir);
         $assignedDir = null;
         if ($objFolder !== null)
         {
@@ -787,7 +812,7 @@ abstract class Albums extends \Module
 
         // Check if the file is stored in the album-directory or if it is stored in an external directory
         $blnExternalFile = false;
-        if (\Input::get('importFromFilesystem'))
+        if (Input::get('importFromFilesystem'))
         {
             $blnExternalFile = strstr($objFile->dirname, $assignedDir) ? false : true;
         }
@@ -795,7 +820,7 @@ abstract class Albums extends \Module
         // Get the album object and the alias
         $strAlbumAlias = $objAlbum->alias;
         // Db insert
-        $objImg = new \GalleryCreatorPicturesModel();
+        $objImg = new GalleryCreatorPicturesModel();
         $objImg->tstamp = time();
         $objImg->pid = $objAlbum->id;
         $objImg->externalFile = $blnExternalFile ? "1" : "";
@@ -805,7 +830,7 @@ abstract class Albums extends \Module
         {
             $insertId = $objImg->id;
             // Get the next sorting index
-            $objImg_2 = \Database::getInstance()
+            $objImg_2 = Database::getInstance()
                 ->prepare('SELECT MAX(sorting)+10 AS maximum FROM tl_gallery_creator_pictures WHERE pid=?')
                 ->execute($objAlbum->id);
             $sorting = $objImg_2->maximum;
@@ -825,7 +850,7 @@ abstract class Albums extends \Module
                 $userId = '0';
                 if (TL_MODE == 'BE')
                 {
-                    $userId = \BackendUser::getInstance()->id;
+                    $userId = BackendUser::getInstance()->id;
                 }
 
                 // The album-owner is automaticaly the image owner, if the image was uploaded by a by a frontend user
@@ -835,21 +860,21 @@ abstract class Albums extends \Module
                 }
 
                 // Get the FilesModel
-                $objFileModel = \FilesModel::findByPath($objFile->path);
+                $objFileModel = FilesModel::findByPath($objFile->path);
 
                 // Finally save the new image in tl_gallery_creator_pictures
-                $objPicture = \GalleryCreatorPicturesModel::findByPk($insertId);
+                $objPicture = GalleryCreatorPicturesModel::findByPk($insertId);
                 $objPicture->uuid = $objFileModel->uuid;
                 $objPicture->owner = $userId;
                 $objPicture->date = $objAlbum->date;
                 $objPicture->sorting = $sorting;
                 $objPicture->save();
 
-                \System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created',
+                System::log('A new version of tl_gallery_creator_pictures ID ' . $insertId . ' has been created',
                     __METHOD__, TL_GENERAL);
 
                 // Check for a valid preview-thumb for the album
-                $objAlbum = \GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
+                $objAlbum = GalleryCreatorAlbumsModel::findByAlias($strAlbumAlias);
                 if ($objAlbum !== null)
                 {
                     if ($objAlbum->thumb == "")
@@ -882,7 +907,7 @@ abstract class Albums extends \Module
                 {
                     $_SESSION['TL_ERROR'][] = sprintf($GLOBALS['TL_LANG']['ERR']['uploadError'], $strFilepath);
                 }
-                \System::log('Unable to create the new image in: ' . $strFilepath . '!', __METHOD__, TL_ERROR);
+                System::log('Unable to create the new image in: ' . $strFilepath . '!', __METHOD__, TL_ERROR);
             }
 
         }
@@ -903,26 +928,26 @@ abstract class Albums extends \Module
         $blnIsError = false;
 
         // Get the album object
-        $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+        $objAlb = GalleryCreatorAlbumsModel::findById($intAlbumId);
         if ($objAlb === null)
         {
             $blnIsError = true;
-            \Message::addError('Album with ID ' . $intAlbumId . ' does not exist.');
+            Message::addError('Album with ID ' . $intAlbumId . ' does not exist.');
         }
 
         // Check for a valid upload directory
-        $objUploadDir = \FilesModel::findByUuid($objAlb->assignedDir);
+        $objUploadDir = FilesModel::findByUuid($objAlb->assignedDir);
         if ($objUploadDir === null || !is_dir(TL_ROOT . '/' . $objUploadDir->path))
         {
             $blnIsError = true;
-            \Message::addError('No upload directory defined in the album settings!');
+            Message::addError('No upload directory defined in the album settings!');
         }
 
         // Check if there are some files in $_FILES
         if (!is_array($_FILES[$strName]))
         {
             $blnIsError = true;
-            \Message::addError('No Files selected for the uploader.');
+            Message::addError('No Files selected for the uploader.');
         }
 
         if ($blnIsError)
@@ -943,25 +968,25 @@ abstract class Albums extends \Module
         }
 
         // Resize image if feature is enabled
-        if (\Input::post('img_resolution') > 1)
+        if (Input::post('img_resolution') > 1)
         {
-            \Config::set('imageWidth', \Input::post('img_resolution'));
-            \Config::set('jpgQuality', \Input::post('img_quality'));
+            Config::set('imageWidth', Input::post('img_resolution'));
+            Config::set('jpgQuality', Input::post('img_quality'));
         }
         else
         {
-            \Config::set('maxImageWidth', 999999999);
+            Config::set('maxImageWidth', 999999999);
         }
 
         // Call the Contao FileUpload class
-        $objUpload = new \FileUpload();
+        $objUpload = new FileUpload();
         $objUpload->setName($strName);
         $arrUpload = $objUpload->uploadTo($objUploadDir->path);
 
         foreach ($arrUpload as $strFileSrc)
         {
             // Store file in tl_files
-            \Dbafs::addResource($strFileSrc);
+            Dbafs::addResource($strFileSrc);
         }
 
         return $arrUpload;
@@ -1036,7 +1061,7 @@ abstract class Albums extends \Module
     {
 
         //create the template object
-        $objTemplate = new \BackendTemplate($uploader);
+        $objTemplate = new BackendTemplate($uploader);
 
 
         // maxFileSize
@@ -1064,20 +1089,20 @@ abstract class Albums extends \Module
 
         if (!file_exists(TL_ROOT . '/' . $src))
         {
-            \Message::addError(sprintf('File "%s" not found.', $src));
+            Message::addError(sprintf('File "%s" not found.', $src));
             return false;
         }
 
-        $objFile = new \File($src);
+        $objFile = new File($src);
         if (!$objFile->isGdImage)
         {
-            \Message::addError(sprintf('File "%s" could not be rotated because it is not an image.', $src));
+            Message::addError(sprintf('File "%s" could not be rotated because it is not an image.', $src));
             return false;
         }
 
         if (!function_exists('imagerotate'))
         {
-            \Message::addError(sprintf('PHP function "%s" is not installed.', 'imagerotate'));
+            Message::addError(sprintf('PHP function "%s" is not installed.', 'imagerotate'));
             return false;
         }
 
@@ -1104,7 +1129,7 @@ abstract class Albums extends \Module
 
         $images = array();
 
-        $objFilesModel = \FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
+        $objFilesModel = FilesModel::findMultipleByUuids(explode(',', $strMultiSRC));
         if ($objFilesModel === null)
         {
             return;
@@ -1122,7 +1147,7 @@ abstract class Albums extends \Module
             // If item is a file, then store it in the array
             if ($objFilesModel->type == 'file')
             {
-                $objFile = new \File($objFilesModel->path);
+                $objFile = new File($objFilesModel->path);
                 if ($objFile->isGdImage)
                 {
                     $images[$objFile->path] = array(
@@ -1135,7 +1160,7 @@ abstract class Albums extends \Module
             else
             {
                 // If it is a directory, then store its files in the array
-                $objSubfilesModel = \FilesModel::findMultipleFilesByFolder($objFilesModel->path);
+                $objSubfilesModel = FilesModel::findMultipleFilesByFolder($objFilesModel->path);
                 if ($objSubfilesModel === null)
                 {
                     continue;
@@ -1150,7 +1175,7 @@ abstract class Albums extends \Module
                         continue;
                     }
 
-                    $objFile = new \File($objSubfilesModel->path);
+                    $objFile = new File($objSubfilesModel->path);
                     if ($objFile->isGdImage)
                     {
                         $images[$objFile->path] = array(
@@ -1171,7 +1196,7 @@ abstract class Albums extends \Module
                 'basename' => array()
             );
 
-            $objPictures = \Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
+            $objPictures = Database::getInstance()->prepare('SELECT * FROM tl_gallery_creator_pictures WHERE pid=?')->execute($intAlbumId);
             $arrPictures['uuid'] = $objPictures->fetchEach('uuid');
             $arrPictures['path'] = $objPictures->fetchEach('path');
             foreach ($arrPictures['path'] as $path)
@@ -1179,7 +1204,7 @@ abstract class Albums extends \Module
                 $arrPictures['basename'][] = basename($path);
             }
 
-            $objAlb = \GalleryCreatorAlbumsModel::findById($intAlbumId);
+            $objAlb = GalleryCreatorAlbumsModel::findById($intAlbumId);
             foreach ($images as $image)
             {
                 // Prevent duplicate entries
@@ -1194,14 +1219,14 @@ abstract class Albums extends \Module
                     continue;
                 }
 
-                \Input::setGet('importFromFilesystem', 'true');
+                Input::setGet('importFromFilesystem', 'true');
                 if ($GLOBALS['TL_CONFIG']['gc_album_import_copy_files'])
                 {
 
                     $strSource = $image['path'];
 
                     // Get the album upload directory
-                    $objFolderModel = \FilesModel::findByUuid($objAlb->assignedDir);
+                    $objFolderModel = FilesModel::findByUuid($objAlb->assignedDir);
                     $errMsg = 'Aborted import process, because there is no upload folder assigned to the album with ID ' . $objAlb->id . '.';
                     if ($objFolderModel === null)
                     {
@@ -1220,9 +1245,9 @@ abstract class Albums extends \Module
                     if (is_file(TL_ROOT . '/' . $strSource))
                     {
                         // Copy image to the upload folder
-                        $objFile = new \File($strSource);
+                        $objFile = new File($strSource);
                         $objFile->copyTo($strDestination);
-                        \Dbafs::addResource($strSource);
+                        Dbafs::addResource($strSource);
                     }
 
                     self::createNewImage($objAlb->id, $strDestination);
@@ -1254,10 +1279,10 @@ abstract class Albums extends \Module
         }
 
         $arrProcessed = array();
-        $time = \Date::floorToMinute();
+        $time = Date::floorToMinute();
 
         // Get all galleries
-        $objGallery = \GalleryCreatorGalleriesModel::findByProtected('');
+        $objGallery = GalleryCreatorGalleriesModel::findByProtected('');
 
         // Walk through each gallery
         if ($objGallery !== null)
@@ -1279,7 +1304,7 @@ abstract class Albums extends \Module
                 // Get the URL of the jumpTo page
                 if (!isset($arrProcessed[$objGallery->jumpTo]))
                 {
-                    $objParent = \PageModel::findWithDetails($objGallery->jumpTo);
+                    $objParent = PageModel::findWithDetails($objGallery->jumpTo);
 
                     // The target page does not exist
                     if ($objParent === null)
@@ -1309,19 +1334,19 @@ abstract class Albums extends \Module
                     }
 
                     // Generate the URL
-                    $arrProcessed[$objGallery->jumpTo] = $objParent->getAbsoluteUrl((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/%s' : '/albums/%s');
+                    $arrProcessed[$objGallery->jumpTo] = $objParent->getAbsoluteUrl((Config::get('useAutoItem') && !Config::get('disableAlias')) ?  '/%s' : '/albums/%s');
                 }
 
                 $strUrl = $arrProcessed[$objGallery->jumpTo];
 
                 // Get the items
-                $objAlbums = \GalleryCreatorAlbumsModel::findPublishedDefaultByPid($objGallery->id);
+                $objAlbums = GalleryCreatorAlbumsModel::findPublishedDefaultByPid($objGallery->id);
 
                 if ($objAlbums !== null)
                 {
                     while ($objAlbums->next())
                     {
-                        $arrPages[] = sprintf($strUrl, (($objAlbums->alias != '' && !\Config::get('disableAlias')) ? $objAlbums->alias : $objAlbums->id));
+                        $arrPages[] = sprintf($strUrl, (($objAlbums->alias != '' && !Config::get('disableAlias')) ? $objAlbums->alias : $objAlbums->id));
                     }
                 }
             }

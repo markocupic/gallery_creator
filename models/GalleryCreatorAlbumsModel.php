@@ -1,22 +1,14 @@
 <?php
 
 /**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
-
-/**
  * Run in a custom namespace, so the class can be replaced
  */
 namespace Contao;
 
+
 /**
- * Reads and writes tl_gallery_creator_albums
+ * Class GalleryCreatorAlbumsModel
+ * @package Contao
  */
 class GalleryCreatorAlbumsModel extends \Model
 {
@@ -28,20 +20,11 @@ class GalleryCreatorAlbumsModel extends \Model
     protected static $strTable = 'tl_gallery_creator_albums';
 
 
-
-
-
-
-
-
     /**
-     * Find a published gallery from one or more calendars by its ID or alias
-     *
-     * @param mixed $varId      The numeric ID or alias name
-     * @param array $arrPids    An array of calendar IDs
-     * @param array $arrOptions An optional options array
-     *
-     * @return \GalleryCreatorAlbumsModel|null The model or null if there is no event
+     * @param $varId
+     * @param $arrPids
+     * @param array $arrOptions
+     * @return null
      */
     public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
     {
@@ -55,7 +38,7 @@ class GalleryCreatorAlbumsModel extends \Model
 
         if (!BE_USER_LOGGED_IN)
         {
-            //$time = \Date::floorToMinute();
+            //$time = Date::floorToMinute();
             //$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
             $arrColumns[] = "$t.published='1'";
         }
@@ -78,7 +61,6 @@ class GalleryCreatorAlbumsModel extends \Model
 
         if (!BE_USER_LOGGED_IN)
         {
-            $time = \Date::floorToMinute();
             $arrColumns[] = "$t.published='1'";
         }
 

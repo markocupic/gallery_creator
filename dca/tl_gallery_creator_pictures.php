@@ -1,13 +1,15 @@
 <?php
-/**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
+use Contao\GalleryCreatorAlbumsModel;
+use Contao\GalleryCreatorPicturesModel;
+use Markocupic\GalleryCreator\Albums;
+use Contao\BackendUser;
+use Contao\Input;
+use Contao\Image;
+use Contao\FilesModel;
+use Contao\Dbafs;
+use Contao\Versions;
+use Contao\File;
+
 
 $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
     // Config
@@ -197,7 +199,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
         ),
         'owner' => array(
             'label' => &$GLOBALS['TL_LANG']['tl_gallery_creator_pictures']['owner'],
-            'default' => \BackendUser::getInstance()->id,
+            'default' => BackendUser::getInstance()->id,
             'foreignKey' => 'tl_user.name',
             'inputType' => 'select',
             'filter' => true,
@@ -243,16 +245,13 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_pictures'] = array(
 
 /**
  * Class tl_gallery_creator_pictures
- *
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @copyright  Marko Cupic 2005-2017
- * @author     Marko Cupic
  */
 class tl_gallery_creator_pictures extends Backend
 {
 
-
+    /**
+     * tl_gallery_creator_pictures constructor.
+     */
     public function __construct()
     {
 
@@ -263,11 +262,8 @@ class tl_gallery_creator_pictures extends Backend
         $this->import('Session');
 
 
-        // Register Parse Backend Template Hook
-        $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_pictures', 'myParseBackendTemplate');
 
-
-        // set the referer when redirecting from import files from the filesystem
+        // Set the referer when redirecting from import files from the filesystem
         if (Input::get('filesImported'))
         {
             $session = $this->Session->get('referer');
@@ -285,7 +281,7 @@ class tl_gallery_creator_pictures extends Backend
             {
                 // Rotate image anticlockwise
                 $angle = 270;
-                GalleryCreator\Albums::imageRotate($objFile->path, $angle);
+                Albums::imageRotate($objFile->path, $angle);
                 Dbafs::addResource($objFile->path, true);
                 $this->redirect($this->getReferer());
             }
@@ -431,14 +427,12 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * Return the delete-image-button
-     *
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @param string
+     * @param $row
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $icon
+     * @param $attributes
      * @return string
      */
     public function buttonCbDeletePicture($row, $href, $label, $title, $icon, $attributes)
@@ -449,14 +443,12 @@ class tl_gallery_creator_pictures extends Backend
 
 
     /**
-     * Return the rotate-image-button
-     *
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @param string
+     * @param $row
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $icon
+     * @param $attributes
      * @return string
      */
     public function buttonCbRotateImage($row, $href, $label, $title, $icon, $attributes)
@@ -467,9 +459,7 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * child-record-callback
-     *
-     * @param array
+     * @param $arrRow
      * @return string
      */
     public function childRecordCb($arrRow)
@@ -531,8 +521,6 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * Move images in the filesystem too, when cutting/pasting images from one album into another
-     *
      * @param DC_Table $dc
      */
     public function onCutCb(DC_Table $dc)
@@ -606,9 +594,7 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * input-field-callback generate image
-     * Returns the html-img-tag
-     *
+     * @param DataContainer $dc
      * @return string
      */
     public function inputFieldCbGenerateImage(DataContainer $dc)
@@ -630,9 +616,6 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * input-field-callback generate image information
-     * Returns the html-table-tag containing some picture informations
-     *
      * @param DataContainer $dc
      * @return string
      */
@@ -640,7 +623,6 @@ class tl_gallery_creator_pictures extends Backend
     {
 
         $objImg = GalleryCreatorPicturesModel::findByPk($dc->id);
-        $objUser = UserModel::findByPk($objImg->owner);
         $oFile = FilesModel::findByUuid($objImg->uuid);
 
         $output = '
@@ -668,13 +650,11 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * Parse Backend Template Hook
-     *
-     * @param string
-     * @param string
-     * @return string
+     * @param $strContent
+     * @param $strTemplate
+     * @return mixed
      */
-    public function myParseBackendTemplate($strContent, $strTemplate)
+    public function parseBackendTemplate($strContent, $strTemplate)
     {
 
         if (Input::get('table') == 'tl_gallery_creator_pictures')
@@ -741,15 +721,12 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * Return the "toggle visibility" button
-     *
-     * @param array $row
-     * @param string $href
-     * @param string $label
-     * @param string $title
-     * @param string $icon
-     * @param string $attributes
-     *
+     * @param $row
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $icon
+     * @param $attributes
      * @return string
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
@@ -778,11 +755,9 @@ class tl_gallery_creator_pictures extends Backend
     }
 
     /**
-     * Publish/unpublish a picture
-     *
-     * @param integer $intId
-     * @param boolean $blnVisible
-     * @param DataContainer $dc
+     * @param $intId
+     * @param $blnVisible
+     * @param DataContainer|null $dc
      */
     public function toggleVisibility($intId, $blnVisible, DataContainer $dc = null)
     {
@@ -829,9 +804,5 @@ class tl_gallery_creator_pictures extends Backend
 
         $objVersions->create();
 
-        // Update the RSS feed (for some reason it does not work without sleep(1))
-        //sleep(1);
-        //$this->import('News');
-        //$this->News->generateFeedsByArchive(CURRENT_ID);
     }
 }

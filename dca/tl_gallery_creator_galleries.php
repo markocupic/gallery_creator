@@ -1,14 +1,7 @@
 <?php
 
-/**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
+use Contao\Input;
+use Contao\Image;
 
 
 $this->import('BackendUser', 'User');
@@ -37,8 +30,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_galleries'] = array
 
         ),
         'onsubmit_callback' => array
-        (
-            array('tl_gallery_creator_galleries', 'scheduleUpdate')
+        (//
         ),
         'sql' => array
         (
@@ -195,9 +187,6 @@ class tl_gallery_creator_galleries extends Backend
     {
         parent::__construct();
         $this->import('BackendUser', 'User');
-
-
-
     }
 
 
@@ -215,26 +204,32 @@ class tl_gallery_creator_galleries extends Backend
      */
     public function checkPermission()
     {
-        if ($this->User->isAdmin) {
+        if ($this->User->isAdmin)
+        {
             return;
         }
 
         // Set root IDs
-        if (!is_array($this->User->gallery_creator) || empty($this->User->gallery_creator)) {
+        if (!is_array($this->User->gallery_creator) || empty($this->User->gallery_creator))
+        {
             $root = array(0);
-        } else {
+        }
+        else
+        {
             $root = $this->User->gallery_creator;
         }
 
         $GLOBALS['TL_DCA']['tl_gallery_creator_galleries']['list']['sorting']['root'] = $root;
 
         // Check permissions to add calendars
-        if (!$this->User->hasAccess('create', 'gallery_creatorp')) {
+        if (!$this->User->hasAccess('create', 'gallery_creatorp'))
+        {
             $GLOBALS['TL_DCA']['tl_gallery_creator_galleries']['config']['closed'] = true;
         }
 
         // Check current action
-        switch (Input::get('act')) {
+        switch (Input::get('act'))
+        {
             case 'create':
             case 'select':
                 // Allow
@@ -242,18 +237,23 @@ class tl_gallery_creator_galleries extends Backend
 
             case 'edit':
                 // Dynamically add the record to the user profile
-                if (!in_array(Input::get('id'), $root)) {
+                if (!in_array(Input::get('id'), $root))
+                {
                     $arrNew = $this->Session->get('new_records');
 
-                    if (is_array($arrNew['tl_gallery_creator_galleries']) && in_array(Input::get('id'), $arrNew['tl_gallery_creator_galleries'])) {
+                    if (is_array($arrNew['tl_gallery_creator_galleries']) && in_array(Input::get('id'), $arrNew['tl_gallery_creator_galleries']))
+                    {
                         // Add the permissions on group level
-                        if ($this->User->inherit != 'custom') {
+                        if ($this->User->inherit != 'custom')
+                        {
                             $objGroup = $this->Database->execute("SELECT id, gallery_creator, gallery_creatorp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
 
-                            while ($objGroup->next()) {
+                            while ($objGroup->next())
+                            {
                                 $arrGalleryCreatorp = deserialize($objGroup->gallery_creatorp);
 
-                                if (is_array($arrGalleryCreatorp) && in_array('create', $arrGalleryCreatorp)) {
+                                if (is_array($arrGalleryCreatorp) && in_array('create', $arrGalleryCreatorp))
+                                {
                                     $arrGalleryCreator = deserialize($objGroup->gallery_creator, true);
                                     $arrGalleryCreator[] = Input::get('id');
 
@@ -264,14 +264,16 @@ class tl_gallery_creator_galleries extends Backend
                         }
 
                         // Add the permissions on user level
-                        if ($this->User->inherit != 'group') {
+                        if ($this->User->inherit != 'group')
+                        {
                             $objUser = $this->Database->prepare("SELECT gallery_creator, gallery_creatorp FROM tl_user WHERE id=?")
                                 ->limit(1)
                                 ->execute($this->User->id);
 
                             $arrGalleryCreatorp = deserialize($objUser->gallery_creatorp);
 
-                            if (is_array($arrGalleryCreatorp) && in_array('create', $arrGalleryCreatorp)) {
+                            if (is_array($arrGalleryCreatorp) && in_array('create', $arrGalleryCreatorp))
+                            {
                                 $arrGalleryCreator = deserialize($objUser->gallery_creator, true);
                                 $arrGalleryCreator[] = Input::get('id');
 
@@ -290,7 +292,8 @@ class tl_gallery_creator_galleries extends Backend
             case 'copy':
             case 'delete':
             case 'show':
-                if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'gallery_creatorp'))) {
+                if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'gallery_creatorp')))
+                {
                     $this->log('Not enough permissions to ' . Input::get('act') . ' gallery ID "' . Input::get('id') . '"', __METHOD__, TL_ERROR);
                     $this->redirect('contao/main.php?act=error');
                 }
@@ -300,86 +303,25 @@ class tl_gallery_creator_galleries extends Backend
             case 'deleteAll':
             case 'overrideAll':
                 $session = $this->Session->getData();
-                if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'gallery_creatorp')) {
+                if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'gallery_creatorp'))
+                {
                     $session['CURRENT']['IDS'] = array();
-                } else {
+                }
+                else
+                {
                     $session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
                 }
                 $this->Session->setData($session);
                 break;
 
             default:
-                if (strlen(Input::get('act'))) {
+                if (strlen(Input::get('act')))
+                {
                     $this->log('Not enough permissions to ' . Input::get('act') . ' gallery_creator', __METHOD__, TL_ERROR);
                     $this->redirect('contao/main.php?act=error');
                 }
                 break;
         }
-    }
-
-
-
-
-    /**
-     * Check for modified calendar feeds and update the XML files if necessary
-     */
-    public function generateFeed()
-    {
-        $session = $this->Session->get('calendar_feed_updater');
-
-        if (!is_array($session) || empty($session)) {
-            return;
-        }
-
-        $this->import('Calendar');
-
-        foreach ($session as $id) {
-            $this->Calendar->generateFeedsByCalendar($id);
-        }
-
-        $this->import('Automator');
-        $this->Automator->generateSitemap();
-
-        $this->Session->set('calendar_feed_updater', null);
-    }
-
-
-    /**
-     * Schedule a calendar feed update
-     *
-     * This method is triggered when a single calendar or multiple calendars
-     * are modified (edit/editAll).
-     *
-     * @param DataContainer $dc
-     */
-    public function scheduleUpdate(DataContainer $dc)
-    {
-        // Return if there is no ID
-        if (!$dc->id) {
-            return;
-        }
-
-        // Store the ID in the session
-        $session = $this->Session->get('calendar_feed_updater');
-        $session[] = $dc->id;
-        $this->Session->set('calendar_feed_updater', array_unique($session));
-    }
-
-
-    /**
-     * Return the manage feeds button
-     *
-     * @param string $href
-     * @param string $label
-     * @param string $title
-     * @param string $class
-     * @param string $attributes
-     *
-     * @return string
-     */
-    public function manageFeeds($href, $label, $title, $class, $attributes)
-    {
-        return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || $this->User->hasAccess('create', 'calendarfeedp')) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
     }
 
 
@@ -442,6 +384,6 @@ class tl_gallery_creator_galleries extends Backend
      */
     public function setUpPalettes()
     {
-      //
+        //
     }
 }

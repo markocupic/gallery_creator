@@ -1,22 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2015 Leo Feyer
- *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
- */
-
 $GLOBALS['TL_DCA']['tl_user']['palettes']['extend'] = str_replace('fop;', 'fop;{calendars_legend},gallery_creator,gallery_creatorp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['extend']);
 $GLOBALS['TL_DCA']['tl_user']['palettes']['custom'] = str_replace('fop;', 'fop;{gallery_creator_legend},gallery_creator,gallery_creatorp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['custom']);
 
 /**
  * Add fields to tl_user
  */
-
 $GLOBALS['TL_DCA']['tl_user']['fields']['gc_img_resolution'] = array(
        'sql' => "varchar(12) NOT NULL default 'no_scaling'"
 );
