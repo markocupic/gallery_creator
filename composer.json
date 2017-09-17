@@ -29,10 +29,13 @@
         "contao/core": "3.0.*"
     },
     "autoload":{
-        "classmap":[
-            "classes/",
-            "modules/",
-            "models/"
+        "classmap":[""],
+        "exclude-from-classmap": [
+            "config/",
+            "assets/",
+            "docs/",
+            "languages/",
+            "templates/"
         ]
     },
     "extra":{
