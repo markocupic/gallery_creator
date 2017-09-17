@@ -59,7 +59,7 @@ $GLOBALS['TL_AUTO_ITEM'][] = 'albums';
 /**
  * Register hook to add album items to the indexer
  */
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('GalleryCreator\GalleryCreator', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('GalleryCreator\Albums', 'getSearchablePages');
 
 
 /**

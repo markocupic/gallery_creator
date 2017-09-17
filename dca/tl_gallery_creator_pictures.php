@@ -285,7 +285,7 @@ class tl_gallery_creator_pictures extends Backend
             {
                 // Rotate image anticlockwise
                 $angle = 270;
-                GalleryCreator\GcHelpers::imageRotate($objFile->path, $angle);
+                GalleryCreator\Albums::imageRotate($objFile->path, $angle);
                 Dbafs::addResource($objFile->path, true);
                 $this->redirect($this->getReferer());
             }

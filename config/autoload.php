@@ -30,7 +30,6 @@ ClassLoader::addClasses(array
 
 	// Classes
 	'GalleryCreator\Albums'                     => 'system/modules/gallery_creator/classes/Albums.php',
-	'GalleryCreator\GcHelpers'                  => 'system/modules/gallery_creator/classes/GcHelpers.php',
 	'Markocupic\GalleryCreator\MigrationKit'    => 'system/modules/gallery_creator/classes/MigrationKit.php',
 	'GalleryCreator\GalleryCreator'             => 'system/modules/gallery_creator/classes/GalleryCreator.php',
 
