@@ -4,8 +4,6 @@ use Contao\Input;
 use Contao\Image;
 
 
-$this->import('BackendUser', 'User');
-
 /**
  * Table tl_gallery_creator_albums
  */

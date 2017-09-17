@@ -17,9 +17,6 @@ use Contao\File;
 use Contao\Folder;
 use Contao\Automator;
 
-
-$this->import('BackendUser', 'User');
-
 /**
  * Table tl_gallery_creator_albums
  */
