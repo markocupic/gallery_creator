@@ -35,8 +35,7 @@
             "assets/",
             "docs/",
             "languages/",
-            "templates/",
-            "dca/"
+            "templates/"
         ]
     },
     "extra":{
