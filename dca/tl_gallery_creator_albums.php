@@ -413,6 +413,9 @@ class tl_gallery_creator_albums extends Backend
             $this->redirect('contao/main.php?do=gallery_creator&clipboard=1');
         }
 
+		// Parse Backend Template Hook
+		$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_albums', 'parseBackendTemplate');
+
     }
 
     /**

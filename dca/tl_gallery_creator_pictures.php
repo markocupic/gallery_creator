@@ -306,6 +306,10 @@ class tl_gallery_creator_pictures extends Backend
             $session['onCutAlbumSourceId'] = Input::get('id');
             $this->Session->set('gallery_creator', $session);
         }
+
+
+		// Parse Backend Template Hook
+		$GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_pictures', 'parseBackendTemplate');
     }
 
     /**

@@ -44,8 +44,6 @@ if (TL_MODE == 'BE')
 if (TL_MODE == 'BE')
 {
     $GLOBALS['TL_HOOKS']['reviseTable'][] = array('Markocupic\GalleryCreator\MigrationKit', 'migrate');
-    $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_albums', 'parseBackendTemplate');
-    $GLOBALS['TL_HOOKS']['parseBackendTemplate'][] = array('tl_gallery_creator_pictures', 'parseBackendTemplate');
 }
 
 
