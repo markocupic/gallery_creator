@@ -22,7 +22,7 @@ $GLOBALS['TL_HOOKS']['gc_generateFrontendTemplate'][] = array('MyGalleryCreatorC
 // MyGalleryCreatorClass.php
 class MyGalleryCreatorClass extends \System
 {
-
+ 
        /**
         * Do some custom modifications
         * @param Module $objModule
