@@ -31,6 +31,7 @@
     "autoload":{
         "classmap":[""],
         "exclude-from-classmap": [
+            "dca/",
             "config/",
             "assets/",
             "docs/",
