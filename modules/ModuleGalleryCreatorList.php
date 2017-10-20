@@ -1,11 +1,13 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Gallery Creator for Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (C) 2008-2018 Marko Cupic
  *
- * @license LGPL-3.0+
+ * @package    Galery Creator
+ * @link       https://github.com/markocupic/gallery_creator/
+ * @license    https://opensource.org/licenses/lgpl-3.0.html LGPL
  */
 
 namespace Markocupic\GalleryCreator;
@@ -18,9 +20,9 @@ use Contao\Pagination;
 use Contao\Environment;
 
 /**
- * Front end module "event list".
+ * Front end module "gallery_creator_list".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Marko Cupic <https://github.com/markocupic>
  */
 class ModuleGalleryCreatorList extends ModuleGalleryCreator
 {
@@ -73,9 +75,7 @@ class ModuleGalleryCreatorList extends ModuleGalleryCreator
             return '';
         }
 
-        // Show the album reader if an item has been selected
-        // Show the selected reader module instead of the listing module, if the jumpTo page and the listing page are equal
-        // See Contao\ModuleEventList::generate()
+        // Show the event reader if an item has been selected
         if ($this->gc_readerModule > 0 && (isset($_GET['albums']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
         {
             return $this->getFrontendModule($this->gc_readerModule, $this->strColumn);

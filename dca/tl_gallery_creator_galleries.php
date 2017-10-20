@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Gallery Creator for Contao Open Source CMS
+ *
+ * Copyright (C) 2008-2018 Marko Cupic
+ *
+ * @package    Galery Creator
+ * @link       https://github.com/markocupic/gallery_creator/
+ * @license    https://opensource.org/licenses/lgpl-3.0.html LGPL
+ */
+
 use Contao\Input;
 use Contao\Image;
 
@@ -173,7 +183,7 @@ $GLOBALS['TL_DCA']['tl_gallery_creator_galleries'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Marko Cupic <https://github.com/markocupic>
  */
 class tl_gallery_creator_galleries extends Backend
 {

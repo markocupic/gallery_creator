@@ -1,11 +1,13 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Gallery Creator for Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (C) 2008-2018 Marko Cupic
  *
- * @license LGPL-3.0+
+ * @package    Galery Creator
+ * @link       https://github.com/markocupic/gallery_creator/
+ * @license    https://opensource.org/licenses/lgpl-3.0.html LGPL
  */
 
 namespace Markocupic\GalleryCreator;
@@ -19,9 +21,9 @@ use Contao\Pagination;
 use Contao\FilesModel;
 
 /**
- * Front end module "event reader".
+ * Front end module "gallery_creator_reader".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Marko Cupic <https://github.com/markocupic>
  */
 class ModuleGalleryCreatorReader extends ModuleGalleryCreator
 {

@@ -1,12 +1,13 @@
 <?php
+
 /**
- * Contao Open Source CMS
+ * Gallery Creator for Contao Open Source CMS
  *
- * Copyright (C) 2005-2015 Leo Feyer
+ * Copyright (C) 2008-2018 Marko Cupic
  *
- * @package Gallery Creator
- * @link    http://www.contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @package    Galery Creator
+ * @link       https://github.com/markocupic/gallery_creator/
+ * @license    https://opensource.org/licenses/lgpl-3.0.html LGPL
  */
 
 /**

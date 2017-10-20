@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Gallery Creator for Contao Open Source CMS
+ *
+ * Copyright (C) 2008-2018 Marko Cupic
+ *
+ * @package    Galery Creator
+ * @link       https://github.com/markocupic/gallery_creator/
+ * @license    https://opensource.org/licenses/lgpl-3.0.html LGPL
+ */
+
+
 $GLOBALS['TL_DCA']['tl_user']['palettes']['extend'] = str_replace('fop;', 'fop;{calendars_legend},gallery_creator,gallery_creatorp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['extend']);
 $GLOBALS['TL_DCA']['tl_user']['palettes']['custom'] = str_replace('fop;', 'fop;{gallery_creator_legend},gallery_creator,gallery_creatorp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['custom']);
 
