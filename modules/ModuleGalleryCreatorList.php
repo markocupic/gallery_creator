@@ -73,7 +73,9 @@ class ModuleGalleryCreatorList extends ModuleGalleryCreator
             return '';
         }
 
-        // Show the event reader if an item has been selected
+        // Show the album reader if an item has been selected
+        // Show the selected reader module instead of the listing module, if the jumpTo page and the listing page are equal
+        // See Contao\ModuleEventList::generate()
         if ($this->gc_readerModule > 0 && (isset($_GET['albums']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
         {
             return $this->getFrontendModule($this->gc_readerModule, $this->strColumn);
