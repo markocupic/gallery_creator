@@ -23,7 +23,7 @@
             </trans-unit>
             <trans-unit id="tl_module.gc_readerModule.1">
                 <source>Select the reader module.</source>
-                <target>Automatisch zum Galerieleser wechseln, wenn ein Galerie ausgewählt wurde.</target>
+                <target>Automatisch zum Galerieleser wechseln, wenn eine Galerie ausgewählt wurde.</target>
             </trans-unit>
             <trans-unit id="tl_module.gc_galleries.0">
                 <source>Galleries</source>
