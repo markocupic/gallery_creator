@@ -54,16 +54,11 @@ class ModuleGalleryCreatorReader extends ModuleGalleryCreator
 
             return $objTemplate->parse();
         }
+        
         // Set the item from the auto_item parameter
         if (!isset($_GET['albums']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
         {
             Input::setGet('albums', Input::get('auto_item'));
-        }
-
-        // Set the item from the auto_item parameter
-        if (!isset($_GET['events']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
-        {
-            Input::setGet('events', Input::get('auto_item'));
         }
 
         // Do not index or cache the page if no event has been specified
