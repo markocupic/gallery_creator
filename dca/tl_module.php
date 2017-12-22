@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['gc_galleries'] = array(
     'exclude'          => true,
     'inputType'        => 'checkbox',
     'options_callback' => array('tl_module_gallery_creator', 'getGalleries'),
-    'eval'             => array('mandatory' => true, 'multiple' => true, 'tl_class' => 'w50'),
+    'eval'             => array('mandatory' => true, 'multiple' => true, 'tl_class' => 'clr'),
     'sql'              => "blob NULL",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['gc_readerModule'] = array(
